@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Edukultur</title>
+  <title>Smart Edukultur - Petualangan Karakter Nusantara</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="/_sdk/element_sdk.js"></script>
   <script src="/_sdk/data_sdk.js"></script>
@@ -11,103 +11,68 @@
   <style>
     * { font-family: 'Nunito', sans-serif; }
     
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-    
-    @keyframes sparkle {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.2); }
-    }
-    
-    @keyframes bounce-in {
-      0% { transform: scale(0); opacity: 0; }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    
-    @keyframes slide-up {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 5px currentColor; }
-      50% { box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
-    }
-    
-    @keyframes star-fall {
-      0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
-    }
+    /* Animasi */
+    @keyframes float { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-10px)} }
+    @keyframes bounce-in { 0%{transform:scale(0);opacity:0} 50%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1} }
+    @keyframes slide-up { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+    @keyframes pulse-glow { 0%,100%{box-shadow:0 0 5px currentColor} 50%{box-shadow:0 0 20px currentColor,0 0 30px currentColor} }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+    @keyframes confetti { 0%{transform:translateY(-100%) rotate(0deg)} 100%{transform:translateY(100vh) rotate(720deg)} }
     
     .float-animation { animation: float 3s ease-in-out infinite; }
-    .sparkle { animation: sparkle 1.5s ease-in-out infinite; }
     .bounce-in { animation: bounce-in 0.5s ease-out forwards; }
     .slide-up { animation: slide-up 0.4s ease-out forwards; }
     .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .shake { animation: shake 0.5s ease-in-out; }
     
     .island-btn {
       transition: all 0.3s ease;
       transform-origin: center;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
     }
     .island-btn:hover {
-      transform: scale(1.1);
-      filter: brightness(1.1);
+      transform: scale(1.05) translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
     }
+    .island-btn:active { transform: scale(0.95); }
     
     .game-card {
       transition: all 0.3s ease;
     }
     .game-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
     }
     
     .draggable {
       cursor: grab;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .draggable:active { cursor: grabbing; }
-    .draggable.dragging {
-      opacity: 0.7;
-      transform: scale(1.05);
-    }
+    .draggable:active { cursor: grabbing; transform: scale(1.02); }
+    .draggable.dragging { opacity: 0.7; transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); }
     
     .drop-zone {
       transition: all 0.3s ease;
-      border: 2px dashed #ccc;
+      border: 2px dashed #d1d5db;
     }
     .drop-zone.drag-over {
       border-color: #10b981;
-      background: rgba(16, 185, 129, 0.1);
+      background: rgba(16,185,129,0.1);
       transform: scale(1.02);
     }
+    .drop-zone.correct { border-color: #22c55e; background: rgba(34,197,94,0.1); }
+    .drop-zone.incorrect { border-color: #ef4444; background: rgba(239,68,68,0.1); }
     
-    .progress-fill {
-      transition: width 0.5s ease;
-    }
+    .progress-fill { transition: width 0.5s ease; }
     
-    .emoji-btn {
-      transition: transform 0.2s ease;
-    }
-    .emoji-btn:hover {
-      transform: scale(1.3);
-    }
+    .emoji-btn { transition: transform 0.2s ease; }
+    .emoji-btn:hover { transform: scale(1.3); }
     
-    .modal-overlay {
-      backdrop-filter: blur(4px);
-    }
+    .modal-overlay { backdrop-filter: blur(4px); }
     
-    .chibi-character {
-      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
-    }
+    .chibi-character { filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2)); }
     
-    .gradient-bg {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
+    .confetti { position: fixed; width: 10px; height: 10px; background: linear-gradient(45deg, #fbbf24, #f59e0b); border-radius: 50%; pointer-events: none; z-index: 9999; animation: confetti 3s linear forwards; }
     
     .island-sumatra { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
     .island-jawa { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
@@ -139,9 +104,11 @@
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      background: #3b82f6;
+      background: #8b5cf6;
       cursor: pointer;
+      transition: transform 0.2s ease;
     }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
     .scroll-container {
       scrollbar-width: thin;
@@ -158,269 +125,458 @@
       background: #cbd5e1;
       border-radius: 3px;
     }
+    
+    .puzzle-piece {
+      transition: all 0.3s ease;
+    }
+    .puzzle-piece:hover { transform: scale(1.05); }
+    .puzzle-piece.selected { transform: scale(1.1); }
+    
+    .flip-card {
+      perspective: 1000px;
+    }
+    .flip-card-inner {
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      backface-visibility: hidden;
+    }
+    .flip-card-back {
+      transform: rotateY(180deg);
+    }
   </style>
-  <style>body { box-sizing: border-box; }</style>
  </head>
  <body class="h-full bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100">
   <div id="app" class="h-full w-full overflow-auto scroll-container">
+   
    <!-- Loading Screen -->
    <div id="loading-screen" class="h-full flex items-center justify-center">
     <div class="text-center">
-     <div class="text-6xl mb-4 float-animation">
-      🏝️
+     <div class="text-7xl mb-4 float-animation">
+      🏝️✨
      </div>
-     <h1 class="text-3xl font-bold text-purple-700">Smart Edukultur</h1>
+     <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Smart Edukultur</h1>
      <p class="text-purple-500 mt-2">Memuat petualangan...</p>
      <div class="mt-4 w-48 h-2 bg-purple-200 rounded-full mx-auto overflow-hidden">
       <div class="h-full bg-purple-600 rounded-full animate-pulse" style="width: 60%"></div>
      </div>
     </div>
-   </div><!-- Main App Container -->
+   </div>
+
+   <!-- Main App Container -->
    <div id="main-container" class="hidden h-full">
+
     <!-- Navigation Bar -->
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/90 shadow-lg px-4 py-2 flex items-center justify-between">
-     <button onclick="goBack()" class="nav-btn p-2 rounded-full text-2xl" title="Kembali">←</button>
-     <div class="flex items-center gap-2">
-      <span class="text-xl">🌟</span> <span id="total-stars" class="font-bold text-yellow-600">0</span>
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-lg px-4 py-2 flex items-center justify-between">
+     <button onclick="goBack()" class="nav-btn p-2 rounded-full text-2xl hover:bg-purple-100 transition-all" title="Kembali">←</button>
+     
+     <!-- Star Counter -->
+     <div class="flex items-center gap-2 bg-gradient-to-r from-yellow-100 to-amber-100 px-4 py-1 rounded-full">
+      <span class="text-2xl">🌟</span>
+      <span id="total-stars" class="font-bold text-amber-700 text-xl">0</span>
      </div>
+     
      <div class="flex gap-2">
-      <button onclick="showScreen('map')" class="nav-btn p-2 rounded-full text-2xl" title="Peta">🏠</button> <button onclick="showScreen('profile')" class="nav-btn p-2 rounded-full text-2xl" title="Profil">👤</button> <button onclick="showHelp()" class="nav-btn p-2 rounded-full text-2xl" title="Bantuan">❓</button>
+      <button onclick="showScreen('map')" class="nav-btn p-2 rounded-full text-2xl hover:bg-green-100 transition-all" title="Peta">🏠</button>
+      <button onclick="showScreen('profile')" class="nav-btn p-2 rounded-full text-2xl hover:bg-blue-100 transition-all" title="Profil">👤</button>
+      <button onclick="showHelp()" class="nav-btn p-2 rounded-full text-2xl hover:bg-yellow-100 transition-all" title="Bantuan">❓</button>
      </div>
-    </nav><!-- Screen Container -->
+    </nav>
+
+    <!-- Screen Container -->
     <div id="screen-container" class="pt-16 pb-4 px-4 min-h-full">
-     <!-- Welcome/Story Screen -->
+
+     <!-- ========== WELCOME SCREEN ========== -->
      <div id="screen-welcome" class="screen hidden">
-      <div class="max-w-2xl mx-auto text-center py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <div class="text-8xl mb-6 float-animation">
+      <div class="max-w-2xl mx-auto py-8">
+       <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 slide-up border-2 border-purple-200">
+        <div class="text-8xl mb-6 float-animation text-center">
          🏝️✨
         </div>
-        <h1 id="main-title" class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-4">Smart Edukultur</h1>
-        <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-6 mb-6 text-left">
-         <h2 class="text-xl font-bold text-orange-700 mb-3">📖 Cerita Pembuka</h2>
-         <p class="text-gray-700 leading-relaxed"><span class="text-2xl">🌏</span> Dahulu kala, <strong>Negeri Nusantara</strong> dilindungi oleh <strong>6 Permata Karakter</strong> yang berkilau indah. Namun, suatu hari permata-permata itu pecah dan tersebar ke 6 pulau berbeda!</p>
-         <p class="text-gray-700 leading-relaxed mt-3"><span class="text-2xl">🦸</span> Kamu terpilih sebagai <strong>Duta Karakter</strong>! Tugasmu adalah mengunjungi setiap pulau, menyelesaikan tantangan, dan mengumpulkan kembali pecahan permata untuk memulihkan Negeri Nusantara!</p>
-         <p class="text-gray-700 leading-relaxed mt-3"><span class="text-2xl">💎</span> Setiap pulau menyimpan nilai karakter: <strong>Disiplin, Tanggung Jawab, Kerja Sama, Sopan Santun, Toleransi, dan Jujur</strong>.</p>
-        </div><button onclick="showScreen('consent')" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full text-xl font-bold hover:scale-105 transition-transform shadow-lg"> 🚀 Mulai Petualangan! </button>
+        <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-4 text-center">Smart Edukultur</h1>
+        
+        <!-- Story Card -->
+        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-6 mb-6 border-2 border-purple-200">
+         <h2 class="text-2xl font-bold text-indigo-700 mb-4 flex items-center gap-2"><span class="text-3xl">📖</span> Cerita Pembuka</h2>
+         <div class="space-y-3 text-gray-700">
+          <p class="flex gap-2"><span class="text-2xl">🌏</span> Dahulu kala, <strong>Negeri Nusantara</strong> dilindungi oleh <strong class="text-purple-600">6 Permata Karakter</strong> yang berkilau indah. Namun, suatu hari permata-permata itu pecah dan tersebar ke 6 pulau berbeda!</p>
+          <p class="flex gap-2"><span class="text-2xl">🦸</span> Kamu terpilih sebagai <strong class="text-pink-600">Duta Karakter</strong>! Tugasmu adalah mengunjungi setiap pulau, menyelesaikan tantangan, dan mengumpulkan kembali pecahan permata!</p>
+          <div class="bg-white p-4 rounded-xl">
+           <p class="font-bold text-purple-700 mb-2">💎 Enam Permata Karakter:</p>
+           <div class="grid grid-cols-3 gap-2 text-sm">
+            <div class="bg-red-100 p-2 rounded-lg text-center">⏰ Disiplin</div>
+            <div class="bg-green-100 p-2 rounded-lg text-center">📚 Tanggung Jawab</div>
+            <div class="bg-yellow-100 p-2 rounded-lg text-center">🤝 Kerja Sama</div>
+            <div class="bg-blue-100 p-2 rounded-lg text-center">🙏 Sopan Santun</div>
+            <div class="bg-purple-100 p-2 rounded-lg text-center">🌈 Toleransi</div>
+            <div class="bg-indigo-100 p-2 rounded-lg text-center">💜 Jujur</div>
+           </div>
+          </div>
+         </div>
+        </div>
+        
+        <button onclick="showScreen('consent')" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full text-2xl font-bold hover:scale-105 transition-transform shadow-lg pulse-glow">
+         🚀 Mulai Petualangan!
+        </button>
        </div>
       </div>
-     </div><!-- Consent Screen -->
+     </div>
+
+     <!-- ========== CONSENT SCREEN ========== -->
      <div id="screen-consent" class="screen hidden">
       <div class="max-w-xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">📝 Data Diri</h2>
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-purple-200">
+        <h2 class="text-3xl font-bold text-center text-purple-700 mb-6">📝 Data Diri</h2>
+        
         <div class="space-y-4">
+         <!-- Nama Lengkap -->
          <div>
-          <label class="block text-gray-700 font-semibold mb-2">👤 Nama Lengkap</label> <input type="text" id="input-nama" class="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none text-lg" placeholder="Masukkan namamu...">
+          <label class="block text-gray-700 font-semibold mb-2 text-lg">👤 Nama Lengkap</label>
+          <input type="text" id="input-nama" class="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none text-lg" placeholder="Masukkan namamu...">
          </div>
+         
+         <!-- Kelas -->
          <div>
-          <label class="block text-gray-700 font-semibold mb-2">🏫 Kelas</label> <select id="input-kelas" class="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none text-lg"> <option value="">Pilih kelas...</option> <option value="4A">Kelas 4A</option> <option value="4B">Kelas 4B</option> <option value="4C">Kelas 4C</option> </select>
+          <label class="block text-gray-700 font-semibold mb-2 text-lg">🏫 Kelas</label>
+          <select id="input-kelas" class="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none text-lg">
+           <option value="">Pilih kelas...</option>
+           <option value="4A">Kelas 4A</option>
+           <option value="4B">Kelas 4B</option>
+           <option value="4C">Kelas 4C</option>
+          </select>
          </div>
+         
+         <!-- Nama Sekolah -->
          <div>
-          <label class="block text-gray-700 font-semibold mb-2">🏢 Nama Sekolah</label> <input type="text" id="input-sekolah" class="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none text-lg" placeholder="Masukkan nama sekolah...">
+          <label class="block text-gray-700 font-semibold mb-2 text-lg">🏢 Nama Sekolah</label>
+          <input type="text" id="input-sekolah" class="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none text-lg" placeholder="Masukkan nama sekolah...">
          </div>
-         <div class="bg-blue-50 rounded-xl p-4 mt-6">
-          <label class="flex items-start gap-3 cursor-pointer"> <input type="checkbox" id="consent-check" class="w-6 h-6 mt-1 rounded text-purple-600"> <span class="text-gray-700">Saya setuju mengikuti pembelajaran ini dan data saya digunakan untuk keperluan penelitian pendidikan.</span> </label>
+         
+         <!-- Persetujuan Penelitian -->
+         <div class="bg-blue-50 rounded-xl p-4 mt-6 border-2 border-blue-200">
+          <label class="flex items-start gap-3 cursor-pointer">
+           <input type="checkbox" id="consent-check" class="w-6 h-6 mt-1 rounded text-purple-600">
+           <span class="text-gray-700">Saya setuju mengikuti pembelajaran ini dan data saya digunakan untuk keperluan penelitian pendidikan.</span>
+          </label>
          </div>
-        </div><button onclick="submitConsent()" class="w-full mt-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> ✅ Lanjutkan </button>
+        </div>
+        
+        <button onclick="submitConsent()" class="w-full mt-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg">
+         ✅ Lanjutkan
+        </button>
+        
         <p id="consent-error" class="text-red-500 text-center mt-3 hidden">⚠️ Mohon lengkapi semua data dan centang persetujuan!</p>
        </div>
       </div>
-     </div><!-- Avatar Creation Screen -->
+     </div>
+
+     <!-- ========== AVATAR CREATION SCREEN ========== -->
      <div id="screen-avatar" class="screen hidden">
       <div class="max-w-2xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">🎨 Buat Avatarmu!</h2><!-- Avatar Preview -->
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-purple-200">
+        <h2 class="text-3xl font-bold text-center text-purple-700 mb-6">🎨 Buat Avatarmu!</h2>
+        
+        <!-- Avatar Preview -->
         <div class="flex justify-center mb-8">
-         <div id="avatar-preview" class="w-40 h-40 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center text-7xl chibi-character bounce-in">
+         <div id="avatar-preview" class="w-40 h-40 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center text-7xl chibi-character bounce-in border-4 border-white shadow-xl">
           🧒
          </div>
         </div>
+        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
          <!-- Gender -->
          <div>
-          <label class="block text-gray-700 font-semibold mb-3">👫 Gender</label>
+          <label class="block text-gray-700 font-semibold mb-3 text-lg">👫 Gender</label>
           <div class="flex gap-3">
-           <button onclick="setAvatar('gender', 'boy')" class="avatar-option flex-1 p-3 rounded-xl border-2 border-gray-200 hover:border-blue-500 transition-all text-center" data-group="gender"> <span class="text-4xl">👦</span> <p class="text-sm mt-1">Laki-laki</p></button> <button onclick="setAvatar('gender', 'girl')" class="avatar-option flex-1 p-3 rounded-xl border-2 border-gray-200 hover:border-pink-500 transition-all text-center" data-group="gender"> <span class="text-4xl">👧</span> <p class="text-sm mt-1">Perempuan</p></button>
-          </div>
-         </div><!-- Skin Tone -->
-         <div>
-          <label class="block text-gray-700 font-semibold mb-3">🎨 Warna Kulit</label>
-          <div class="flex gap-2 flex-wrap">
-           <button onclick="setAvatar('skin', '🧒🏻')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl" data-group="skin">🧒🏻</button> <button onclick="setAvatar('skin', '🧒🏼')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl" data-group="skin">🧒🏼</button> <button onclick="setAvatar('skin', '🧒🏽')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl" data-group="skin">🧒🏽</button> <button onclick="setAvatar('skin', '🧒🏾')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl" data-group="skin">🧒🏾</button> <button onclick="setAvatar('skin', '🧒🏿')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl" data-group="skin">🧒🏿</button>
-          </div>
-         </div><!-- Traditional Clothing -->
-         <div>
-          <label class="block text-gray-700 font-semibold mb-3">👘 Pakaian Adat</label>
-          <div class="flex gap-2 flex-wrap">
-           <button onclick="setAvatar('clothes', 'jawa')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-green-500 text-sm" data-group="clothes">🏛️ Jawa</button> <button onclick="setAvatar('clothes', 'sumatra')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-red-500 text-sm" data-group="clothes">🏔️ Sumatra</button> <button onclick="setAvatar('clothes', 'bali')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-yellow-500 text-sm" data-group="clothes">🌺 Bali</button> <button onclick="setAvatar('clothes', 'papua')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-orange-500 text-sm" data-group="clothes">🦜 Papua</button>
-          </div>
-         </div><!-- Pet -->
-         <div>
-          <label class="block text-gray-700 font-semibold mb-3">🐾 Hewan Peliharaan</label>
-          <div class="flex gap-2 flex-wrap">
-           <button onclick="setAvatar('pet', '🦜')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl" data-group="pet">🦜</button> <button onclick="setAvatar('pet', '🐈')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl" data-group="pet">🐈</button> <button onclick="setAvatar('pet', '🦜')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl" data-group="pet">🦎</button> <button onclick="setAvatar('pet', '🐠')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl" data-group="pet">🐠</button> <button onclick="setAvatar('pet', '🦋')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl" data-group="pet">🦋</button>
+           <button onclick="setAvatar('gender', 'boy')" class="avatar-option flex-1 p-3 rounded-xl border-2 border-gray-200 hover:border-blue-500 transition-all text-center" data-group="gender">
+            <span class="text-4xl">👦</span>
+            <p class="text-sm mt-1">Laki-laki</p>
+           </button>
+           <button onclick="setAvatar('gender', 'girl')" class="avatar-option flex-1 p-3 rounded-xl border-2 border-gray-200 hover:border-pink-500 transition-all text-center" data-group="gender">
+            <span class="text-4xl">👧</span>
+            <p class="text-sm mt-1">Perempuan</p>
+           </button>
           </div>
          </div>
-        </div><button onclick="saveAvatar()" class="w-full mt-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> ✨ Simpan Avatar </button>
+         
+         <!-- Skin Tone -->
+         <div>
+          <label class="block text-gray-700 font-semibold mb-3 text-lg">🎨 Warna Kulit</label>
+          <div class="flex gap-2 flex-wrap">
+           <button onclick="setAvatar('skin', '🧒🏻')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl flex items-center justify-center" data-group="skin">🧒🏻</button>
+           <button onclick="setAvatar('skin', '🧒🏼')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl flex items-center justify-center" data-group="skin">🧒🏼</button>
+           <button onclick="setAvatar('skin', '🧒🏽')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl flex items-center justify-center" data-group="skin">🧒🏽</button>
+           <button onclick="setAvatar('skin', '🧒🏾')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl flex items-center justify-center" data-group="skin">🧒🏾</button>
+           <button onclick="setAvatar('skin', '🧒🏿')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl flex items-center justify-center" data-group="skin">🧒🏿</button>
+          </div>
+         </div>
+         
+         <!-- Traditional Clothing -->
+         <div>
+          <label class="block text-gray-700 font-semibold mb-3 text-lg">👘 Pakaian Adat</label>
+          <div class="flex gap-2 flex-wrap">
+           <button onclick="setAvatar('clothes', 'jawa')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-green-500 text-sm" data-group="clothes">🏛️ Jawa</button>
+           <button onclick="setAvatar('clothes', 'sumatra')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-red-500 text-sm" data-group="clothes">🏔️ Sumatra</button>
+           <button onclick="setAvatar('clothes', 'bali')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-yellow-500 text-sm" data-group="clothes">🌺 Bali</button>
+           <button onclick="setAvatar('clothes', 'kalimantan')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-amber-500 text-sm" data-group="clothes">🌲 Kalimantan</button>
+           <button onclick="setAvatar('clothes', 'sulawesi')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-blue-500 text-sm" data-group="clothes">🏝️ Sulawesi</button>
+           <button onclick="setAvatar('clothes', 'papua')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-orange-500 text-sm" data-group="clothes">🦜 Papua</button>
+          </div>
+         </div>
+         
+         <!-- Pet -->
+         <div>
+          <label class="block text-gray-700 font-semibold mb-3 text-lg">🐾 Hewan Peliharaan</label>
+          <div class="flex gap-2 flex-wrap">
+           <button onclick="setAvatar('pet', '🦜')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl flex items-center justify-center" data-group="pet">🦜</button>
+           <button onclick="setAvatar('pet', '🐈')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl flex items-center justify-center" data-group="pet">🐈</button>
+           <button onclick="setAvatar('pet', '🦎')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-green-500 text-2xl flex items-center justify-center" data-group="pet">🦎</button>
+           <button onclick="setAvatar('pet', '🐠')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-blue-500 text-2xl flex items-center justify-center" data-group="pet">🐠</button>
+           <button onclick="setAvatar('pet', '🦋')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl flex items-center justify-center" data-group="pet">🦋</button>
+          </div>
+         </div>
+        </div>
+        
+        <button onclick="saveAvatar()" class="w-full mt-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg">
+         ✨ Simpan Avatar
+        </button>
        </div>
       </div>
-     </div><!-- Pretest Screen -->
+     </div>
+
+     <!-- ========== PRETEST SCREEN ========== -->
      <div id="screen-pretest" class="screen hidden">
       <div class="max-w-2xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-purple-700 mb-2">📊 Pretest</h2>
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-purple-200">
+        <h2 class="text-3xl font-bold text-center text-purple-700 mb-2">📊 Pretest</h2>
         <p class="text-center text-gray-600 mb-6">Jawab pertanyaan berikut sesuai kebiasaanmu sehari-hari!</p>
-        <div id="pretest-questions" class="space-y-6">
+        
+        <div id="pretest-questions" class="space-y-6 max-h-[400px] overflow-y-auto scroll-container pr-2">
          <!-- Questions will be generated by JS -->
         </div>
+        
         <div class="flex justify-between items-center mt-8">
-         <span id="pretest-progress" class="text-gray-600">Pertanyaan 1/12</span> <button onclick="submitPretest()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg"> Selesai ✅ </button>
+         <span id="pretest-progress" class="text-gray-600 font-medium">Pertanyaan 1/12</span>
+         <button onclick="submitPretest()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg">
+          Selesai ✅
+         </button>
         </div>
        </div>
       </div>
-     </div><!-- Map Screen -->
+     </div>
+
+     <!-- ========== MAP SCREEN ========== -->
      <div id="screen-map" class="screen hidden">
-      <div class="max-w-4xl mx-auto py-8">
+      <div class="max-w-5xl mx-auto py-8">
        <div class="text-center mb-6">
-        <h2 class="text-3xl font-bold text-purple-700">🗺️ Peta Nusantara</h2>
-        <p id="welcome-msg" class="text-gray-600 mt-2">Pilih pulau untuk memulai petualangan!</p>
-       </div><!-- Map Grid -->
+        <h2 class="text-4xl font-bold text-purple-700">🗺️ Peta Nusantara</h2>
+        <p id="welcome-msg" class="text-gray-600 mt-2 text-lg">Pilih pulau untuk memulai petualangan!</p>
+       </div>
+       
+       <!-- Map Grid - 6 Islands -->
        <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-        <!-- Sumatra --> <button onclick="startIslandGame('sumatra')" class="island-btn island-sumatra rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
-         <div class="absolute top-2 right-2 text-2xl" id="sumatra-status">
-          🔒
-         </div>
-         <div class="text-5xl mb-3">
-          ⏰
-         </div><h3 class="text-xl font-bold">Sumatra</h3><p class="text-sm opacity-90">Disiplin</p>
-         <div class="mt-2 flex justify-center gap-1" id="sumatra-stars"></div></button> <!-- Jawa --> <button onclick="startIslandGame('jawa')" class="island-btn island-jawa rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
-         <div class="absolute top-2 right-2 text-2xl" id="jawa-status">
-          🔒
-         </div>
-         <div class="text-5xl mb-3">
-          📚
-         </div><h3 class="text-xl font-bold">Jawa</h3><p class="text-sm opacity-90">Tanggung Jawab</p>
-         <div class="mt-2 flex justify-center gap-1" id="jawa-stars"></div></button> <!-- Kalimantan --> <button onclick="startIslandGame('kalimantan')" class="island-btn island-kalimantan rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
-         <div class="absolute top-2 right-2 text-2xl" id="kalimantan-status">
-          🔒
-         </div>
-         <div class="text-5xl mb-3">
-          🤝
-         </div><h3 class="text-xl font-bold">Kalimantan</h3><p class="text-sm opacity-90">Kerja Sama</p>
-         <div class="mt-2 flex justify-center gap-1" id="kalimantan-stars"></div></button> <!-- Sulawesi --> <button onclick="startIslandGame('sulawesi')" class="island-btn island-sulawesi rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
-         <div class="absolute top-2 right-2 text-2xl" id="sulawesi-status">
-          🔒
-         </div>
-         <div class="text-5xl mb-3">
-          🙏
-         </div><h3 class="text-xl font-bold">Sulawesi</h3><p class="text-sm opacity-90">Sopan Santun</p>
-         <div class="mt-2 flex justify-center gap-1" id="sulawesi-stars"></div></button> <!-- Bali --> <button onclick="startIslandGame('bali')" class="island-btn island-bali rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
-         <div class="absolute top-2 right-2 text-2xl" id="bali-status">
-          🔒
-         </div>
-         <div class="text-5xl mb-3">
-          🌈
-         </div><h3 class="text-xl font-bold">Bali</h3><p class="text-sm opacity-90">Toleransi</p>
-         <div class="mt-2 flex justify-center gap-1" id="bali-stars"></div></button> <!-- Papua --> <button onclick="startIslandGame('papua')" class="island-btn island-papua rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
-         <div class="absolute top-2 right-2 text-2xl" id="papua-status">
-          🔒
-         </div>
-         <div class="text-5xl mb-3">
-          💜
-         </div><h3 class="text-xl font-bold">Papua</h3><p class="text-sm opacity-90">Jujur</p>
-         <div class="mt-2 flex justify-center gap-1" id="papua-stars"></div></button>
-       </div><!-- Quick Actions -->
-       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <button onclick="showScreen('journal')" class="game-card bg-white rounded-2xl p-4 shadow-lg text-center"> <span class="text-3xl">📔</span> <p class="font-semibold text-gray-700 mt-2">Jurnal Harian</p></button> <button onclick="showScreen('garden')" class="game-card bg-white rounded-2xl p-4 shadow-lg text-center"> <span class="text-3xl">🌱</span> <p class="font-semibold text-gray-700 mt-2">Taman Karakter</p></button> <button onclick="showScreen('comic')" class="game-card bg-white rounded-2xl p-4 shadow-lg text-center"> <span class="text-3xl">🎨</span> <p class="font-semibold text-gray-700 mt-2">Komik Generator</p></button> <button onclick="showScreen('expression')" class="game-card bg-white rounded-2xl p-4 shadow-lg text-center"> <span class="text-3xl">😊</span> <p class="font-semibold text-gray-700 mt-2">Tebak Ekspresi</p></button>
-       </div><!-- Special Access -->
-       <div class="mt-8 text-center">
-        <button onclick="showAccessCode()" class="text-purple-600 underline text-sm">🔐 Akses Khusus</button>
+        <!-- Sumatra -->
+        <button onclick="startIslandGame('sumatra')" class="island-btn island-sumatra rounded-3xl p-6 text-white shadow-xl relative overflow-hidden group">
+         <div class="absolute top-2 right-2 text-2xl" id="sumatra-status">🔒</div>
+         <div class="text-6xl mb-3 group-hover:scale-110 transition-transform">⏰</div>
+         <h3 class="text-2xl font-bold">Sumatra</h3>
+         <p class="text-sm opacity-90">Disiplin</p>
+         <div class="mt-2 flex justify-center gap-1" id="sumatra-stars"></div>
+        </button>
+        
+        <!-- Jawa -->
+        <button onclick="startIslandGame('jawa')" class="island-btn island-jawa rounded-3xl p-6 text-white shadow-xl relative overflow-hidden group">
+         <div class="absolute top-2 right-2 text-2xl" id="jawa-status">🔒</div>
+         <div class="text-6xl mb-3 group-hover:scale-110 transition-transform">📚</div>
+         <h3 class="text-2xl font-bold">Jawa</h3>
+         <p class="text-sm opacity-90">Tanggung Jawab</p>
+         <div class="mt-2 flex justify-center gap-1" id="jawa-stars"></div>
+        </button>
+        
+        <!-- Kalimantan -->
+        <button onclick="startIslandGame('kalimantan')" class="island-btn island-kalimantan rounded-3xl p-6 text-white shadow-xl relative overflow-hidden group">
+         <div class="absolute top-2 right-2 text-2xl" id="kalimantan-status">🔒</div>
+         <div class="text-6xl mb-3 group-hover:scale-110 transition-transform">🤝</div>
+         <h3 class="text-2xl font-bold">Kalimantan</h3>
+         <p class="text-sm opacity-90">Kerja Sama</p>
+         <div class="mt-2 flex justify-center gap-1" id="kalimantan-stars"></div>
+        </button>
+        
+        <!-- Sulawesi -->
+        <button onclick="startIslandGame('sulawesi')" class="island-btn island-sulawesi rounded-3xl p-6 text-white shadow-xl relative overflow-hidden group">
+         <div class="absolute top-2 right-2 text-2xl" id="sulawesi-status">🔒</div>
+         <div class="text-6xl mb-3 group-hover:scale-110 transition-transform">🙏</div>
+         <h3 class="text-2xl font-bold">Sulawesi</h3>
+         <p class="text-sm opacity-90">Sopan Santun</p>
+         <div class="mt-2 flex justify-center gap-1" id="sulawesi-stars"></div>
+        </button>
+        
+        <!-- Bali -->
+        <button onclick="startIslandGame('bali')" class="island-btn island-bali rounded-3xl p-6 text-white shadow-xl relative overflow-hidden group">
+         <div class="absolute top-2 right-2 text-2xl" id="bali-status">🔒</div>
+         <div class="text-6xl mb-3 group-hover:scale-110 transition-transform">🌈</div>
+         <h3 class="text-2xl font-bold">Bali</h3>
+         <p class="text-sm opacity-90">Toleransi</p>
+         <div class="mt-2 flex justify-center gap-1" id="bali-stars"></div>
+        </button>
+        
+        <!-- Papua -->
+        <button onclick="startIslandGame('papua')" class="island-btn island-papua rounded-3xl p-6 text-white shadow-xl relative overflow-hidden group">
+         <div class="absolute top-2 right-2 text-2xl" id="papua-status">🔒</div>
+         <div class="text-6xl mb-3 group-hover:scale-110 transition-transform">💜</div>
+         <h3 class="text-2xl font-bold">Papua</h3>
+         <p class="text-sm opacity-90">Jujur</p>
+         <div class="mt-2 flex justify-center gap-1" id="papua-stars"></div>
+        </button>
+       </div>
+       
+       <!-- Quick Actions -->
+       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <button onclick="showScreen('journal')" class="game-card bg-white rounded-2xl p-6 shadow-lg text-center hover:bg-yellow-50">
+         <span class="text-4xl">📔</span>
+         <p class="font-bold text-gray-700 mt-2">Jurnal Harian</p>
+         <p class="text-xs text-gray-500">Tulis pengalamanmu</p>
+        </button>
+        <button onclick="showScreen('garden')" class="game-card bg-white rounded-2xl p-6 shadow-lg text-center hover:bg-green-50">
+         <span class="text-4xl">🌱</span>
+         <p class="font-bold text-gray-700 mt-2">Taman Karakter</p>
+         <p class="text-xs text-gray-500">Lihat tanamanku</p>
+        </button>
+        <button onclick="showScreen('comic')" class="game-card bg-white rounded-2xl p-6 shadow-lg text-center hover:bg-pink-50">
+         <span class="text-4xl">🎨</span>
+         <p class="font-bold text-gray-700 mt-2">Komik Generator</p>
+         <p class="text-xs text-gray-500">Buat komikmu</p>
+        </button>
+        <button onclick="showScreen('expression')" class="game-card bg-white rounded-2xl p-6 shadow-lg text-center hover:bg-orange-50">
+         <span class="text-4xl">😊</span>
+         <p class="font-bold text-gray-700 mt-2">Tebak Ekspresi</p>
+         <p class="text-xs text-gray-500">Tebak karaktermu</p>
+        </button>
+       </div>
+       
+       <!-- Special Access & Stats -->
+       <div class="flex justify-between items-center">
+        <button onclick="showAccessCode()" class="text-purple-600 underline text-sm hover:text-purple-800 transition-colors">
+         🔐 Akses Khusus
+        </button>
+        <div class="bg-white px-4 py-2 rounded-full shadow-md">
+         <span class="text-sm text-gray-600">Pulau Selesai: <span id="completed-islands-count" class="font-bold text-purple-600">0</span>/6</span>
+        </div>
        </div>
       </div>
-     </div><!-- Game Screens --> <!-- Sumatra: Jadwal Pahlawan -->
+     </div>
+
+     <!-- ========== SUMATRA GAME ========== -->
      <div id="screen-game-sumatra" class="screen hidden">
       <div class="max-w-3xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 border-2 border-red-200">
         <div class="text-center mb-6">
-         <span class="text-5xl">⏰</span>
-         <h2 class="text-2xl font-bold text-red-600 mt-2">Jadwal Pahlawan</h2>
+         <span class="text-6xl">⏰</span>
+         <h2 class="text-3xl font-bold text-red-600 mt-2">Jadwal Pahlawan</h2>
          <p class="text-gray-600">Susun jadwal harian dengan disiplin!</p>
-        </div><!-- Schedule Grid -->
+        </div>
+        
+        <!-- Game Instructions -->
+        <div class="bg-red-50 p-4 rounded-xl mb-6 text-sm">
+         <p class="flex gap-2"><span class="text-xl">💡</span> Tarik kegiatan ke slot waktu yang tepat!</p>
+        </div>
+        
+        <!-- Schedule Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
          <!-- Activities to drag -->
-         <div>
-          <h3 class="font-bold text-gray-700 mb-3">📋 Kegiatan</h3>
+         <div class="bg-gray-50 p-4 rounded-xl">
+          <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><span class="text-xl">📋</span> Kegiatan</h3>
           <div id="activities-container" class="space-y-2">
-           <div class="draggable bg-yellow-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="bangun">
-            🌅 Bangun Tidur
-           </div>
-           <div class="draggable bg-blue-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="mandi">
-            🚿 Mandi Pagi
-           </div>
-           <div class="draggable bg-green-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="sarapan">
-            🍳 Sarapan
-           </div>
-           <div class="draggable bg-purple-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="sekolah">
-            🏫 Berangkat Sekolah
-           </div>
-           <div class="draggable bg-pink-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="belajar">
-            📖 Belajar
-           </div>
-           <div class="draggable bg-orange-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="tidur">
-            🌙 Tidur Malam
-           </div>
+           <div class="draggable bg-red-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="bangun">🌅 Bangun Tidur</div>
+           <div class="draggable bg-blue-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="mandi">🚿 Mandi Pagi</div>
+           <div class="draggable bg-green-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="sarapan">🍳 Sarapan</div>
+           <div class="draggable bg-purple-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="sekolah">🏫 Berangkat Sekolah</div>
+           <div class="draggable bg-yellow-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="belajar">📖 Belajar</div>
+           <div class="draggable bg-orange-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="tidur">🌙 Tidur Malam</div>
           </div>
-         </div><!-- Time slots -->
-         <div>
-          <h3 class="font-bold text-gray-700 mb-3">🕐 Slot Waktu</h3>
+         </div>
+         
+         <!-- Time slots -->
+         <div class="bg-gray-50 p-4 rounded-xl">
+          <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><span class="text-xl">🕐</span> Slot Waktu</h3>
           <div class="space-y-2">
-           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="05:00">
-            <span class="text-gray-500">05:00 - </span>
-           </div>
-           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="06:00">
-            <span class="text-gray-500">06:00 - </span>
-           </div>
-           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="06:30">
-            <span class="text-gray-500">06:30 - </span>
-           </div>
-           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="07:00">
-            <span class="text-gray-500">07:00 - </span>
-           </div>
-           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="15:00">
-            <span class="text-gray-500">15:00 - </span>
-           </div>
-           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="21:00">
-            <span class="text-gray-500">21:00 - </span>
-           </div>
+           <div class="drop-zone p-3 rounded-xl min-h-[60px] bg-white" data-time="05:00"><span class="text-gray-500">05:00</span></div>
+           <div class="drop-zone p-3 rounded-xl min-h-[60px] bg-white" data-time="06:00"><span class="text-gray-500">06:00</span></div>
+           <div class="drop-zone p-3 rounded-xl min-h-[60px] bg-white" data-time="06:30"><span class="text-gray-500">06:30</span></div>
+           <div class="drop-zone p-3 rounded-xl min-h-[60px] bg-white" data-time="07:00"><span class="text-gray-500">07:00</span></div>
+           <div class="drop-zone p-3 rounded-xl min-h-[60px] bg-white" data-time="15:00"><span class="text-gray-500">15:00</span></div>
+           <div class="drop-zone p-3 rounded-xl min-h-[60px] bg-white" data-time="21:00"><span class="text-gray-500">21:00</span></div>
           </div>
          </div>
         </div>
+        
+        <!-- Score and Check -->
         <div class="mt-6 text-center">
-         <p class="text-gray-600 mb-4">Skor: <span id="sumatra-score" class="font-bold text-red-600">0</span>/6</p><button onclick="checkSchedule()" class="bg-red-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-600 transition-colors"> ✅ Periksa Jadwal </button>
+         <div class="flex justify-center items-center gap-4 mb-4">
+          <div class="bg-red-100 px-6 py-2 rounded-full">
+           <span class="text-gray-600">Skor:</span>
+           <span id="sumatra-score" class="font-bold text-red-600 text-2xl ml-2">0</span><span class="text-gray-500">/6</span>
+          </div>
+          <button onclick="checkSchedule()" class="bg-red-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-600 transition-colors shadow-lg">
+           ✅ Periksa Jadwal
+          </button>
+         </div>
+         <button onclick="resetSumatraGame()" class="text-gray-500 text-sm hover:text-red-500 transition-colors">↻ Mulai Ulang</button>
         </div>
        </div>
       </div>
-     </div><!-- Jawa: Misi Rawat Bumi -->
+     </div>
+
+     <!-- ========== JAWA GAME ========== -->
      <div id="screen-game-jawa" class="screen hidden">
       <div class="max-w-3xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 border-2 border-green-200">
         <div class="text-center mb-6">
-         <span class="text-5xl">📚</span>
-         <h2 class="text-2xl font-bold text-green-600 mt-2">Misi Rawat Bumi</h2>
+         <span class="text-6xl">📚</span>
+         <h2 class="text-3xl font-bold text-green-600 mt-2">Misi Rawat Bumi</h2>
          <p class="text-gray-600">Selesaikan semua tugas tanggung jawabmu!</p>
-        </div><!-- Progress Bar -->
-        <div class="mb-6">
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="mb-8">
          <div class="flex justify-between text-sm text-gray-600 mb-1">
-          <span>Progress</span> <span id="jawa-progress-text">0/4 tugas</span>
+          <span>Progress</span>
+          <span id="jawa-progress-text">0/4 tugas</span>
          </div>
          <div class="w-full h-4 bg-gray-200 rounded-full overflow-hidden">
           <div id="jawa-progress-bar" class="h-full bg-green-500 progress-fill" style="width: 0%"></div>
          </div>
-        </div><!-- Tasks Grid -->
-        <div class="grid grid-cols-2 gap-4">
-         <button onclick="completeTask('siram')" id="task-siram" class="task-btn bg-blue-50 hover:bg-blue-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-blue-400"> <span class="text-5xl">🌱</span> <p class="font-semibold mt-2">Siram Tanaman</p><span class="task-status text-green-500 hidden">✅ Selesai</span> </button> <button onclick="completeTask('rapikan')" id="task-rapikan" class="task-btn bg-purple-50 hover:bg-purple-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-purple-400"> <span class="text-5xl">📚</span> <p class="font-semibold mt-2">Rapikan Buku</p><span class="task-status text-green-500 hidden">✅ Selesai</span> </button> <button onclick="completeTask('sampah')" id="task-sampah" class="task-btn bg-orange-50 hover:bg-orange-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-orange-400"> <span class="text-5xl">🗑️</span> <p class="font-semibold mt-2">Buang Sampah</p><span class="task-status text-green-500 hidden">✅ Selesai</span> </button> <button onclick="completeTask('makan')" id="task-makan" class="task-btn bg-pink-50 hover:bg-pink-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-pink-400"> <span class="text-5xl">🍽️</span> <p class="font-semibold mt-2">Cuci Piring</p><span class="task-status text-green-500 hidden">✅ Selesai</span> </button>
         </div>
+        
+        <!-- Tasks Grid -->
+        <div class="grid grid-cols-2 gap-4">
+         <button onclick="completeTask('siram')" id="task-siram" class="task-btn bg-blue-50 hover:bg-blue-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-blue-400">
+          <span class="text-5xl">🌱</span>
+          <p class="font-semibold mt-2">Siram Tanaman</p>
+          <span class="task-status text-green-500 hidden">✅ Selesai</span>
+         </button>
+         <button onclick="completeTask('rapikan')" id="task-rapikan" class="task-btn bg-purple-50 hover:bg-purple-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-purple-400">
+          <span class="text-5xl">📚</span>
+          <p class="font-semibold mt-2">Rapikan Buku</p>
+          <span class="task-status text-green-500 hidden">✅ Selesai</span>
+         </button>
+         <button onclick="completeTask('sampah')" id="task-sampah" class="task-btn bg-orange-50 hover:bg-orange-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-orange-400">
+          <span class="text-5xl">🗑️</span>
+          <p class="font-semibold mt-2">Buang Sampah</p>
+          <span class="task-status text-green-500 hidden">✅ Selesai</span>
+         </button>
+         <button onclick="completeTask('makan')" id="task-makan" class="task-btn bg-pink-50 hover:bg-pink-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-pink-400">
+          <span class="text-5xl">🍽️</span>
+          <p class="font-semibold mt-2">Cuci Piring</p>
+          <span class="task-status text-green-500 hidden">✅ Selesai</span>
+         </button>
+        </div>
+        
+        <!-- Completion Message -->
         <div id="jawa-result" class="mt-6 text-center hidden">
          <div class="bg-green-100 rounded-2xl p-6">
           <span class="text-5xl">🎉</span>
@@ -430,38 +586,53 @@
         </div>
        </div>
       </div>
-     </div><!-- Kalimantan: Gotong Royong Mosaik -->
+     </div>
+
+     <!-- ========== KALIMANTAN GAME ========== -->
      <div id="screen-game-kalimantan" class="screen hidden">
       <div class="max-w-3xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 border-2 border-yellow-200">
         <div class="text-center mb-6">
-         <span class="text-5xl">🤝</span>
-         <h2 class="text-2xl font-bold text-yellow-600 mt-2">Gotong Royong Mosaik</h2>
+         <span class="text-6xl">🤝</span>
+         <h2 class="text-3xl font-bold text-yellow-600 mt-2">Gotong Royong Mosaik</h2>
          <p class="text-gray-600">Susun puzzle rumah adat bersama teman!</p>
-        </div><!-- Timer -->
+        </div>
+        
+        <!-- Timer -->
         <div class="text-center mb-4">
-         <span class="text-2xl font-bold text-yellow-600">⏱️ <span id="puzzle-timer">3:00</span></span>
-        </div><!-- AI Helpers -->
-        <div class="flex justify-center gap-4 mb-6">
+         <div class="inline-block bg-yellow-100 px-6 py-3 rounded-full">
+          <span class="text-2xl font-bold text-yellow-600">⏱️ <span id="puzzle-timer">3:00</span></span>
+         </div>
+        </div>
+        
+        <!-- AI Helpers -->
+        <div class="flex justify-center gap-6 mb-6">
          <div class="text-center">
-          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl">
-           👦
-          </div>
-          <p class="text-sm mt-1">Budi</p>
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl border-2 border-blue-300">👦</div>
+          <p class="text-sm mt-1 font-medium">Budi</p>
          </div>
          <div class="text-center">
-          <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center text-3xl">
-           👧
-          </div>
-          <p class="text-sm mt-1">Ani</p>
+          <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center text-3xl border-2 border-pink-300">👧</div>
+          <p class="text-sm mt-1 font-medium">Ani</p>
          </div>
-        </div><!-- Puzzle Grid -->
+        </div>
+        
+        <!-- Puzzle Grid -->
         <div id="puzzle-container" class="grid grid-cols-3 gap-2 max-w-md mx-auto mb-6">
          <!-- Puzzle pieces will be generated by JS -->
         </div>
+        
+        <!-- Action Buttons -->
         <div class="flex justify-center gap-4">
-         <button onclick="startPuzzle()" class="bg-yellow-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-yellow-600 transition-colors"> 🎮 Mulai Puzzle </button> <button onclick="getHint()" class="bg-blue-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600 transition-colors"> 💡 Minta Bantuan </button>
+         <button onclick="startPuzzle()" class="bg-yellow-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-yellow-600 transition-colors shadow-lg">
+          🎮 Mulai Puzzle
+         </button>
+         <button onclick="getHint()" class="bg-blue-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-lg">
+          💡 Minta Bantuan
+         </button>
         </div>
+        
+        <!-- Completion Message -->
         <div id="kalimantan-result" class="mt-6 text-center hidden">
          <div class="bg-yellow-100 rounded-2xl p-6">
           <span class="text-5xl">🏠</span>
@@ -471,570 +642,982 @@
         </div>
        </div>
       </div>
-     </div><!-- Sulawesi: Kata Ajaib -->
+     </div>
+
+     <!-- ========== SULAWESI GAME ========== -->
      <div id="screen-game-sulawesi" class="screen hidden">
       <div class="max-w-3xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 border-2 border-blue-200">
         <div class="text-center mb-6">
-         <span class="text-5xl">🙏</span>
-         <h2 class="text-2xl font-bold text-blue-600 mt-2">Kata Ajaib</h2>
+         <span class="text-6xl">🙏</span>
+         <h2 class="text-3xl font-bold text-blue-600 mt-2">Kata Ajaib</h2>
          <p class="text-gray-600">Pilih kata-kata sopan di pasar!</p>
-        </div><!-- Scenario -->
+        </div>
+        
+        <!-- Coins -->
+        <div class="text-right mb-4">
+         <div class="inline-block bg-yellow-100 px-4 py-2 rounded-full">
+          <span class="text-2xl">🪙</span>
+          <span id="sulawesi-coins" class="text-xl font-bold text-yellow-600 ml-1">0</span>
+          <span class="text-gray-600 ml-1">koin</span>
+         </div>
+        </div>
+        
+        <!-- Scenario -->
         <div id="sulawesi-scenario" class="bg-blue-50 rounded-2xl p-6 mb-6">
          <div class="text-center mb-4">
           <span class="text-6xl">🏪</span>
          </div>
          <p id="scenario-text" class="text-lg text-center text-gray-700">Kamu ingin membeli buah di pasar. Apa yang kamu katakan kepada penjual?</p>
-        </div><!-- Choices -->
-        <div id="sulawesi-choices" class="space-y-3">
-         <button onclick="selectChoice(0)" class="choice-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 text-left transition-all"> "Bu, saya mau beli jeruk 1 kg, <strong>tolong</strong> ya!" </button> <button onclick="selectChoice(1)" class="choice-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 text-left transition-all"> "Hey, kasih jeruk 1 kg!" </button> <button onclick="selectChoice(2)" class="choice-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 text-left transition-all"> "Jeruknya mana? Cepat!" </button>
-        </div><!-- Coins -->
-        <div class="mt-6 text-center">
-         <span class="text-2xl">🪙</span> <span id="sulawesi-coins" class="text-xl font-bold text-yellow-600">0</span> <span class="text-gray-600"> koin sopan</span>
         </div>
+        
+        <!-- Choices -->
+        <div id="sulawesi-choices" class="space-y-3">
+         <!-- Will be populated by JS -->
+        </div>
+        
+        <!-- Feedback -->
         <div id="sulawesi-feedback" class="mt-4 text-center hidden"></div>
+        
+        <!-- Progress -->
+        <div class="mt-4 text-center">
+         <p class="text-sm text-gray-500">Tantangan <span id="sulawesi-progress">1</span>/3</p>
+        </div>
        </div>
       </div>
-     </div><!-- Bali: Bhineka Warna -->
+     </div>
+
+     <!-- ========== BALI GAME ========== -->
      <div id="screen-game-bali" class="screen hidden">
       <div class="max-w-4xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 border-2 border-purple-200">
         <div class="text-center mb-6">
-         <span class="text-5xl">🌈</span>
-         <h2 class="text-2xl font-bold text-purple-600 mt-2">Bhineka Warna</h2>
+         <span class="text-6xl">🌈</span>
+         <h2 class="text-3xl font-bold text-purple-600 mt-2">Bhineka Warna</h2>
          <p class="text-gray-600">Cocokkan budaya dengan daerah asalnya!</p>
-        </div><!-- Cards to drag -->
+        </div>
+        
+        <!-- Cards to drag -->
         <div class="mb-6">
-         <h3 class="font-bold text-gray-700 mb-3">🎴 Kartu Budaya</h3>
-         <div id="culture-cards" class="flex flex-wrap gap-3 justify-center">
-          <div class="draggable bg-red-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="sumatra">
-           🏠 Rumah Gadang
-          </div>
-          <div class="draggable bg-green-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="jawa">
-           👘 Batik
-          </div>
-          <div class="draggable bg-yellow-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="kalimantan">
-           🍲 Soto Banjar
-          </div>
-          <div class="draggable bg-purple-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="bali">
-           💃 Tari Kecak
-          </div>
-          <div class="draggable bg-blue-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="papua">
-           🎭 Tifa
-          </div>
-          <div class="draggable bg-pink-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="sulawesi">
-           🏛️ Tongkonan
-          </div>
+         <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><span class="text-xl">🎴</span> Kartu Budaya</h3>
+         <div id="culture-cards" class="flex flex-wrap gap-3 justify-center p-4 bg-gray-50 rounded-xl">
+          <!-- Will be populated by JS -->
          </div>
-        </div><!-- Drop zones for regions -->
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-red-50" data-region="sumatra">
+        </div>
+        
+        <!-- Drop zones for regions -->
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-red-50 border-2" data-region="sumatra">
           <p class="font-bold text-red-600 mb-2">🏔️ Sumatra</p>
          </div>
-         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-green-50" data-region="jawa">
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-green-50 border-2" data-region="jawa">
           <p class="font-bold text-green-600 mb-2">🏛️ Jawa</p>
          </div>
-         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-yellow-50" data-region="kalimantan">
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-yellow-50 border-2" data-region="kalimantan">
           <p class="font-bold text-yellow-600 mb-2">🌲 Kalimantan</p>
          </div>
-         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-blue-50" data-region="sulawesi">
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-blue-50 border-2" data-region="sulawesi">
           <p class="font-bold text-blue-600 mb-2">🌊 Sulawesi</p>
          </div>
-         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-purple-50" data-region="bali">
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-purple-50 border-2" data-region="bali">
           <p class="font-bold text-purple-600 mb-2">🌺 Bali</p>
          </div>
-         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-indigo-50" data-region="papua">
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-indigo-50 border-2" data-region="papua">
           <p class="font-bold text-indigo-600 mb-2">🦜 Papua</p>
          </div>
-        </div><!-- Fun fact -->
+        </div>
+        
+        <!-- Fun fact -->
         <div id="bali-fact" class="mt-6 bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-4 hidden">
          <p class="text-center text-purple-700"><span class="text-xl">💡</span> <span id="fact-text"></span></p>
         </div>
+        
+        <!-- Check Button -->
         <div class="mt-6 text-center">
-         <button onclick="checkCulture()" class="bg-purple-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-purple-600 transition-colors"> ✅ Periksa Jawaban </button>
+         <button onclick="checkCulture()" class="bg-purple-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-purple-600 transition-colors shadow-lg">
+          ✅ Periksa Jawaban
+         </button>
         </div>
        </div>
       </div>
-     </div><!-- Papua: Hati Nurani -->
+     </div>
+
+     <!-- ========== PAPUA GAME ========== -->
      <div id="screen-game-papua" class="screen hidden">
       <div class="max-w-3xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 border-2 border-indigo-200">
         <div class="text-center mb-6">
-         <span class="text-5xl">💜</span>
-         <h2 class="text-2xl font-bold text-indigo-600 mt-2">Hati Nurani</h2>
+         <span class="text-6xl">💜</span>
+         <h2 class="text-3xl font-bold text-indigo-600 mt-2">Hati Nurani</h2>
          <p class="text-gray-600">Pilih tindakan jujur!</p>
-        </div><!-- Story -->
+        </div>
+        
+        <!-- Stars -->
+        <div class="text-right mb-4">
+         <div class="inline-block bg-yellow-100 px-4 py-2 rounded-full">
+          <span class="text-2xl">⭐</span>
+          <span id="papua-stars" class="text-xl font-bold text-yellow-600 ml-1">0</span>
+          <span class="text-gray-600 ml-1">bintang</span>
+         </div>
+        </div>
+        
+        <!-- Story -->
         <div id="papua-story" class="bg-indigo-50 rounded-2xl p-6 mb-6">
          <div class="text-center mb-4">
           <span id="story-emoji" class="text-6xl">👛</span>
          </div>
          <p id="story-text" class="text-lg text-center text-gray-700">Kamu menemukan dompet berisi uang di jalan. Tidak ada orang di sekitar. Apa yang akan kamu lakukan?</p>
-        </div><!-- Choices -->
-        <div id="papua-choices" class="space-y-3">
-         <button onclick="selectHonesty(0)" class="honesty-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 text-left transition-all"> 🔍 Mencari pemiliknya atau menyerahkan ke polisi/guru </button> <button onclick="selectHonesty(1)" class="honesty-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 text-left transition-all"> 🤫 Menyimpan uangnya untuk diri sendiri </button> <button onclick="selectHonesty(2)" class="honesty-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 text-left transition-all"> 🚶 Meninggalkannya begitu saja </button>
-        </div><!-- Stars -->
-        <div class="mt-6 text-center">
-         <span class="text-2xl">⭐</span> <span id="papua-stars" class="text-xl font-bold text-yellow-600">0</span> <span class="text-gray-600"> bintang kejujuran</span>
         </div>
+        
+        <!-- Choices -->
+        <div id="papua-choices" class="space-y-3">
+         <!-- Will be populated by JS -->
+        </div>
+        
+        <!-- Feedback -->
         <div id="papua-feedback" class="mt-4 text-center hidden"></div>
+        
+        <!-- Progress -->
+        <div class="mt-4 text-center">
+         <p class="text-sm text-gray-500">Cerita <span id="papua-progress">1</span>/3</p>
+        </div>
        </div>
       </div>
-     </div><!-- Journal Screen -->
+     </div>
+
+     <!-- ========== JOURNAL SCREEN ========== -->
      <div id="screen-journal" class="screen hidden">
       <div class="max-w-2xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">📔 Jurnal Harian</h2>
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-yellow-200">
+        <h2 class="text-3xl font-bold text-center text-yellow-700 mb-6">📔 Jurnal Harian</h2>
+        
+        <!-- Journal Entry -->
         <div class="bg-yellow-50 rounded-2xl p-6 mb-6">
-         <label class="block text-gray-700 font-semibold mb-3">✨ Hari ini aku berhasil...</label> <textarea id="journal-entry" class="w-full h-32 p-4 rounded-xl border-2 border-yellow-200 focus:border-yellow-500 focus:outline-none resize-none" placeholder="Ceritakan pengalamanmu hari ini..."></textarea>
-        </div><button onclick="saveJournal()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> 💾 Simpan Jurnal </button> <!-- Previous Entries -->
+         <label class="block text-gray-700 font-semibold mb-3 text-lg flex items-center gap-2">
+          <span class="text-2xl">✨</span> Hari ini aku berhasil...
+         </label>
+         <textarea id="journal-entry" class="w-full h-32 p-4 rounded-xl border-2 border-yellow-200 focus:border-yellow-500 focus:outline-none resize-none" placeholder="Contoh: aku membantu teman yang kesulitan..."></textarea>
+         
+         <!-- Character Stickers -->
+         <div class="mt-4">
+          <p class="text-sm text-gray-600 mb-2">Tambahkan stiker karakter:</p>
+          <div class="flex gap-2">
+           <button onclick="addJournalSticker('⏰')" class="w-10 h-10 bg-red-100 rounded-full text-xl hover:scale-110 transition-transform">⏰</button>
+           <button onclick="addJournalSticker('📚')" class="w-10 h-10 bg-green-100 rounded-full text-xl hover:scale-110 transition-transform">📚</button>
+           <button onclick="addJournalSticker('🤝')" class="w-10 h-10 bg-yellow-100 rounded-full text-xl hover:scale-110 transition-transform">🤝</button>
+           <button onclick="addJournalSticker('🙏')" class="w-10 h-10 bg-blue-100 rounded-full text-xl hover:scale-110 transition-transform">🙏</button>
+           <button onclick="addJournalSticker('🌈')" class="w-10 h-10 bg-purple-100 rounded-full text-xl hover:scale-110 transition-transform">🌈</button>
+           <button onclick="addJournalSticker('💜')" class="w-10 h-10 bg-indigo-100 rounded-full text-xl hover:scale-110 transition-transform">💜</button>
+          </div>
+         </div>
+        </div>
+        
+        <!-- Save Button -->
+        <button onclick="saveJournal()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg">
+         💾 Simpan Jurnal
+        </button>
+        
+        <!-- Previous Entries -->
         <div class="mt-8">
-         <h3 class="font-bold text-gray-700 mb-4">📖 Jurnal Sebelumnya</h3>
+         <h3 class="font-bold text-gray-700 mb-4 flex items-center gap-2"><span class="text-2xl">📖</span> Jurnal Sebelumnya</h3>
          <div id="journal-list" class="space-y-3 max-h-64 overflow-y-auto scroll-container">
           <p class="text-gray-500 text-center">Belum ada jurnal tersimpan</p>
          </div>
         </div>
        </div>
       </div>
-     </div><!-- Garden Screen -->
+     </div>
+
+     <!-- ========== GARDEN SCREEN ========== -->
      <div id="screen-garden" class="screen hidden">
       <div class="max-w-3xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-green-700 mb-6">🌱 Taman Karakter</h2>
-        <p class="text-center text-gray-600 mb-6">Tanamanmu tumbuh sesuai bintang yang kamu kumpulkan!</p><!-- Garden Grid -->
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-green-200">
+        <h2 class="text-3xl font-bold text-center text-green-700 mb-6">🌱 Taman Karakter</h2>
+        <p class="text-center text-gray-600 mb-6">Tanamanmu tumbuh sesuai bintang yang kamu kumpulkan!</p>
+        
+        <!-- Garden Grid -->
         <div class="grid grid-cols-3 gap-4 mb-6">
          <div class="text-center p-4 bg-green-50 rounded-2xl">
-          <div id="plant-1" class="text-5xl">
-           🌱
-          </div>
-          <p class="text-sm mt-2 text-green-600">Disiplin</p>
+          <div id="plant-1" class="text-5xl mb-2">🌱</div>
+          <p class="text-sm font-medium text-green-700">Disiplin</p>
+          <div class="flex justify-center gap-1 mt-2" id="garden-stars-1"></div>
          </div>
          <div class="text-center p-4 bg-green-50 rounded-2xl">
-          <div id="plant-2" class="text-5xl">
-           🌱
-          </div>
-          <p class="text-sm mt-2 text-green-600">Tanggung Jawab</p>
+          <div id="plant-2" class="text-5xl mb-2">🌱</div>
+          <p class="text-sm font-medium text-green-700">Tanggung Jawab</p>
+          <div class="flex justify-center gap-1 mt-2" id="garden-stars-2"></div>
          </div>
          <div class="text-center p-4 bg-green-50 rounded-2xl">
-          <div id="plant-3" class="text-5xl">
-           🌱
-          </div>
-          <p class="text-sm mt-2 text-green-600">Kerja Sama</p>
+          <div id="plant-3" class="text-5xl mb-2">🌱</div>
+          <p class="text-sm font-medium text-green-700">Kerja Sama</p>
+          <div class="flex justify-center gap-1 mt-2" id="garden-stars-3"></div>
          </div>
          <div class="text-center p-4 bg-green-50 rounded-2xl">
-          <div id="plant-4" class="text-5xl">
-           🌱
-          </div>
-          <p class="text-sm mt-2 text-green-600">Sopan Santun</p>
+          <div id="plant-4" class="text-5xl mb-2">🌱</div>
+          <p class="text-sm font-medium text-green-700">Sopan Santun</p>
+          <div class="flex justify-center gap-1 mt-2" id="garden-stars-4"></div>
          </div>
          <div class="text-center p-4 bg-green-50 rounded-2xl">
-          <div id="plant-5" class="text-5xl">
-           🌱
-          </div>
-          <p class="text-sm mt-2 text-green-600">Toleransi</p>
+          <div id="plant-5" class="text-5xl mb-2">🌱</div>
+          <p class="text-sm font-medium text-green-700">Toleransi</p>
+          <div class="flex justify-center gap-1 mt-2" id="garden-stars-5"></div>
          </div>
          <div class="text-center p-4 bg-green-50 rounded-2xl">
-          <div id="plant-6" class="text-5xl">
-           🌱
-          </div>
-          <p class="text-sm mt-2 text-green-600">Jujur</p>
+          <div id="plant-6" class="text-5xl mb-2">🌱</div>
+          <p class="text-sm font-medium text-green-700">Jujur</p>
+          <div class="flex justify-center gap-1 mt-2" id="garden-stars-6"></div>
          </div>
         </div>
-        <div class="text-center bg-yellow-100 rounded-2xl p-4">
-         <p class="text-yellow-700">🌟 Total Bintang: <span id="garden-stars" class="font-bold">0</span></p>
-         <p class="text-sm text-yellow-600">Kumpulkan bintang untuk menumbuhkan tanamanmu!</p>
+        
+        <!-- Garden Stats -->
+        <div class="text-center bg-gradient-to-r from-green-100 to-emerald-100 rounded-2xl p-6">
+         <p class="text-3xl text-green-700">🌟 <span id="garden-stars-total" class="font-bold">0</span></p>
+         <p class="text-sm text-green-600 mt-1">Total Bintang Karakter</p>
+         <div class="mt-3 text-xs text-gray-600">
+          <p>🌱 Kecambah (0-2 bintang) | 🌿 Tumbuh (3-5) | 🌳 Besar (6+)</p>
+         </div>
         </div>
        </div>
       </div>
-     </div><!-- Comic Generator Screen -->
+     </div>
+
+     <!-- ========== COMIC GENERATOR ========== -->
      <div id="screen-comic" class="screen hidden">
       <div class="max-w-4xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-pink-700 mb-6">🎨 Komik Generator</h2>
-        <p class="text-center text-gray-600 mb-6">Buat komik tentang karakter baikmu!</p><!-- Comic Panels -->
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-pink-200">
+        <h2 class="text-3xl font-bold text-center text-pink-700 mb-6">🎨 Komik Generator</h2>
+        <p class="text-center text-gray-600 mb-6">Buat komik tentang karakter baikmu!</p>
+        
+        <!-- Comic Panels -->
         <div class="grid grid-cols-3 gap-4 mb-6">
-         <div class="comic-panel bg-gray-100 rounded-xl p-4 min-h-[200px] relative">
-          <div class="absolute top-2 left-2 bg-pink-500 text-white text-xs px-2 py-1 rounded">
-           Panel 1
-          </div><select id="comic-bg-1" class="w-full mt-6 p-2 rounded border" onchange="updateComicPanel(1)"> <option value="🏫">🏫 Sekolah</option> <option value="🏠">🏠 Rumah</option> <option value="🌳">🌳 Taman</option> <option value="🏪">🏪 Pasar</option> </select> <select id="comic-char-1" class="w-full mt-2 p-2 rounded border" onchange="updateComicPanel(1)"> <option value="👦">👦 Anak Laki-laki</option> <option value="👧">👧 Anak Perempuan</option> <option value="👨‍🏫">👨‍🏫 Guru</option> <option value="👩">👩 Ibu</option> </select> <input type="text" id="comic-text-1" class="w-full mt-2 p-2 rounded border text-sm" placeholder="Dialog..." onchange="updateComicPanel(1)">
-          <div id="comic-preview-1" class="mt-2 text-center text-3xl">
-           🏫👦
+         <!-- Panel 1 -->
+         <div class="comic-panel bg-gray-100 rounded-xl p-4 min-h-[250px] relative border-2 border-pink-200">
+          <div class="absolute top-2 left-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-full">Panel 1</div>
+          <div class="mt-6">
+           <label class="block text-xs text-gray-600 mb-1">Latar</label>
+           <select id="comic-bg-1" class="w-full p-2 rounded border text-sm mb-2" onchange="updateComicPreview()">
+            <option value="🏫">🏫 Sekolah</option>
+            <option value="🏠">🏠 Rumah</option>
+            <option value="🌳">🌳 Taman</option>
+            <option value="🏪">🏪 Pasar</option>
+            <option value="🕌">🕌 Masjid</option>
+            <option value="⛪">⛪ Gereja</option>
+           </select>
+           <label class="block text-xs text-gray-600 mb-1">Karakter</label>
+           <select id="comic-char-1" class="w-full p-2 rounded border text-sm mb-2" onchange="updateComicPreview()">
+            <option value="👦">👦 Anak Laki-laki</option>
+            <option value="👧">👧 Anak Perempuan</option>
+            <option value="👨‍🏫">👨‍🏫 Guru</option>
+            <option value="👩">👩 Ibu</option>
+            <option value="👴">👴 Kakek</option>
+            <option value="👵">👵 Nenek</option>
+           </select>
+           <label class="block text-xs text-gray-600 mb-1">Dialog</label>
+           <input type="text" id="comic-text-1" class="w-full p-2 rounded border text-sm" placeholder="Ayo jujur..." onchange="updateComicPreview()">
+           <div id="comic-preview-1" class="mt-2 text-center text-4xl">🏫👦</div>
           </div>
          </div>
-         <div class="comic-panel bg-gray-100 rounded-xl p-4 min-h-[200px] relative">
-          <div class="absolute top-2 left-2 bg-pink-500 text-white text-xs px-2 py-1 rounded">
-           Panel 2
-          </div><select id="comic-bg-2" class="w-full mt-6 p-2 rounded border" onchange="updateComicPanel(2)"> <option value="🏫">🏫 Sekolah</option> <option value="🏠">🏠 Rumah</option> <option value="🌳">🌳 Taman</option> <option value="🏪">🏪 Pasar</option> </select> <select id="comic-char-2" class="w-full mt-2 p-2 rounded border" onchange="updateComicPanel(2)"> <option value="👦">👦 Anak Laki-laki</option> <option value="👧">👧 Anak Perempuan</option> <option value="👨‍🏫">👨‍🏫 Guru</option> <option value="👩">👩 Ibu</option> </select> <input type="text" id="comic-text-2" class="w-full mt-2 p-2 rounded border text-sm" placeholder="Dialog..." onchange="updateComicPanel(2)">
-          <div id="comic-preview-2" class="mt-2 text-center text-3xl">
-           🏫👦
+         
+         <!-- Panel 2 -->
+         <div class="comic-panel bg-gray-100 rounded-xl p-4 min-h-[250px] relative border-2 border-pink-200">
+          <div class="absolute top-2 left-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-full">Panel 2</div>
+          <div class="mt-6">
+           <label class="block text-xs text-gray-600 mb-1">Latar</label>
+           <select id="comic-bg-2" class="w-full p-2 rounded border text-sm mb-2" onchange="updateComicPreview()">
+            <option value="🏫">🏫 Sekolah</option>
+            <option value="🏠">🏠 Rumah</option>
+            <option value="🌳">🌳 Taman</option>
+            <option value="🏪">🏪 Pasar</option>
+            <option value="🕌">🕌 Masjid</option>
+            <option value="⛪">⛪ Gereja</option>
+           </select>
+           <label class="block text-xs text-gray-600 mb-1">Karakter</label>
+           <select id="comic-char-2" class="w-full p-2 rounded border text-sm mb-2" onchange="updateComicPreview()">
+            <option value="👦">👦 Anak Laki-laki</option>
+            <option value="👧">👧 Anak Perempuan</option>
+            <option value="👨‍🏫">👨‍🏫 Guru</option>
+            <option value="👩">👩 Ibu</option>
+            <option value="👴">👴 Kakek</option>
+            <option value="👵">👵 Nenek</option>
+           </select>
+           <label class="block text-xs text-gray-600 mb-1">Dialog</label>
+           <input type="text" id="comic-text-2" class="w-full p-2 rounded border text-sm" placeholder="Maafkan aku..." onchange="updateComicPreview()">
+           <div id="comic-preview-2" class="mt-2 text-center text-4xl">🏫👦</div>
           </div>
          </div>
-         <div class="comic-panel bg-gray-100 rounded-xl p-4 min-h-[200px] relative">
-          <div class="absolute top-2 left-2 bg-pink-500 text-white text-xs px-2 py-1 rounded">
-           Panel 3
-          </div><select id="comic-bg-3" class="w-full mt-6 p-2 rounded border" onchange="updateComicPanel(3)"> <option value="🏫">🏫 Sekolah</option> <option value="🏠">🏠 Rumah</option> <option value="🌳">🌳 Taman</option> <option value="🏪">🏪 Pasar</option> </select> <select id="comic-char-3" class="w-full mt-2 p-2 rounded border" onchange="updateComicPanel(3)"> <option value="👦">👦 Anak Laki-laki</option> <option value="👧">👧 Anak Perempuan</option> <option value="👨‍🏫">👨‍🏫 Guru</option> <option value="👩">👩 Ibu</option> </select> <input type="text" id="comic-text-3" class="w-full mt-2 p-2 rounded border text-sm" placeholder="Dialog..." onchange="updateComicPanel(3)">
-          <div id="comic-preview-3" class="mt-2 text-center text-3xl">
-           🏫👦
+         
+         <!-- Panel 3 -->
+         <div class="comic-panel bg-gray-100 rounded-xl p-4 min-h-[250px] relative border-2 border-pink-200">
+          <div class="absolute top-2 left-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-full">Panel 3</div>
+          <div class="mt-6">
+           <label class="block text-xs text-gray-600 mb-1">Latar</label>
+           <select id="comic-bg-3" class="w-full p-2 rounded border text-sm mb-2" onchange="updateComicPreview()">
+            <option value="🏫">🏫 Sekolah</option>
+            <option value="🏠">🏠 Rumah</option>
+            <option value="🌳">🌳 Taman</option>
+            <option value="🏪">🏪 Pasar</option>
+            <option value="🕌">🕌 Masjid</option>
+            <option value="⛪">⛪ Gereja</option>
+           </select>
+           <label class="block text-xs text-gray-600 mb-1">Karakter</label>
+           <select id="comic-char-3" class="w-full p-2 rounded border text-sm mb-2" onchange="updateComicPreview()">
+            <option value="👦">👦 Anak Laki-laki</option>
+            <option value="👧">👧 Anak Perempuan</option>
+            <option value="👨‍🏫">👨‍🏫 Guru</option>
+            <option value="👩">👩 Ibu</option>
+            <option value="👴">👴 Kakek</option>
+            <option value="👵">👵 Nenek</option>
+           </select>
+           <label class="block text-xs text-gray-600 mb-1">Dialog</label>
+           <input type="text" id="comic-text-3" class="w-full p-2 rounded border text-sm" placeholder="Terima kasih!" onchange="updateComicPreview()">
+           <div id="comic-preview-3" class="mt-2 text-center text-4xl">🏫👦</div>
           </div>
          </div>
         </div>
+        
+        <!-- Action Buttons -->
         <div class="flex justify-center gap-4">
-         <button onclick="previewComic()" class="bg-pink-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-pink-600 transition-colors"> 👁️ Preview Komik </button> <button onclick="downloadComic()" class="bg-purple-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-purple-600 transition-colors"> 📥 Unduh Komik </button>
+         <button onclick="previewComic()" class="bg-pink-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-pink-600 transition-colors shadow-lg">
+          👁️ Preview
+         </button>
+         <button onclick="downloadComic()" class="bg-purple-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-purple-600 transition-colors shadow-lg">
+          📥 Unduh Komik
+         </button>
+         <button onclick="resetComic()" class="bg-gray-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-600 transition-colors shadow-lg">
+          🔄 Reset
+         </button>
+        </div>
+        
+        <!-- Preview Area -->
+        <div id="comic-full-preview" class="mt-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl hidden">
+         <h3 class="font-bold text-center mb-4">📖 Preview Komik</h3>
+         <div class="grid grid-cols-3 gap-2">
+          <div class="text-center p-2">
+           <div class="text-7xl" id="preview-panel-1">🏫👦</div>
+           <p class="text-sm mt-2" id="preview-text-1"></p>
+          </div>
+          <div class="text-center p-2">
+           <div class="text-7xl" id="preview-panel-2">🏫👦</div>
+           <p class="text-sm mt-2" id="preview-text-2"></p>
+          </div>
+          <div class="text-center p-2">
+           <div class="text-7xl" id="preview-panel-3">🏫👦</div>
+           <p class="text-sm mt-2" id="preview-text-3"></p>
+          </div>
+         </div>
         </div>
        </div>
       </div>
-     </div><!-- Expression Game Screen -->
+     </div>
+
+     <!-- ========== EXPRESSION GAME ========== -->
      <div id="screen-expression" class="screen hidden">
       <div class="max-w-2xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-orange-700 mb-6">😊 Tebak Ekspresi</h2>
-        <p class="text-center text-gray-600 mb-6">Tebak karakter dari emoji!</p><!-- Expression Display -->
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-orange-200">
+        <h2 class="text-3xl font-bold text-center text-orange-700 mb-6">😊 Tebak Ekspresi</h2>
+        <p class="text-center text-gray-600 mb-6">Tebak karakter dari emoji!</p>
+        
+        <!-- Score -->
+        <div class="text-right mb-4">
+         <div class="inline-block bg-orange-100 px-4 py-2 rounded-full">
+          <span class="text-xl">⭐</span>
+          <span id="expression-score" class="text-xl font-bold text-orange-600">0</span>
+          <span class="text-gray-600 ml-1">/5</span>
+         </div>
+        </div>
+        
+        <!-- Expression Display -->
         <div class="text-center mb-8">
-         <div id="expression-emoji" class="text-8xl mb-4">
+         <div id="expression-emoji" class="text-8xl mb-4 bg-orange-50 p-8 rounded-3xl inline-block">
           😡📚
          </div>
-         <p class="text-gray-600">Karakter apa yang ditunjukkan?</p>
-        </div><!-- Answer Options -->
+         <p class="text-gray-600 text-lg">Karakter apa yang kurang?</p>
+        </div>
+        
+        <!-- Answer Options -->
         <div id="expression-options" class="grid grid-cols-2 gap-4">
-         <button onclick="checkExpression('disiplin')" class="expression-btn bg-red-50 hover:bg-red-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-red-400"> <span class="text-3xl">⏰</span> <p class="font-semibold mt-2">Kurang Disiplin</p></button> <button onclick="checkExpression('tanggung_jawab')" class="expression-btn bg-green-50 hover:bg-green-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-green-400"> <span class="text-3xl">📚</span> <p class="font-semibold mt-2">Kurang Tanggung Jawab</p></button> <button onclick="checkExpression('sopan')" class="expression-btn bg-blue-50 hover:bg-blue-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-blue-400"> <span class="text-3xl">🙏</span> <p class="font-semibold mt-2">Kurang Sopan</p></button> <button onclick="checkExpression('jujur')" class="expression-btn bg-purple-50 hover:bg-purple-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-purple-400"> <span class="text-3xl">💜</span> <p class="font-semibold mt-2">Kurang Jujur</p></button>
+         <button onclick="checkExpression('disiplin')" class="expression-btn bg-red-50 hover:bg-red-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-red-400">
+          <span class="text-3xl">⏰</span>
+          <p class="font-semibold mt-2">Disiplin</p>
+         </button>
+         <button onclick="checkExpression('tanggung_jawab')" class="expression-btn bg-green-50 hover:bg-green-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-green-400">
+          <span class="text-3xl">📚</span>
+          <p class="font-semibold mt-2">Tanggung Jawab</p>
+         </button>
+         <button onclick="checkExpression('kerja_sama')" class="expression-btn bg-yellow-50 hover:bg-yellow-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-yellow-400">
+          <span class="text-3xl">🤝</span>
+          <p class="font-semibold mt-2">Kerja Sama</p>
+         </button>
+         <button onclick="checkExpression('sopan')" class="expression-btn bg-blue-50 hover:bg-blue-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-blue-400">
+          <span class="text-3xl">🙏</span>
+          <p class="font-semibold mt-2">Sopan Santun</p>
+         </button>
+         <button onclick="checkExpression('toleransi')" class="expression-btn bg-purple-50 hover:bg-purple-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-purple-400">
+          <span class="text-3xl">🌈</span>
+          <p class="font-semibold mt-2">Toleransi</p>
+         </button>
+         <button onclick="checkExpression('jujur')" class="expression-btn bg-indigo-50 hover:bg-indigo-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-indigo-400">
+          <span class="text-3xl">💜</span>
+          <p class="font-semibold mt-2">Jujur</p>
+         </button>
         </div>
-        <div class="mt-6 text-center">
-         <p>Skor: <span id="expression-score" class="font-bold text-orange-600">0</span>/5</p>
-        </div>
-        <div id="expression-feedback" class="mt-4 text-center hidden"></div>
+        
+        <!-- Feedback -->
+        <div id="expression-feedback" class="mt-6 text-center hidden"></div>
+        
+        <!-- Hint -->
+        <div class="mt-4 text-center text-sm text-gray-500" id="expression-hint"></div>
        </div>
       </div>
-     </div><!-- Profile Screen -->
+     </div>
+
+     <!-- ========== PROFILE SCREEN ========== -->
      <div id="screen-profile" class="screen hidden">
       <div class="max-w-2xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">👤 Profil Duta Karakter</h2><!-- Avatar Display -->
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-purple-200">
+        <h2 class="text-3xl font-bold text-center text-purple-700 mb-6">👤 Profil Duta Karakter</h2>
+        
+        <!-- Avatar Display -->
         <div class="text-center mb-6">
-         <div id="profile-avatar" class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center text-6xl">
+         <div id="profile-avatar" class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center text-6xl border-4 border-white shadow-xl">
           🧒
          </div>
-         <h3 id="profile-name" class="text-xl font-bold mt-4">Nama Siswa</h3>
-         <p id="profile-class" class="text-gray-600">Kelas - Sekolah</p>
-        </div><!-- Stats -->
+         <h3 id="profile-name" class="text-2xl font-bold mt-4">Nama Siswa</h3>
+         <p id="profile-class" class="text-gray-600 text-lg">Kelas - Sekolah</p>
+         <div class="mt-2 flex justify-center gap-1">
+          <span class="text-2xl" id="profile-pet">🦜</span>
+         </div>
+        </div>
+        
+        <!-- Stats -->
         <div class="grid grid-cols-2 gap-4 mb-6">
-         <div class="bg-yellow-50 rounded-xl p-4 text-center">
+         <div class="bg-gradient-to-br from-yellow-100 to-amber-100 rounded-xl p-4 text-center shadow-md">
           <span class="text-3xl">🌟</span>
-          <p class="text-2xl font-bold text-yellow-600" id="profile-stars">0</p>
+          <p class="text-3xl font-bold text-amber-700" id="profile-stars">0</p>
           <p class="text-sm text-gray-600">Total Bintang</p>
          </div>
-         <div class="bg-green-50 rounded-xl p-4 text-center">
+         <div class="bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl p-4 text-center shadow-md">
           <span class="text-3xl">🏝️</span>
-          <p class="text-2xl font-bold text-green-600" id="profile-islands">0/6</p>
+          <p class="text-3xl font-bold text-green-700" id="profile-islands">0/6</p>
           <p class="text-sm text-gray-600">Pulau Selesai</p>
          </div>
-        </div><!-- Character Progress -->
-        <div class="space-y-3">
-         <h3 class="font-bold text-gray-700">📊 Progress Karakter</h3>
+        </div>
+        
+        <!-- Character Progress -->
+        <div class="space-y-4">
+         <h3 class="font-bold text-gray-700 text-lg mb-4">📊 Progress Karakter</h3>
+         
          <div class="flex items-center gap-3">
-          <span class="w-24 text-sm">Disiplin</span>
-          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+          <span class="w-24 text-sm font-medium">Disiplin</span>
+          <div class="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
            <div id="prog-disiplin" class="h-full bg-red-500 progress-fill" style="width: 0%"></div>
           </div>
+          <span id="prog-disiplin-text" class="text-sm">0/6</span>
          </div>
+         
          <div class="flex items-center gap-3">
-          <span class="w-24 text-sm">Tanggung Jawab</span>
-          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+          <span class="w-24 text-sm font-medium">Tanggung Jawab</span>
+          <div class="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
            <div id="prog-tanggung" class="h-full bg-green-500 progress-fill" style="width: 0%"></div>
           </div>
+          <span id="prog-tanggung-text" class="text-sm">0/6</span>
          </div>
+         
          <div class="flex items-center gap-3">
-          <span class="w-24 text-sm">Kerja Sama</span>
-          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+          <span class="w-24 text-sm font-medium">Kerja Sama</span>
+          <div class="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
            <div id="prog-kerjasama" class="h-full bg-yellow-500 progress-fill" style="width: 0%"></div>
           </div>
+          <span id="prog-kerjasama-text" class="text-sm">0/6</span>
          </div>
+         
          <div class="flex items-center gap-3">
-          <span class="w-24 text-sm">Sopan Santun</span>
-          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+          <span class="w-24 text-sm font-medium">Sopan Santun</span>
+          <div class="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
            <div id="prog-sopan" class="h-full bg-blue-500 progress-fill" style="width: 0%"></div>
           </div>
+          <span id="prog-sopan-text" class="text-sm">0/6</span>
          </div>
+         
          <div class="flex items-center gap-3">
-          <span class="w-24 text-sm">Toleransi</span>
-          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+          <span class="w-24 text-sm font-medium">Toleransi</span>
+          <div class="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
            <div id="prog-toleransi" class="h-full bg-purple-500 progress-fill" style="width: 0%"></div>
           </div>
+          <span id="prog-toleransi-text" class="text-sm">0/6</span>
          </div>
+         
          <div class="flex items-center gap-3">
-          <span class="w-24 text-sm">Jujur</span>
-          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+          <span class="w-24 text-sm font-medium">Jujur</span>
+          <div class="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
            <div id="prog-jujur" class="h-full bg-indigo-500 progress-fill" style="width: 0%"></div>
           </div>
+          <span id="prog-jujur-text" class="text-sm">0/6</span>
          </div>
         </div>
+        
+        <!-- Logout Button -->
+        <button onclick="logout()" class="w-full mt-6 bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition-colors text-sm">
+         🔒 Keluar
+        </button>
        </div>
       </div>
-     </div><!-- Posttest Screen -->
+     </div>
+
+     <!-- ========== POSTTEST SCREEN ========== -->
      <div id="screen-posttest" class="screen hidden">
       <div class="max-w-2xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-green-700 mb-2">📊 Posttest</h2>
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-green-200">
+        <h2 class="text-3xl font-bold text-center text-green-700 mb-2">📊 Posttest</h2>
         <p class="text-center text-gray-600 mb-6">Selamat! Kamu sudah menyelesaikan semua pulau! Jawab pertanyaan berikut:</p>
-        <div id="posttest-questions" class="space-y-6">
+        
+        <div id="posttest-questions" class="space-y-6 max-h-[400px] overflow-y-auto scroll-container pr-2">
          <!-- Questions will be generated by JS -->
         </div>
+        
         <div class="flex justify-between items-center mt-8">
-         <span id="posttest-progress" class="text-gray-600">Pertanyaan 1/12</span> <button onclick="submitPosttest()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg"> Selesai ✅ </button>
+         <span id="posttest-progress" class="text-gray-600 font-medium">Pertanyaan 1/12</span>
+         <button onclick="submitPosttest()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg">
+          Selesai ✅
+         </button>
         </div>
        </div>
       </div>
-     </div><!-- Results Comparison Screen -->
+     </div>
+
+     <!-- ========== RESULTS SCREEN ========== -->
      <div id="screen-results" class="screen hidden">
       <div class="max-w-3xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">🏆 Hasil Perbandingan</h2>
-        <div id="results-comparison" class="space-y-4">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-purple-200">
+        <h2 class="text-3xl font-bold text-center text-purple-700 mb-6">🏆 Hasil Perbandingan</h2>
+        
+        <div id="results-comparison" class="space-y-4 max-h-96 overflow-y-auto scroll-container">
          <!-- Results will be generated by JS -->
-        </div><button onclick="showScreen('student-response')" class="w-full mt-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> 📝 Isi Angket Respon </button>
+        </div>
+        
+        <!-- Improvement Summary -->
+        <div class="mt-6 bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-xl">
+         <h3 class="font-bold text-center text-xl mb-4">📈 Ringkasan Peningkatan</h3>
+         <div class="grid grid-cols-2 gap-4 text-center">
+          <div>
+           <p class="text-sm text-gray-600">Pretest Total</p>
+           <p id="result-pretest-total" class="text-2xl font-bold text-gray-700">0</p>
+          </div>
+          <div>
+           <p class="text-sm text-gray-600">Posttest Total</p>
+           <p id="result-posttest-total" class="text-2xl font-bold text-gray-700">0</p>
+          </div>
+          <div class="col-span-2">
+           <p class="text-sm text-gray-600">Peningkatan</p>
+           <p id="result-improvement" class="text-3xl font-bold text-green-600">+0%</p>
+          </div>
+         </div>
+        </div>
+        
+        <button onclick="showScreen('student-response')" class="w-full mt-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg">
+         📝 Isi Angket Respon
+        </button>
        </div>
       </div>
-     </div><!-- Student Response Screen -->
+     </div>
+
+     <!-- ========== STUDENT RESPONSE SCREEN ========== -->
      <div id="screen-student-response" class="screen hidden">
       <div class="max-w-2xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">📝 Angket Respon Siswa</h2>
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-purple-200">
+        <h2 class="text-3xl font-bold text-center text-purple-700 mb-6">📝 Angket Respon Siswa</h2>
+        
         <div class="space-y-6">
+         <!-- Question 1 -->
          <div class="bg-purple-50 rounded-xl p-4">
-          <p class="font-semibold mb-3">😊 Apakah kamu senang bermain Smart Edukultur?</p>
-          <div class="flex justify-center gap-4">
-           <button onclick="setResponse('q1', 3)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q1">😄</button> <button onclick="setResponse('q1', 2)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q1">😐</button> <button onclick="setResponse('q1', 1)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q1">😢</button>
+          <p class="font-semibold mb-3 text-lg">😊 Apakah kamu senang bermain Smart Edukultur?</p>
+          <div class="flex justify-center gap-6">
+           <button onclick="setResponse('q1', 3)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-green-200 transition-all" data-question="q1">😄</button>
+           <button onclick="setResponse('q1', 2)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-yellow-200 transition-all" data-question="q1">😐</button>
+           <button onclick="setResponse('q1', 1)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-red-200 transition-all" data-question="q1">😢</button>
           </div>
          </div>
+         
+         <!-- Question 2 -->
          <div class="bg-blue-50 rounded-xl p-4">
-          <p class="font-semibold mb-3">🎮 Apakah game-nya mudah dimainkan?</p>
-          <div class="flex justify-center gap-4">
-           <button onclick="setResponse('q2', 3)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q2">👍</button> <button onclick="setResponse('q2', 2)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q2">🤔</button> <button onclick="setResponse('q2', 1)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q2">👎</button>
+          <p class="font-semibold mb-3 text-lg">🎮 Apakah game-nya mudah dimainkan?</p>
+          <div class="flex justify-center gap-6">
+           <button onclick="setResponse('q2', 3)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-green-200 transition-all" data-question="q2">👍</button>
+           <button onclick="setResponse('q2', 2)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-yellow-200 transition-all" data-question="q2">🤔</button>
+           <button onclick="setResponse('q2', 1)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-red-200 transition-all" data-question="q2">👎</button>
           </div>
          </div>
+         
+         <!-- Question 3 -->
          <div class="bg-green-50 rounded-xl p-4">
-          <p class="font-semibold mb-3">📚 Apakah kamu lebih paham tentang karakter baik?</p>
-          <div class="flex justify-center gap-4">
-           <button onclick="setResponse('q3', 3)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q3">🌟</button> <button onclick="setResponse('q3', 2)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q3">⭐</button> <button onclick="setResponse('q3', 1)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q3">✨</button>
+          <p class="font-semibold mb-3 text-lg">📚 Apakah kamu lebih paham tentang karakter baik?</p>
+          <div class="flex justify-center gap-6">
+           <button onclick="setResponse('q3', 3)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-green-200 transition-all" data-question="q3">🌟</button>
+           <button onclick="setResponse('q3', 2)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-yellow-200 transition-all" data-question="q3">⭐</button>
+           <button onclick="setResponse('q3', 1)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-red-200 transition-all" data-question="q3">✨</button>
           </div>
          </div>
+         
+         <!-- Question 4 -->
          <div class="bg-yellow-50 rounded-xl p-4">
-          <p class="font-semibold mb-3">🔄 Apakah kamu ingin main lagi?</p>
-          <div class="flex justify-center gap-4">
-           <button onclick="setResponse('q4', 3)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q4">❤️</button> <button onclick="setResponse('q4', 2)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q4">💛</button> <button onclick="setResponse('q4', 1)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q4">💔</button>
+          <p class="font-semibold mb-3 text-lg">🔄 Apakah kamu ingin main lagi?</p>
+          <div class="flex justify-center gap-6">
+           <button onclick="setResponse('q4', 3)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-green-200 transition-all" data-question="q4">❤️</button>
+           <button onclick="setResponse('q4', 2)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-yellow-200 transition-all" data-question="q4">💛</button>
+           <button onclick="setResponse('q4', 1)" class="response-btn emoji-btn text-5xl p-2 rounded-lg hover:bg-red-200 transition-all" data-question="q4">💔</button>
           </div>
          </div>
+         
+         <!-- Question 5 -->
          <div class="bg-pink-50 rounded-xl p-4">
-          <p class="font-semibold mb-3">⭐ Fitur favoritmu?</p>
-          <div class="flex flex-wrap justify-center gap-2">
-           <button onclick="setResponse('q5', 'game')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500" data-question="q5">🎮 Game</button> <button onclick="setResponse('q5', 'jurnal')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500" data-question="q5">📔 Jurnal</button> <button onclick="setResponse('q5', 'taman')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500" data-question="q5">🌱 Taman</button> <button onclick="setResponse('q5', 'komik')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500" data-question="q5">🎨 Komik</button>
+          <p class="font-semibold mb-3 text-lg">⭐ Fitur apa yang paling kamu suka?</p>
+          <div class="flex flex-wrap justify-center gap-3">
+           <button onclick="setResponse('q5', 'game')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500 hover:bg-pink-50 transition-all" data-question="q5">🎮 Game</button>
+           <button onclick="setResponse('q5', 'jurnal')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500 hover:bg-pink-50 transition-all" data-question="q5">📔 Jurnal</button>
+           <button onclick="setResponse('q5', 'taman')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500 hover:bg-pink-50 transition-all" data-question="q5">🌱 Taman</button>
+           <button onclick="setResponse('q5', 'komik')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500 hover:bg-pink-50 transition-all" data-question="q5">🎨 Komik</button>
+           <button onclick="setResponse('q5', 'tebak')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500 hover:bg-pink-50 transition-all" data-question="q5">😊 Tebak</button>
+           <button onclick="setResponse('q5', 'profil')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500 hover:bg-pink-50 transition-all" data-question="q5">👤 Profil</button>
           </div>
          </div>
-        </div><button onclick="submitStudentResponse()" class="w-full mt-8 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> ✅ Kirim Angket </button>
+        </div>
+        
+        <button onclick="submitStudentResponse()" class="w-full mt-8 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg">
+         ✅ Kirim Angket
+        </button>
+        
+        <p id="response-error" class="text-red-500 text-center mt-3 hidden">⚠️ Pilih semua jawaban!</p>
        </div>
       </div>
-     </div><!-- Validator Mode Screen -->
+     </div>
+
+     <!-- ========== VALIDATOR MODE SCREEN ========== -->
      <div id="screen-validator" class="screen hidden">
       <div class="max-w-3xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6">🔬 Mode Validator</h2>
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-indigo-200">
+        <h2 class="text-3xl font-bold text-center text-indigo-700 mb-6">🔬 Mode Validator</h2>
+        
         <div class="grid md:grid-cols-2 gap-6">
          <!-- Material Validation -->
          <div class="bg-indigo-50 rounded-xl p-6">
-          <h3 class="font-bold text-indigo-700 mb-4">📚 Validasi Materi</h3>
-          <div class="space-y-4">
+          <h3 class="font-bold text-indigo-700 mb-4 flex items-center gap-2"><span class="text-2xl">📚</span> Validasi Materi</h3>
+          <div class="space-y-6">
            <div>
-            <label class="block text-sm mb-2">Kesesuaian Materi dengan Kurikulum</label> <input type="range" id="val-materi-1" min="1" max="5" value="3" class="w-full">
-            <div class="flex justify-between text-xs text-gray-500"><span>1</span><span>5</span>
+            <label class="block text-sm mb-2 font-medium">Kesesuaian Materi dengan Kurikulum</label>
+            <input type="range" id="val-materi-1" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+             <span>1 (Kurang)</span>
+             <span>5 (Sangat Baik)</span>
             </div>
            </div>
            <div>
-            <label class="block text-sm mb-2">Kejelasan Nilai Karakter</label> <input type="range" id="val-materi-2" min="1" max="5" value="3" class="w-full">
-            <div class="flex justify-between text-xs text-gray-500"><span>1</span><span>5</span>
+            <label class="block text-sm mb-2 font-medium">Kejelasan Nilai Karakter</label>
+            <input type="range" id="val-materi-2" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+             <span>1 (Kurang)</span>
+             <span>5 (Sangat Baik)</span>
             </div>
            </div>
            <div>
-            <label class="block text-sm mb-2">Kesesuaian Bahasa untuk Anak SD</label> <input type="range" id="val-materi-3" min="1" max="5" value="3" class="w-full">
-            <div class="flex justify-between text-xs text-gray-500"><span>1</span><span>5</span>
-            </div>
-           </div>
-          </div>
-         </div><!-- Media Validation -->
-         <div class="bg-purple-50 rounded-xl p-6">
-          <h3 class="font-bold text-purple-700 mb-4">🎨 Validasi Media</h3>
-          <div class="space-y-4">
-           <div>
-            <label class="block text-sm mb-2">Tampilan Visual</label> <input type="range" id="val-media-1" min="1" max="5" value="3" class="w-full">
-            <div class="flex justify-between text-xs text-gray-500"><span>1</span><span>5</span>
-            </div>
-           </div>
-           <div>
-            <label class="block text-sm mb-2">Kemudahan Navigasi</label> <input type="range" id="val-media-2" min="1" max="5" value="3" class="w-full">
-            <div class="flex justify-between text-xs text-gray-500"><span>1</span><span>5</span>
-            </div>
-           </div>
-           <div>
-            <label class="block text-sm mb-2">Interaktivitas</label> <input type="range" id="val-media-3" min="1" max="5" value="3" class="w-full">
-            <div class="flex justify-between text-xs text-gray-500"><span>1</span><span>5</span>
+            <label class="block text-sm mb-2 font-medium">Kesesuaian Bahasa untuk Anak SD</label>
+            <input type="range" id="val-materi-3" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+             <span>1 (Kurang)</span>
+             <span>5 (Sangat Baik)</span>
             </div>
            </div>
           </div>
          </div>
-        </div><!-- Suggestions -->
+         
+         <!-- Media Validation -->
+         <div class="bg-purple-50 rounded-xl p-6">
+          <h3 class="font-bold text-purple-700 mb-4 flex items-center gap-2"><span class="text-2xl">🎨</span> Validasi Media</h3>
+          <div class="space-y-6">
+           <div>
+            <label class="block text-sm mb-2 font-medium">Tampilan Visual</label>
+            <input type="range" id="val-media-1" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+             <span>1 (Kurang)</span>
+             <span>5 (Sangat Baik)</span>
+            </div>
+           </div>
+           <div>
+            <label class="block text-sm mb-2 font-medium">Kemudahan Navigasi</label>
+            <input type="range" id="val-media-2" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+             <span>1 (Sulit)</span>
+             <span>5 (Sangat Mudah)</span>
+            </div>
+           </div>
+           <div>
+            <label class="block text-sm mb-2 font-medium">Interaktivitas</label>
+            <input type="range" id="val-media-3" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+             <span>1 (Kurang)</span>
+             <span>5 (Sangat Interaktif)</span>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        
+        <!-- Suggestions -->
         <div class="mt-6">
-         <label class="block font-bold text-gray-700 mb-2">💬 Saran dan Masukan</label> <textarea id="validator-suggestions" class="w-full h-32 p-4 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none resize-none" placeholder="Tuliskan saran Anda..."></textarea>
-        </div><button onclick="submitValidation()" class="w-full mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> 📤 Kirim Validasi </button>
+         <label class="block font-bold text-gray-700 mb-2 text-lg">💬 Saran dan Masukan</label>
+         <textarea id="validator-suggestions" class="w-full h-32 p-4 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none resize-none" placeholder="Tuliskan saran Anda..."></textarea>
+        </div>
+        
+        <!-- Submit Button -->
+        <button onclick="submitValidation()" class="w-full mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg">
+         📤 Kirim Validasi
+        </button>
        </div>
       </div>
-     </div><!-- Teacher Dashboard Screen -->
+     </div>
+
+     <!-- ========== TEACHER DASHBOARD SCREEN ========== -->
      <div id="screen-dashboard" class="screen hidden">
       <div class="max-w-5xl mx-auto py-8">
-       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
-        <h2 class="text-2xl font-bold text-center text-green-700 mb-6">👨‍🏫 Dashboard Guru</h2><!-- Stats Cards -->
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up border-2 border-green-200">
+        <h2 class="text-3xl font-bold text-center text-green-700 mb-6">👨‍🏫 Dashboard Guru</h2>
+        
+        <!-- Stats Cards -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-         <div class="bg-blue-50 rounded-xl p-4 text-center">
+         <div class="bg-blue-50 rounded-xl p-4 text-center shadow-md">
           <span class="text-3xl">👨‍🎓</span>
-          <p id="dash-students" class="text-2xl font-bold text-blue-600">0</p>
+          <p id="dash-students" class="text-3xl font-bold text-blue-600">0</p>
           <p class="text-sm text-gray-600">Siswa Aktif</p>
          </div>
-         <div class="bg-green-50 rounded-xl p-4 text-center">
+         <div class="bg-green-50 rounded-xl p-4 text-center shadow-md">
           <span class="text-3xl">✅</span>
-          <p id="dash-completed" class="text-2xl font-bold text-green-600">0</p>
+          <p id="dash-completed" class="text-3xl font-bold text-green-600">0</p>
           <p class="text-sm text-gray-600">Selesai Semua</p>
          </div>
-         <div class="bg-yellow-50 rounded-xl p-4 text-center">
+         <div class="bg-yellow-50 rounded-xl p-4 text-center shadow-md">
           <span class="text-3xl">🌟</span>
-          <p id="dash-avg-stars" class="text-2xl font-bold text-yellow-600">0</p>
+          <p id="dash-avg-stars" class="text-3xl font-bold text-yellow-600">0</p>
           <p class="text-sm text-gray-600">Rata-rata Bintang</p>
          </div>
-         <div class="bg-purple-50 rounded-xl p-4 text-center">
+         <div class="bg-purple-50 rounded-xl p-4 text-center shadow-md">
           <span class="text-3xl">📔</span>
-          <p id="dash-journals" class="text-2xl font-bold text-purple-600">0</p>
+          <p id="dash-journals" class="text-3xl font-bold text-purple-600">0</p>
           <p class="text-sm text-gray-600">Total Jurnal</p>
          </div>
-        </div><!-- Student Data Table -->
+        </div>
+        
+        <!-- Student Data Table -->
         <div class="mb-8">
-         <h3 class="font-bold text-gray-700 mb-4">📊 Data Siswa</h3>
-         <div class="overflow-x-auto">
+         <h3 class="font-bold text-gray-700 mb-4 text-lg">📊 Data Siswa</h3>
+         <div class="overflow-x-auto rounded-xl border-2 border-gray-200">
           <table class="w-full text-sm">
            <thead class="bg-gray-100">
             <tr>
-             <th class="p-3 text-left rounded-tl-lg">Nama</th>
+             <th class="p-3 text-left">Nama</th>
              <th class="p-3 text-center">Kelas</th>
              <th class="p-3 text-center">Pretest</th>
              <th class="p-3 text-center">Posttest</th>
+             <th class="p-3 text-center">Peningkatan</th>
              <th class="p-3 text-center">Bintang</th>
-             <th class="p-3 text-center rounded-tr-lg">Status</th>
+             <th class="p-3 text-center">Pulau</th>
             </tr>
            </thead>
            <tbody id="student-table-body">
             <tr>
-             <td colspan="6" class="p-4 text-center text-gray-500">Belum ada data siswa</td>
+             <td colspan="7" class="p-4 text-center text-gray-500">Belum ada data siswa</td>
             </tr>
            </tbody>
           </table>
          </div>
-        </div><!-- Character Progress Chart -->
+        </div>
+        
+        <!-- Character Progress Chart -->
         <div class="mb-8">
-         <h3 class="font-bold text-gray-700 mb-4">📈 Rata-rata Peningkatan per Karakter</h3>
-         <div id="character-chart" class="grid grid-cols-6 gap-2">
+         <h3 class="font-bold text-gray-700 mb-4 text-lg">📈 Rata-rata Peningkatan per Karakter</h3>
+         <div id="character-chart" class="grid grid-cols-6 gap-2 h-64 items-end">
           <div class="text-center">
-           <div class="h-32 bg-red-100 rounded-t-lg relative overflow-hidden">
+           <div class="h-48 bg-red-100 rounded-t-lg relative overflow-hidden">
             <div id="chart-disiplin" class="absolute bottom-0 w-full bg-red-500 transition-all" style="height: 0%"></div>
            </div>
-           <p class="text-xs mt-1">Disiplin</p>
+           <p class="text-xs mt-1 font-medium">Disiplin</p>
           </div>
           <div class="text-center">
-           <div class="h-32 bg-green-100 rounded-t-lg relative overflow-hidden">
+           <div class="h-48 bg-green-100 rounded-t-lg relative overflow-hidden">
             <div id="chart-tanggung" class="absolute bottom-0 w-full bg-green-500 transition-all" style="height: 0%"></div>
            </div>
-           <p class="text-xs mt-1">T.Jawab</p>
+           <p class="text-xs mt-1 font-medium">T.Jawab</p>
           </div>
           <div class="text-center">
-           <div class="h-32 bg-yellow-100 rounded-t-lg relative overflow-hidden">
+           <div class="h-48 bg-yellow-100 rounded-t-lg relative overflow-hidden">
             <div id="chart-kerjasama" class="absolute bottom-0 w-full bg-yellow-500 transition-all" style="height: 0%"></div>
            </div>
-           <p class="text-xs mt-1">K.Sama</p>
+           <p class="text-xs mt-1 font-medium">K.Sama</p>
           </div>
           <div class="text-center">
-           <div class="h-32 bg-blue-100 rounded-t-lg relative overflow-hidden">
+           <div class="h-48 bg-blue-100 rounded-t-lg relative overflow-hidden">
             <div id="chart-sopan" class="absolute bottom-0 w-full bg-blue-500 transition-all" style="height: 0%"></div>
            </div>
-           <p class="text-xs mt-1">Sopan</p>
+           <p class="text-xs mt-1 font-medium">Sopan</p>
           </div>
           <div class="text-center">
-           <div class="h-32 bg-purple-100 rounded-t-lg relative overflow-hidden">
+           <div class="h-48 bg-purple-100 rounded-t-lg relative overflow-hidden">
             <div id="chart-toleransi" class="absolute bottom-0 w-full bg-purple-500 transition-all" style="height: 0%"></div>
            </div>
-           <p class="text-xs mt-1">Toleransi</p>
+           <p class="text-xs mt-1 font-medium">Toleransi</p>
           </div>
           <div class="text-center">
-           <div class="h-32 bg-indigo-100 rounded-t-lg relative overflow-hidden">
+           <div class="h-48 bg-indigo-100 rounded-t-lg relative overflow-hidden">
             <div id="chart-jujur" class="absolute bottom-0 w-full bg-indigo-500 transition-all" style="height: 0%"></div>
            </div>
-           <p class="text-xs mt-1">Jujur</p>
+           <p class="text-xs mt-1 font-medium">Jujur</p>
           </div>
          </div>
-        </div><!-- Teacher Response Form -->
+        </div>
+        
+        <!-- Teacher Response Form -->
         <div class="bg-gray-50 rounded-xl p-6 mb-6">
-         <h3 class="font-bold text-gray-700 mb-4">📝 Angket Respon Guru</h3>
-         <div class="grid md:grid-cols-2 gap-4">
+         <h3 class="font-bold text-gray-700 mb-4 text-lg">📝 Angket Respon Guru</h3>
+         <div class="grid md:grid-cols-2 gap-6">
           <div>
-           <label class="block text-sm mb-2">Kemudahan Penggunaan (1-5)</label> <input type="range" id="teacher-q1" min="1" max="5" value="3" class="w-full">
+           <label class="block text-sm mb-2 font-medium">Kemudahan Penggunaan (1-5)</label>
+           <input type="range" id="teacher-q1" min="1" max="5" value="3" class="w-full">
+           <div class="flex justify-between text-xs text-gray-500">
+            <span>1</span><span>5</span>
+           </div>
           </div>
           <div>
-           <label class="block text-sm mb-2">Kesesuaian dengan Pembelajaran (1-5)</label> <input type="range" id="teacher-q2" min="1" max="5" value="3" class="w-full">
+           <label class="block text-sm mb-2 font-medium">Kesesuaian dengan Pembelajaran (1-5)</label>
+           <input type="range" id="teacher-q2" min="1" max="5" value="3" class="w-full">
+           <div class="flex justify-between text-xs text-gray-500">
+            <span>1</span><span>5</span>
+           </div>
           </div>
           <div>
-           <label class="block text-sm mb-2">Antusiasme Siswa (1-5)</label> <input type="range" id="teacher-q3" min="1" max="5" value="3" class="w-full">
+           <label class="block text-sm mb-2 font-medium">Antusiasme Siswa (1-5)</label>
+           <input type="range" id="teacher-q3" min="1" max="5" value="3" class="w-full">
+           <div class="flex justify-between text-xs text-gray-500">
+            <span>1</span><span>5</span>
+           </div>
           </div>
           <div>
-           <label class="block text-sm mb-2">Kebermanfaatan (1-5)</label> <input type="range" id="teacher-q4" min="1" max="5" value="3" class="w-full">
+           <label class="block text-sm mb-2 font-medium">Kebermanfaatan (1-5)</label>
+           <input type="range" id="teacher-q4" min="1" max="5" value="3" class="w-full">
+           <div class="flex justify-between text-xs text-gray-500">
+            <span>1</span><span>5</span>
+           </div>
           </div>
-         </div><button onclick="submitTeacherResponse()" class="mt-4 bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors"> 📤 Kirim Respon </button>
-        </div><!-- Export Buttons -->
+         </div>
+         <button onclick="submitTeacherResponse()" class="mt-4 bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors">
+          📤 Kirim Respon
+         </button>
+        </div>
+        
+        <!-- Export Buttons -->
         <div class="flex justify-center gap-4">
-         <button onclick="exportCSV()" class="bg-blue-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600 transition-colors"> 📊 Ekspor CSV </button> <button onclick="exportPDF()" class="bg-red-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-red-600 transition-colors"> 📄 Ekspor PDF </button>
+         <button onclick="exportCSV()" class="bg-blue-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-lg">
+          📊 Ekspor CSV
+         </button>
+         <button onclick="exportPDF()" class="bg-red-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-red-600 transition-colors shadow-lg">
+          📄 Ekspor PDF
+         </button>
         </div>
        </div>
       </div>
-     </div><!-- Access Code Modal -->
+     </div>
+
+     <!-- ========== ACCESS CODE MODAL ========== -->
      <div id="access-modal" class="hidden fixed inset-0 bg-black/50 modal-overlay flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-2xl p-6 max-w-sm w-full">
-       <h3 class="text-xl font-bold text-center mb-4">🔐 Masukkan Kode Akses</h3><input type="password" id="access-code-input" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-center text-xl tracking-widest" placeholder="••••••••">
+      <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+       <h3 class="text-2xl font-bold text-center mb-4">🔐 Masukkan Kode Akses</h3>
+       
+       <input type="password" id="access-code-input" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-center text-xl tracking-widest" placeholder="••••••••" maxlength="10">
+       
+       <div class="grid grid-cols-3 gap-2 mt-4">
+        <button onclick="addAccessNumber('1')" class="bg-gray-200 p-3 rounded-lg text-xl font-bold hover:bg-gray-300">1</button>
+        <button onclick="addAccessNumber('2')" class="bg-gray-200 p-3 rounded-lg text-xl font-bold hover:bg-gray-300">2</button>
+        <button onclick="addAccessNumber('3')" class="bg-gray-200 p-3 rounded-lg text-xl font-bold hover:bg-gray-300">3</button>
+        <button onclick="addAccessNumber('4')" class="bg-gray-200 p-3 rounded-lg text-xl font-bold hover:bg-gray-300">4</button>
+        <button onclick="addAccessNumber('5')" class="bg-gray-200 p-3 rounded-lg text-xl font-bold hover:bg-gray-300">5</button>
+        <button onclick="addAccessNumber('6')" class="bg-gray-200 p-3 rounded-lg text-xl font-bold hover:bg-gray-300">6</button>
+        <button onclick="addAccessNumber('7')" class="bg-gray-200 p-3 rounded-lg text-xl font-bold hover:bg-gray-300">7</button>
+        <button onclick="addAccessNumber('8')" class="bg-gray-200 p-3 rounded-lg text-xl font-bold hover:bg-gray-300">8</button>
+        <button onclick="addAccessNumber('9')" class="bg-gray-200 p-3 rounded-lg text-xl font-bold hover:bg-gray-300">9</button>
+        <button onclick="addAccessNumber('0')" class="bg-gray-200 p-3 rounded-lg text-xl font-bold hover:bg-gray-300 col-span-2">0</button>
+        <button onclick="clearAccessInput()" class="bg-red-200 p-3 rounded-lg text-xl font-bold hover:bg-red-300">C</button>
+       </div>
+       
        <p id="access-error" class="text-red-500 text-center mt-2 hidden">Kode tidak valid!</p>
+       
        <div class="flex gap-3 mt-4">
-        <button onclick="closeAccessModal()" class="flex-1 px-4 py-2 rounded-xl border-2 border-gray-300 hover:bg-gray-100 transition-colors"> Batal </button> <button onclick="checkAccessCode()" class="flex-1 px-4 py-2 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition-colors"> Masuk </button>
+        <button onclick="closeAccessModal()" class="flex-1 px-4 py-2 rounded-xl border-2 border-gray-300 hover:bg-gray-100 transition-colors">
+         Batal
+        </button>
+        <button onclick="checkAccessCode()" class="flex-1 px-4 py-2 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition-colors">
+         Masuk
+        </button>
        </div>
       </div>
-     </div><!-- Help Modal -->
+     </div>
+
+     <!-- ========== HELP MODAL ========== -->
      <div id="help-modal" class="hidden fixed inset-0 bg-black/50 modal-overlay flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-2xl p-6 max-w-md w-full max-h-[80%] overflow-y-auto scroll-container">
-       <h3 class="text-xl font-bold text-center mb-4">❓ Bantuan</h3>
-       <div class="space-y-4 text-sm">
+       <h3 class="text-2xl font-bold text-center mb-4">❓ Bantuan</h3>
+       
+       <div class="space-y-4">
         <div class="bg-blue-50 rounded-xl p-4">
-         <h4 class="font-bold text-blue-700">🏝️ Cara Bermain</h4>
-         <p class="text-gray-600">Kunjungi 6 pulau dan selesaikan tantangan untuk mengumpulkan pecahan permata karakter!</p>
+         <h4 class="font-bold text-blue-700 text-lg mb-2">🏝️ Cara Bermain</h4>
+         <p class="text-gray-600">Kunjungi 6 pulau dan selesaikan tantangan untuk mengumpulkan pecahan permata karakter! Setiap pulau mengajarkan nilai karakter yang berbeda.</p>
         </div>
+        
         <div class="bg-green-50 rounded-xl p-4">
-         <h4 class="font-bold text-green-700">🌟 Bintang</h4>
-         <p class="text-gray-600">Kumpulkan bintang dengan bermain game dan menumbuhkan Taman Karakter!</p>
+         <h4 class="font-bold text-green-700 text-lg mb-2">🌟 Bintang</h4>
+         <p class="text-gray-600">Kumpulkan bintang dengan bermain game dan menumbuhkan Taman Karakter! Bintang bisa didapat dari:</p>
+         <ul class="list-disc list-inside text-sm text-gray-600 mt-2">
+          <li>Menyelesaikan game dengan baik (1-3 bintang)</li>
+          <li>Menulis jurnal harian (+1 bintang)</li>
+          <li>Bermain Tebak Ekspresi</li>
+         </ul>
         </div>
+        
         <div class="bg-yellow-50 rounded-xl p-4">
-         <h4 class="font-bold text-yellow-700">📔 Jurnal</h4>
-         <p class="text-gray-600">Tulis pengalaman harianmu di Jurnal untuk mendapat bintang bonus!</p>
+         <h4 class="font-bold text-yellow-700 text-lg mb-2">📔 Jurnal Harian</h4>
+         <p class="text-gray-600">Tulis pengalamanmu menerapkan karakter baik setiap hari. Jurnal akan membuat Taman Karaktermu semakin indah!</p>
         </div>
+        
         <div class="bg-purple-50 rounded-xl p-4">
-         <h4 class="font-bold text-purple-700">🎨 Fitur Kreatif</h4>
-         <p class="text-gray-600">Buat komik, main tebak ekspresi, dan rawat Taman Karakter!</p>
+         <h4 class="font-bold text-purple-700 text-lg mb-2">🎨 Fitur Kreatif</h4>
+         <ul class="list-disc list-inside text-sm text-gray-600">
+          <li><strong>Komik Generator</strong> - Buat komik tentang karakter baikmu</li>
+          <li><strong>Tebak Ekspresi</strong> - Tebak karakter dari emoji</li>
+          <li><strong>Taman Karakter</strong> - Tanaman tumbuh sesuai bintangmu</li>
+         </ul>
         </div>
-       </div><button onclick="closeHelpModal()" class="w-full mt-4 px-4 py-2 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition-colors"> Mengerti! 👍 </button>
+        
+        <div class="bg-red-50 rounded-xl p-4">
+         <h4 class="font-bold text-red-700 text-lg mb-2">🔐 Akses Khusus</h4>
+         <p class="text-gray-600">Guru dan peneliti bisa masuk dengan kode:</p>
+         <ul class="list-disc list-inside text-sm text-gray-600 mt-2">
+          <li><strong>VALIDATOR</strong> - Untuk ahli materi/media</li>
+          <li><strong>GURU4JAMBU</strong> - Untuk dashboard guru</li>
+         </ul>
+        </div>
+       </div>
+       
+       <button onclick="closeHelpModal()" class="w-full mt-6 px-4 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold hover:scale-105 transition-transform">
+        Mengerti! 👍
+       </button>
       </div>
-     </div><!-- Success Toast -->
-     <div id="toast" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-full shadow-lg z-50 bounce-in">
+     </div>
+
+     <!-- ========== SUCCESS TOAST ========== -->
+     <div id="toast" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-full shadow-lg z-50 bounce-in flex items-center gap-2">
       <span id="toast-message">✅ Berhasil!</span>
      </div>
-    </div>
-   </div>
-  </div>
+
+    </div> <!-- End Screen Container -->
+   </div> <!-- End Main Container -->
+  </div> <!-- End App -->
+
   <script>
     // ==================== STATE MANAGEMENT ====================
     const defaultConfig = {
@@ -1051,7 +1634,7 @@
     
     // Game states
     let gameStates = {
-      sumatra: { completed: false, score: 0 },
+      sumatra: { completed: false, score: 0, activities: [] },
       jawa: { completed: false, tasksCompleted: [] },
       kalimantan: { completed: false, puzzleSolved: false },
       sulawesi: { completed: false, coins: 0, questionIndex: 0 },
@@ -1069,7 +1652,11 @@
     let pretestAnswers = {};
     let posttestAnswers = {};
     let studentResponses = {};
+    let journalEntries = [];
     let puzzleTimer = null;
+    let puzzleTimeLeft = 180;
+    
+    // Expression game
     let expressionIndex = 0;
     let expressionScore = 0;
 
@@ -1150,11 +1737,24 @@
 
     // Expression quiz data
     const expressionQuizzes = [
-      { emoji: '😡📚', answer: 'disiplin', hint: 'Marah karena harus belajar' },
-      { emoji: '🗑️😴', answer: 'tanggung_jawab', hint: 'Malas membuang sampah' },
+      { emoji: '😡📚', answer: 'disiplin', hint: 'Marah karena harus belajar - kurang disiplin' },
+      { emoji: '🗑️😴', answer: 'tanggung_jawab', hint: 'Malas membuang sampah - kurang tanggung jawab' },
       { emoji: '🤝❌', answer: 'kerja_sama', hint: 'Tidak mau kerja sama' },
-      { emoji: '👋😤', answer: 'sopan', hint: 'Tidak mau menyapa' },
-      { emoji: '🤥📖', answer: 'jujur', hint: 'Berbohong tentang PR' }
+      { emoji: '👋😤', answer: 'sopan', hint: 'Tidak mau menyapa - kurang sopan' },
+      { emoji: '🤥📖', answer: 'jujur', hint: 'Berbohong tentang PR - kurang jujur' },
+      { emoji: '⏰❌', answer: 'disiplin', hint: 'Terlambat terus - kurang disiplin' }
+    ];
+
+    // Culture cards for Bali game
+    const cultureCards = [
+      { name: '🏠 Rumah Gadang', region: 'sumatra' },
+      { name: '👘 Batik', region: 'jawa' },
+      { name: '🍲 Soto Banjar', region: 'kalimantan' },
+      { name: '🏛️ Tongkonan', region: 'sulawesi' },
+      { name: '💃 Tari Kecak', region: 'bali' },
+      { name: '🎭 Tifa', region: 'papua' },
+      { name: '🍛 Rendang', region: 'sumatra' },
+      { name: '🎎 Wayang Kulit', region: 'jawa' }
     ];
 
     // Culture facts
@@ -1241,8 +1841,13 @@
       if (screenId === 'posttest') generateTestQuestions('posttest');
       if (screenId === 'profile') updateProfile();
       if (screenId === 'garden') updateGarden();
-      if (screenId === 'expression') initExpressionGame();
       if (screenId === 'dashboard') updateDashboard();
+      if (screenId === 'map') updateMapStatus();
+      if (screenId === 'journal') loadJournalEntries();
+      if (screenId === 'expression') initExpressionGame();
+      if (screenId === 'bali') initBaliGame();
+      if (screenId === 'sulawesi') initSulawesiGame();
+      if (screenId === 'papua') initPapuaGame();
     }
 
     function goBack() {
@@ -1272,6 +1877,15 @@
       document.getElementById('access-modal').classList.add('hidden');
       document.getElementById('access-code-input').value = '';
       document.getElementById('access-error').classList.add('hidden');
+    }
+
+    function addAccessNumber(num) {
+      const input = document.getElementById('access-code-input');
+      input.value += num;
+    }
+
+    function clearAccessInput() {
+      document.getElementById('access-code-input').value = '';
     }
 
     function checkAccessCode() {
@@ -1312,21 +1926,15 @@
         nama,
         kelas,
         sekolah,
-        gender: avatarSettings.gender,
-        skinTone: avatarSettings.skin,
-        clothes: avatarSettings.clothes,
-        pet: avatarSettings.pet,
+        avatar: JSON.stringify(avatarSettings),
         totalStars: 0,
         completedIslands: '[]',
         journalCount: 0,
         pretestScore: 0,
         posttestScore: 0,
-        gamesSumatra: 0,
-        gamesJawa: 0,
-        gamesKalimantan: 0,
-        gamesSulawesi: 0,
-        gamesBali: 0,
-        gamesPapua: 0,
+        pretestData: '{}',
+        posttestData: '{}',
+        gameProgress: JSON.stringify(gameStates),
         timestamp: new Date().toISOString()
       };
 
@@ -1341,7 +1949,9 @@
       document.querySelectorAll(`.avatar-option[data-group="${type}"]`).forEach(btn => {
         btn.classList.remove('border-purple-500', 'bg-purple-100');
       });
-      event.currentTarget.classList.add('border-purple-500', 'bg-purple-100');
+      if (event) {
+        event.currentTarget.classList.add('border-purple-500', 'bg-purple-100');
+      }
       
       updateAvatarPreview();
     }
@@ -1352,28 +1962,35 @@
     }
 
     function saveAvatar() {
-      currentUser.gender = avatarSettings.gender;
-      currentUser.skinTone = avatarSettings.skin;
-      currentUser.clothes = avatarSettings.clothes;
-      currentUser.pet = avatarSettings.pet;
       showToast('✨ Avatar tersimpan!');
       showScreen('pretest');
+    }
+
+    function logout() {
+      if (confirm('Yakin ingin keluar? Progress akan tersimpan.')) {
+        currentUser = null;
+        screenHistory = ['welcome'];
+        showScreen('welcome');
+      }
     }
 
     // ==================== PRETEST/POSTTEST ====================
     function generateTestQuestions(type) {
       const container = document.getElementById(type + '-questions');
+      if (!container) return;
+      
       container.innerHTML = '';
       
       testQuestions.forEach((q, index) => {
         const div = document.createElement('div');
-        div.className = 'bg-gray-50 rounded-xl p-4';
+        div.className = 'bg-gray-50 rounded-xl p-4 slide-up';
+        div.style.animationDelay = (index * 0.05) + 's';
         div.innerHTML = `
           <p class="font-semibold mb-3">${index + 1}. ${q.text}</p>
-          <div class="flex justify-center gap-4">
-            <button onclick="setTestAnswer('${type}', '${q.id}', 3)" class="test-btn emoji-btn text-4xl p-2 rounded-lg transition-all hover:scale-110" data-question="${q.id}" data-value="3">🟢</button>
-            <button onclick="setTestAnswer('${type}', '${q.id}', 2)" class="test-btn emoji-btn text-4xl p-2 rounded-lg transition-all hover:scale-110" data-question="${q.id}" data-value="2">🟡</button>
-            <button onclick="setTestAnswer('${type}', '${q.id}', 1)" class="test-btn emoji-btn text-4xl p-2 rounded-lg transition-all hover:scale-110" data-question="${q.id}" data-value="1">🔴</button>
+          <div class="flex justify-center gap-6">
+            <button onclick="setTestAnswer('${type}', '${q.id}', 3)" class="test-btn text-5xl p-2 rounded-lg hover:scale-110 transition-all" data-question="${q.id}" data-value="3">🟢</button>
+            <button onclick="setTestAnswer('${type}', '${q.id}', 2)" class="test-btn text-5xl p-2 rounded-lg hover:scale-110 transition-all" data-question="${q.id}" data-value="2">🟡</button>
+            <button onclick="setTestAnswer('${type}', '${q.id}', 1)" class="test-btn text-5xl p-2 rounded-lg hover:scale-110 transition-all" data-question="${q.id}" data-value="1">🔴</button>
           </div>
           <div class="flex justify-center gap-8 mt-1 text-xs text-gray-500">
             <span>Selalu</span>
@@ -1383,19 +2000,30 @@
         `;
         container.appendChild(div);
       });
+      
+      updateTestProgress(type);
     }
 
     function setTestAnswer(type, questionId, value) {
-      const answers = type === 'pretest' ? pretestAnswers : posttestAnswers;
-      answers[questionId] = value;
+      if (type === 'pretest') {
+        pretestAnswers[questionId] = value;
+      } else {
+        posttestAnswers[questionId] = value;
+      }
       
       // Update UI
-      document.querySelectorAll(`.test-btn[data-question="${questionId}"]`).forEach(btn => {
-        btn.classList.remove('bg-purple-200', 'ring-2', 'ring-purple-500');
+      document.querySelectorAll(`#screen-${type} .test-btn[data-question="${questionId}"]`).forEach(btn => {
+        btn.classList.remove('bg-purple-200', 'ring-4', 'ring-purple-300');
       });
-      event.currentTarget.classList.add('bg-purple-200', 'ring-2', 'ring-purple-500');
+      if (event) {
+        event.currentTarget.classList.add('bg-purple-200', 'ring-4', 'ring-purple-300');
+      }
       
-      // Update progress
+      updateTestProgress(type);
+    }
+
+    function updateTestProgress(type) {
+      const answers = type === 'pretest' ? pretestAnswers : posttestAnswers;
       const answered = Object.keys(answers).length;
       document.getElementById(type + '-progress').textContent = `Pertanyaan ${Math.min(answered + 1, 12)}/12`;
     }
@@ -1408,10 +2036,13 @@
       
       // Calculate pretest score
       const pretestScore = Object.values(pretestAnswers).reduce((sum, val) => sum + val, 0);
-      currentUser.pretestScore = pretestScore;
+      if (currentUser) {
+        currentUser.pretestScore = pretestScore;
+        currentUser.pretestData = JSON.stringify(pretestAnswers);
+      }
       
       // Save to database
-      if (window.dataSdk && appData.length < 999) {
+      if (window.dataSdk && appData.length < 999 && currentUser) {
         const result = await window.dataSdk.create(currentUser);
         if (result.isOk) {
           userRecordId = currentUser.userId;
@@ -1431,10 +2062,16 @@
       
       // Calculate posttest score
       const posttestScore = Object.values(posttestAnswers).reduce((sum, val) => sum + val, 0);
-      currentUser.posttestScore = posttestScore;
+      if (currentUser) {
+        currentUser.posttestScore = posttestScore;
+        currentUser.posttestData = JSON.stringify(posttestAnswers);
+      }
       
       // Update in database
-      await updateUserData({ posttestScore: currentUser.posttestScore });
+      await updateUserData({ 
+        posttestScore: currentUser.posttestScore,
+        posttestData: currentUser.posttestData 
+      });
       
       showToast('✅ Posttest selesai!');
       generateResults();
@@ -1443,6 +2080,8 @@
 
     function generateResults() {
       const container = document.getElementById('results-comparison');
+      if (!container) return;
+      
       container.innerHTML = '';
       
       const characters = [
@@ -1454,6 +2093,8 @@
         { id: 'jujur', name: 'Jujur', color: 'indigo', questions: ['q11', 'q12'] }
       ];
 
+      let totalPre = 0, totalPost = 0;
+      
       characters.forEach(char => {
         const preScore = char.questions.reduce((sum, q) => sum + (pretestAnswers[q] || 0), 0);
         const postScore = char.questions.reduce((sum, q) => sum + (posttestAnswers[q] || 0), 0);
@@ -1462,47 +2103,77 @@
         const postPercent = (postScore / maxScore) * 100;
         const improvement = postPercent - prePercent;
         
+        totalPre += preScore;
+        totalPost += postScore;
+        
         const div = document.createElement('div');
         div.className = 'bg-gray-50 rounded-xl p-4';
         div.innerHTML = `
           <div class="flex justify-between items-center mb-2">
-            <span class="font-semibold">${char.name}</span>
-            <span class="${improvement >= 0 ? 'text-green-600' : 'text-red-600'}">${improvement >= 0 ? '↑' : '↓'} ${Math.abs(improvement).toFixed(0)}%</span>
+            <span class="font-semibold text-lg">${char.name}</span>
+            <span class="${improvement >= 0 ? 'text-green-600' : 'text-red-600'} font-bold">
+              ${improvement >= 0 ? '↑' : '↓'} ${Math.abs(improvement).toFixed(0)}%
+            </span>
           </div>
           <div class="flex gap-2 items-center text-sm mb-1">
-            <span class="w-16 text-gray-500">Pretest:</span>
-            <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
-              <div class="h-full bg-${char.color}-300" style="width: ${prePercent}%"></div>
+            <span class="w-20 text-gray-500">Pretest:</span>
+            <div class="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full bg-${char.color}-300 progress-fill" style="width: ${prePercent}%"></div>
             </div>
-            <span>${preScore}/6</span>
+            <span class="font-medium">${preScore}/6</span>
           </div>
           <div class="flex gap-2 items-center text-sm">
-            <span class="w-16 text-gray-500">Posttest:</span>
-            <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
-              <div class="h-full bg-${char.color}-500" style="width: ${postPercent}%"></div>
+            <span class="w-20 text-gray-500">Posttest:</span>
+            <div class="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full bg-${char.color}-500 progress-fill" style="width: ${postPercent}%"></div>
             </div>
-            <span>${postScore}/6</span>
+            <span class="font-medium">${postScore}/6</span>
           </div>
         `;
         container.appendChild(div);
       });
+      
+      // Update totals
+      document.getElementById('result-pretest-total').textContent = totalPre + '/36';
+      document.getElementById('result-posttest-total').textContent = totalPost + '/36';
+      const improvementPercent = totalPost > 0 ? ((totalPost - totalPre) / 36 * 100).toFixed(0) : 0;
+      document.getElementById('result-improvement').textContent = `+${improvementPercent}%`;
     }
 
-    // ==================== ISLAND GAMES ====================
+    // ==================== MAP & ISLAND MANAGEMENT ====================
     function unlockAllIslands() {
       ['sumatra', 'jawa', 'kalimantan', 'sulawesi', 'bali', 'papua'].forEach(island => {
-        document.getElementById(island + '-status').textContent = '🔓';
+        const statusEl = document.getElementById(island + '-status');
+        if (statusEl) statusEl.textContent = '🔓';
       });
     }
 
-    function startIslandGame(island) {
-      showScreen('game-' + island);
+    function updateMapStatus() {
+      const islands = ['sumatra', 'jawa', 'kalimantan', 'sulawesi', 'bali', 'papua'];
+      let completed = 0;
       
-      // Initialize game-specific content
-      if (island === 'sulawesi') initSulawesiGame();
-      if (island === 'papua') initPapuaGame();
-      if (island === 'kalimantan') initPuzzleGame();
-      if (island === 'bali') initBaliGame();
+      islands.forEach(island => {
+        const statusEl = document.getElementById(island + '-status');
+        const starsEl = document.getElementById(island + '-stars');
+        
+        if (gameStates[island].completed) {
+          statusEl.textContent = '✅';
+          completed++;
+          if (starsEl) {
+            starsEl.innerHTML = '⭐'.repeat(gameStates[island].score || 3);
+          }
+        } else {
+          statusEl.textContent = '🔓'; // Unlocked but not completed
+        }
+      });
+      
+      document.getElementById('completed-islands-count').textContent = completed;
+      document.getElementById('total-stars').textContent = currentUser?.totalStars || 0;
+    }
+
+    function startIslandGame(island) {
+      // Check if all previous islands are completed? (optional progression)
+      showScreen('game-' + island);
     }
 
     function updateIslandStatus(island, stars) {
@@ -1510,17 +2181,16 @@
       gameStates[island].score = stars;
       
       // Update map UI
-      document.getElementById(island + '-status').textContent = '✅';
-      const starsContainer = document.getElementById(island + '-stars');
-      starsContainer.innerHTML = '⭐'.repeat(stars);
+      const statusEl = document.getElementById(island + '-status');
+      const starsEl = document.getElementById(island + '-stars');
+      if (statusEl) statusEl.textContent = '✅';
+      if (starsEl) starsEl.innerHTML = '⭐'.repeat(stars);
       
       // Update total stars
-      currentUser.totalStars = (currentUser.totalStars || 0) + stars;
-      document.getElementById('total-stars').textContent = currentUser.totalStars;
-      
-      // Update game-specific star count
-      const gameKey = 'games' + island.charAt(0).toUpperCase() + island.slice(1);
-      currentUser[gameKey] = stars;
+      if (currentUser) {
+        currentUser.totalStars = (currentUser.totalStars || 0) + stars;
+        document.getElementById('total-stars').textContent = currentUser.totalStars;
+      }
       
       // Check if all islands completed
       const completedIslands = Object.values(gameStates).filter(g => g.completed).length;
@@ -1535,16 +2205,28 @@
       updateUserData({
         totalStars: currentUser.totalStars,
         completedIslands: JSON.stringify(Object.keys(gameStates).filter(k => gameStates[k].completed)),
-        gamesSumatra: currentUser.gamesSumatra,
-        gamesJawa: currentUser.gamesJawa,
-        gamesKalimantan: currentUser.gamesKalimantan,
-        gamesSulawesi: currentUser.gamesSulawesi,
-        gamesBali: currentUser.gamesBali,
-        gamesPapua: currentUser.gamesPapua
+        gameProgress: JSON.stringify(gameStates)
       });
+      
+      // Trigger confetti
+      createConfetti();
     }
 
-    // ==================== SUMATRA GAME (Jadwal Pahlawan) ====================
+    function createConfetti() {
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + '%';
+          confetti.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+          confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+          document.body.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 3000);
+        }, i * 100);
+      }
+    }
+
+    // ==================== SUMATRA GAME ====================
     const correctSchedule = {
       '05:00': 'bangun',
       '06:00': 'mandi',
@@ -1563,9 +2245,11 @@
         const activity = zone.dataset.placedActivity;
         if (activity === correctSchedule[time]) {
           score++;
-          zone.classList.add('bg-green-100');
+          zone.classList.add('correct');
+          zone.classList.remove('incorrect');
         } else if (activity) {
-          zone.classList.add('bg-red-100');
+          zone.classList.add('incorrect');
+          zone.classList.remove('correct');
         }
       });
       
@@ -1573,20 +2257,42 @@
       
       if (score >= 4) {
         showToast('🎉 Hebat! Kamu anak yang disiplin!');
-        updateIslandStatus('sumatra', Math.min(3, Math.ceil(score / 2)));
+        const stars = Math.min(3, Math.ceil(score / 2));
+        updateIslandStatus('sumatra', stars);
+        
+        // Show success message
+        setTimeout(() => {
+          if (confirm('Selamat! Kamu mendapatkan ' + stars + ' bintang! Kembali ke peta?')) {
+            showScreen('map');
+          }
+        }, 1000);
       } else {
         showToast('💪 Coba lagi! Susun jadwal dengan benar!');
       }
     }
 
-    // ==================== JAWA GAME (Misi Rawat Bumi) ====================
+    function resetSumatraGame() {
+      const dropZones = document.querySelectorAll('#screen-game-sumatra .drop-zone');
+      dropZones.forEach(zone => {
+        zone.innerHTML = '<span class="text-gray-500">' + zone.dataset.time + '</span>';
+        zone.dataset.placedActivity = '';
+        zone.classList.remove('correct', 'incorrect', 'drag-over');
+      });
+      document.getElementById('sumatra-score').textContent = '0';
+      showToast('↻ Game direset');
+    }
+
+    // ==================== JAWA GAME ====================
     function completeTask(taskId) {
       if (gameStates.jawa.tasksCompleted.includes(taskId)) return;
       
       gameStates.jawa.tasksCompleted.push(taskId);
       const taskBtn = document.getElementById('task-' + taskId);
-      taskBtn.classList.add('bg-green-100', 'border-green-500');
-      taskBtn.querySelector('.task-status').classList.remove('hidden');
+      if (taskBtn) {
+        taskBtn.classList.add('bg-green-100', 'border-green-500');
+        const statusSpan = taskBtn.querySelector('.task-status');
+        if (statusSpan) statusSpan.classList.remove('hidden');
+      }
       
       // Update progress
       const completed = gameStates.jawa.tasksCompleted.length;
@@ -1596,15 +2302,22 @@
       if (completed === 4) {
         document.getElementById('jawa-result').classList.remove('hidden');
         updateIslandStatus('jawa', 3);
+        
+        setTimeout(() => {
+          if (confirm('Selamat! Kamu mendapatkan 3 bintang! Kembali ke peta?')) {
+            showScreen('map');
+          }
+        }, 1500);
       }
     }
 
-    // ==================== KALIMANTAN GAME (Gotong Royong Mosaik) ====================
+    // ==================== KALIMANTAN GAME ====================
     let puzzlePieces = [];
-    let puzzleTimeLeft = 180;
 
     function initPuzzleGame() {
       const container = document.getElementById('puzzle-container');
+      if (!container) return;
+      
       container.innerHTML = '';
       puzzlePieces = ['🏠', '🏡', '🛖', '🏘️', '🌳', '🌴', '⛰️', '🏔️', '🌊'];
       
@@ -1613,7 +2326,7 @@
       
       shuffled.forEach((piece, index) => {
         const div = document.createElement('div');
-        div.className = 'puzzle-piece bg-yellow-100 p-4 rounded-xl text-4xl text-center cursor-pointer hover:bg-yellow-200 transition-all';
+        div.className = 'puzzle-piece bg-yellow-100 p-4 rounded-xl text-4xl text-center cursor-pointer hover:bg-yellow-200 transition-all hover:scale-105';
         div.textContent = piece;
         div.dataset.index = index;
         div.dataset.originalPiece = piece;
@@ -1626,15 +2339,23 @@
 
     function selectPuzzlePiece(element) {
       if (selectedPuzzlePiece === null) {
+        // First selection
+        if (selectedPuzzlePiece) {
+          selectedPuzzlePiece.classList.remove('ring-4', 'ring-yellow-500', 'scale-110');
+        }
         selectedPuzzlePiece = element;
-        element.classList.add('ring-2', 'ring-yellow-500');
+        element.classList.add('ring-4', 'ring-yellow-500', 'scale-110');
+      } else if (selectedPuzzlePiece === element) {
+        // Deselect
+        element.classList.remove('ring-4', 'ring-yellow-500', 'scale-110');
+        selectedPuzzlePiece = null;
       } else {
         // Swap pieces
         const temp = element.textContent;
         element.textContent = selectedPuzzlePiece.textContent;
         selectedPuzzlePiece.textContent = temp;
         
-        selectedPuzzlePiece.classList.remove('ring-2', 'ring-yellow-500');
+        selectedPuzzlePiece.classList.remove('ring-4', 'ring-yellow-500', 'scale-110');
         selectedPuzzlePiece = null;
         
         // Check if puzzle is solved
@@ -1650,6 +2371,12 @@
         document.getElementById('kalimantan-result').classList.remove('hidden');
         if (puzzleTimer) clearInterval(puzzleTimer);
         updateIslandStatus('kalimantan', 3);
+        
+        setTimeout(() => {
+          if (confirm('Selamat! Puzzle selesai! Kembali ke peta?')) {
+            showScreen('map');
+          }
+        }, 1500);
       }
     }
 
@@ -1675,59 +2402,101 @@
       showToast('💡 Budi: "Coba susun dari pojok kiri atas!"');
     }
 
-    // ==================== SULAWESI GAME (Kata Ajaib) ====================
+    // ==================== SULAWESI GAME ====================
     function initSulawesiGame() {
       gameStates.sulawesi.questionIndex = 0;
       gameStates.sulawesi.coins = 0;
+      document.getElementById('sulawesi-coins').textContent = '0';
       loadSulawesiQuestion();
     }
 
     function loadSulawesiQuestion() {
       const index = gameStates.sulawesi.questionIndex;
       if (index >= sulawesiScenarios.length) {
-        updateIslandStatus('sulawesi', Math.min(3, Math.ceil(gameStates.sulawesi.coins / sulawesiScenarios.length)));
+        const stars = Math.min(3, Math.ceil(gameStates.sulawesi.coins / sulawesiScenarios.length));
+        updateIslandStatus('sulawesi', stars);
+        
+        setTimeout(() => {
+          if (confirm('Selamat! Kamu mendapatkan ' + stars + ' bintang! Kembali ke peta?')) {
+            showScreen('map');
+          }
+        }, 1500);
         return;
       }
       
       const scenario = sulawesiScenarios[index];
       document.getElementById('scenario-text').textContent = scenario.text;
+      document.getElementById('sulawesi-progress').textContent = (index + 1);
       
       const choicesContainer = document.getElementById('sulawesi-choices');
+      if (!choicesContainer) return;
+      
       choicesContainer.innerHTML = '';
       
       scenario.choices.forEach((choice, i) => {
         const btn = document.createElement('button');
-        btn.className = 'choice-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 text-left transition-all';
+        btn.className = 'choice-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 text-left transition-all hover:bg-blue-50';
         btn.innerHTML = choice.text;
-        btn.onclick = () => selectChoice(i);
+        btn.onclick = () => selectSulawesiChoice(i);
         choicesContainer.appendChild(btn);
       });
     }
 
-    function selectChoice(choiceIndex) {
-      const scenario = sulawesiScenarios[gameStates.sulawesi.questionIndex];
+    function selectSulawesiChoice(choiceIndex) {
+      const index = gameStates.sulawesi.questionIndex;
+      const scenario = sulawesiScenarios[index];
       const choice = scenario.choices[choiceIndex];
       const feedback = document.getElementById('sulawesi-feedback');
       
       if (choice.correct) {
         gameStates.sulawesi.coins++;
         document.getElementById('sulawesi-coins').textContent = gameStates.sulawesi.coins;
-        feedback.innerHTML = '<div class="bg-green-100 text-green-700 p-3 rounded-xl">✅ Benar! Kata-kata sopan sangat penting!</div>';
+        feedback.innerHTML = '<div class="bg-green-100 text-green-700 p-3 rounded-xl animate-bounce">✅ Benar! +1 koin</div>';
       } else {
-        feedback.innerHTML = '<div class="bg-red-100 text-red-700 p-3 rounded-xl">❌ Coba gunakan kata yang lebih sopan!</div>';
+        feedback.innerHTML = '<div class="bg-red-100 text-red-700 p-3 rounded-xl shake">❌ Coba gunakan kata yang lebih sopan!</div>';
       }
       feedback.classList.remove('hidden');
+      
+      // Disable choices temporarily
+      document.querySelectorAll('#sulawesi-choices button').forEach(btn => {
+        btn.disabled = true;
+        btn.classList.add('opacity-50');
+      });
       
       setTimeout(() => {
         feedback.classList.add('hidden');
         gameStates.sulawesi.questionIndex++;
+        
+        // Enable choices again
+        document.querySelectorAll('#sulawesi-choices button').forEach(btn => {
+          btn.disabled = false;
+          btn.classList.remove('opacity-50');
+        });
+        
         loadSulawesiQuestion();
       }, 1500);
     }
 
-    // ==================== BALI GAME (Bhineka Warna) ====================
+    // ==================== BALI GAME ====================
     function initBaliGame() {
       gameStates.bali.correctMatches = 0;
+      
+      // Shuffle culture cards
+      const shuffled = [...cultureCards].sort(() => Math.random() - 0.5);
+      
+      const cardsContainer = document.getElementById('culture-cards');
+      if (!cardsContainer) return;
+      
+      cardsContainer.innerHTML = '';
+      
+      shuffled.forEach(card => {
+        const div = document.createElement('div');
+        div.className = 'draggable bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 rounded-xl cursor-grab border-2 border-purple-200 hover:shadow-lg';
+        div.setAttribute('draggable', 'true');
+        div.dataset.region = card.region;
+        div.innerHTML = card.name;
+        cardsContainer.appendChild(div);
+      });
     }
 
     function checkCulture() {
@@ -1754,63 +2523,101 @@
       
       if (correct >= 4) {
         showToast('🎉 Hebat! Kamu mengenal budaya Indonesia!');
-        updateIslandStatus('bali', Math.min(3, Math.ceil(correct / 2)));
+        const stars = Math.min(3, Math.ceil(correct / 2));
+        updateIslandStatus('bali', stars);
+        
+        setTimeout(() => {
+          if (confirm('Selamat! Kamu mendapatkan ' + stars + ' bintang! Kembali ke peta?')) {
+            showScreen('map');
+          }
+        }, 1500);
+      } else {
+        showToast('💪 Coba lagi! Masih ada yang salah.');
       }
     }
 
-    // ==================== PAPUA GAME (Hati Nurani) ====================
+    // ==================== PAPUA GAME ====================
     function initPapuaGame() {
       gameStates.papua.storyIndex = 0;
       gameStates.papua.stars = 0;
+      document.getElementById('papua-stars').textContent = '0';
       loadPapuaStory();
     }
 
     function loadPapuaStory() {
       const index = gameStates.papua.storyIndex;
       if (index >= papuaStories.length) {
-        updateIslandStatus('papua', Math.min(3, gameStates.papua.stars));
+        const stars = Math.min(3, gameStates.papua.stars);
+        updateIslandStatus('papua', stars);
+        
+        setTimeout(() => {
+          if (confirm('Selamat! Kamu mendapatkan ' + stars + ' bintang! Kembali ke peta?')) {
+            showScreen('map');
+          }
+        }, 1500);
         return;
       }
       
       const story = papuaStories[index];
       document.getElementById('story-emoji').textContent = story.emoji;
       document.getElementById('story-text').textContent = story.text;
+      document.getElementById('papua-progress').textContent = (index + 1);
       
       const choicesContainer = document.getElementById('papua-choices');
+      if (!choicesContainer) return;
+      
       choicesContainer.innerHTML = '';
       
       story.choices.forEach((choice, i) => {
         const btn = document.createElement('button');
-        btn.className = 'honesty-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 text-left transition-all';
+        btn.className = 'honesty-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 text-left transition-all hover:bg-indigo-50';
         btn.innerHTML = choice.text;
-        btn.onclick = () => selectHonesty(i);
+        btn.onclick = () => selectPapuaChoice(i);
         choicesContainer.appendChild(btn);
       });
     }
 
-    function selectHonesty(choiceIndex) {
-      const story = papuaStories[gameStates.papua.storyIndex];
+    function selectPapuaChoice(choiceIndex) {
+      const index = gameStates.papua.storyIndex;
+      const story = papuaStories[index];
       const choice = story.choices[choiceIndex];
       const feedback = document.getElementById('papua-feedback');
       
       if (choice.correct) {
         gameStates.papua.stars++;
         document.getElementById('papua-stars').textContent = gameStates.papua.stars;
-        feedback.innerHTML = '<div class="bg-green-100 text-green-700 p-3 rounded-xl">⭐ Benar! Kejujuran adalah karakter mulia!</div>';
+        feedback.innerHTML = '<div class="bg-green-100 text-green-700 p-3 rounded-xl animate-bounce">⭐ Benar! +1 bintang</div>';
       } else {
-        feedback.innerHTML = '<div class="bg-red-100 text-red-700 p-3 rounded-xl">💭 Coba pikirkan lagi, apa yang hati nuranimu katakan?</div>';
+        feedback.innerHTML = '<div class="bg-red-100 text-red-700 p-3 rounded-xl shake">💭 Coba pikirkan lagi, apa yang hati nuranimu katakan?</div>';
       }
       feedback.classList.remove('hidden');
+      
+      // Disable choices temporarily
+      document.querySelectorAll('#papua-choices button').forEach(btn => {
+        btn.disabled = true;
+        btn.classList.add('opacity-50');
+      });
       
       setTimeout(() => {
         feedback.classList.add('hidden');
         gameStates.papua.storyIndex++;
+        
+        // Enable choices again
+        document.querySelectorAll('#papua-choices button').forEach(btn => {
+          btn.disabled = false;
+          btn.classList.remove('opacity-50');
+        });
+        
         loadPapuaStory();
       }, 1500);
     }
 
-    // ==================== CREATIVE FEATURES ====================
-    // Journal
+    // ==================== JOURNAL ====================
+    function addJournalSticker(sticker) {
+      const textarea = document.getElementById('journal-entry');
+      textarea.value += ' ' + sticker + ' ';
+    }
+
     async function saveJournal() {
       const entry = document.getElementById('journal-entry').value.trim();
       if (!entry) {
@@ -1818,64 +2625,88 @@
         return;
       }
       
+      // Save entry
+      journalEntries.push({
+        date: new Date().toLocaleDateString('id-ID'),
+        content: entry
+      });
+      
       // Add bonus star
-      currentUser.totalStars = (currentUser.totalStars || 0) + 1;
-      currentUser.journalCount = (currentUser.journalCount || 0) + 1;
-      document.getElementById('total-stars').textContent = currentUser.totalStars;
+      if (currentUser) {
+        currentUser.totalStars = (currentUser.totalStars || 0) + 1;
+        currentUser.journalCount = (currentUser.journalCount || 0) + 1;
+        document.getElementById('total-stars').textContent = currentUser.totalStars;
+      }
       
       await updateUserData({
         journalCount: currentUser.journalCount,
-        totalStars: currentUser.totalStars,
-        timestamp: new Date().toISOString()
+        totalStars: currentUser.totalStars
       });
       
       document.getElementById('journal-entry').value = '';
       showToast('📔 Jurnal tersimpan! +1 ⭐');
-      updateJournalList();
+      loadJournalEntries();
     }
 
-    function updateJournalList() {
+    function loadJournalEntries() {
       const container = document.getElementById('journal-list');
+      if (!container) return;
       
-      if (currentUser.journalCount <= 0) {
+      if (journalEntries.length === 0) {
         container.innerHTML = '<p class="text-gray-500 text-center">Belum ada jurnal tersimpan</p>';
         return;
       }
       
-      // Display simple count of journals saved
-      container.innerHTML = `
-        <div class="bg-yellow-50 rounded-xl p-3 text-center">
-          <p class="text-lg font-bold text-yellow-700">📔 ${currentUser.journalCount} jurnal tersimpan</p>
-          <p class="text-sm text-yellow-600">Terakhir diperbarui: ${new Date().toLocaleDateString('id-ID')}</p>
+      container.innerHTML = journalEntries.slice(-5).reverse().map(entry => `
+        <div class="bg-yellow-50 rounded-xl p-3 border-l-4 border-yellow-500">
+          <p class="text-xs text-gray-500">${entry.date}</p>
+          <p class="text-gray-700">${entry.content}</p>
         </div>
-      `;
+      `).join('');
     }
 
-    // Garden
+    // ==================== GARDEN ====================
     function updateGarden() {
-      const stars = currentUser.totalStars || 0;
-      document.getElementById('garden-stars').textContent = stars;
+      const stars = currentUser?.totalStars || 0;
+      document.getElementById('garden-stars-total').textContent = stars;
       
       const plants = ['🌱', '🌿', '🌳', '🌲', '🌴', '🎄'];
-      const plantLevel = Math.min(5, Math.floor(stars / 5));
+      const islands = ['sumatra', 'jawa', 'kalimantan', 'sulawesi', 'bali', 'papua'];
       
       for (let i = 1; i <= 6; i++) {
         const plant = document.getElementById('plant-' + i);
-        const islandStars = Object.values(gameStates)[i - 1]?.score || 0;
+        const starsEl = document.getElementById('garden-stars-' + i);
+        const islandStars = gameStates[islands[i-1]]?.score || 0;
         const level = Math.min(5, islandStars);
         plant.textContent = plants[level];
+        if (starsEl) {
+          starsEl.innerHTML = '⭐'.repeat(islandStars);
+        }
       }
     }
 
-    // Comic Generator
-    function updateComicPanel(panelNum) {
-      const bg = document.getElementById('comic-bg-' + panelNum).value;
-      const char = document.getElementById('comic-char-' + panelNum).value;
-      const preview = document.getElementById('comic-preview-' + panelNum);
-      preview.textContent = bg + char;
+    // ==================== COMIC GENERATOR ====================
+    function updateComicPreview() {
+      for (let i = 1; i <= 3; i++) {
+        const bg = document.getElementById('comic-bg-' + i).value;
+        const char = document.getElementById('comic-char-' + i).value;
+        const preview = document.getElementById('comic-preview-' + i);
+        if (preview) preview.textContent = bg + char;
+      }
     }
 
     function previewComic() {
+      // Update full preview
+      for (let i = 1; i <= 3; i++) {
+        const bg = document.getElementById('comic-bg-' + i).value;
+        const char = document.getElementById('comic-char-' + i).value;
+        const text = document.getElementById('comic-text-' + i).value;
+        
+        document.getElementById('preview-panel-' + i).textContent = bg + char;
+        document.getElementById('preview-text-' + i).textContent = text || '...';
+      }
+      
+      document.getElementById('comic-full-preview').classList.remove('hidden');
       showToast('👁️ Preview komik siap!');
     }
 
@@ -1885,13 +2716,13 @@
         panels.push({
           bg: document.getElementById('comic-bg-' + i).value,
           char: document.getElementById('comic-char-' + i).value,
-          text: document.getElementById('comic-text-' + i).value
+          text: document.getElementById('comic-text-' + i).value || '...'
         });
       }
       
       // Create simple text representation
       const comicText = panels.map((p, i) => 
-        `Panel ${i + 1}: ${p.bg}${p.char}\n"${p.text || '...'}"`
+        `Panel ${i + 1}: ${p.bg}${p.char}\n"${p.text}"`
       ).join('\n\n');
       
       const blob = new Blob([comicText], { type: 'text/plain' });
@@ -1905,11 +2736,36 @@
       showToast('📥 Komik diunduh!');
     }
 
-    // Expression Game
+    function resetComic() {
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById('comic-bg-' + i).value = '🏫';
+        document.getElementById('comic-char-' + i).value = '👦';
+        document.getElementById('comic-text-' + i).value = '';
+        document.getElementById('comic-preview-' + i).textContent = '🏫👦';
+      }
+      document.getElementById('comic-full-preview').classList.add('hidden');
+      showToast('↻ Komik direset');
+    }
+
+    // ==================== EXPRESSION GAME ====================
     function initExpressionGame() {
       expressionIndex = 0;
       expressionScore = 0;
+      document.getElementById('expression-score').textContent = '0';
       loadExpression();
+    }
+
+    function loadExpression() {
+      const quiz = expressionQuizzes[expressionIndex];
+      if (!quiz) {
+        showToast(`🎉 Skor akhir: ${expressionScore}/6`);
+        expressionIndex = 0;
+        expressionScore = 0;
+        return;
+      }
+      
+      document.getElementById('expression-emoji').textContent = quiz.emoji;
+      document.getElementById('expression-hint').textContent = quiz.hint;
     }
 
     function checkExpression(answer) {
@@ -1919,49 +2775,62 @@
       if (answer === quiz.answer) {
         expressionScore++;
         document.getElementById('expression-score').textContent = expressionScore;
-        feedback.innerHTML = '<div class="bg-green-100 text-green-700 p-3 rounded-xl">✅ Benar!</div>';
+        feedback.innerHTML = '<div class="bg-green-100 text-green-700 p-3 rounded-xl animate-bounce">✅ Benar!</div>';
       } else {
-        feedback.innerHTML = `<div class="bg-red-100 text-red-700 p-3 rounded-xl">❌ Jawaban: ${quiz.hint}</div>`;
+        feedback.innerHTML = '<div class="bg-red-100 text-red-700 p-3 rounded-xl shake">❌ Coba lagi!</div>';
       }
       feedback.classList.remove('hidden');
+      
+      // Disable options temporarily
+      document.querySelectorAll('#screen-expression .expression-btn').forEach(btn => {
+        btn.disabled = true;
+        btn.classList.add('opacity-50');
+      });
       
       setTimeout(() => {
         feedback.classList.add('hidden');
         expressionIndex++;
+        
+        // Enable options again
+        document.querySelectorAll('#screen-expression .expression-btn').forEach(btn => {
+          btn.disabled = false;
+          btn.classList.remove('opacity-50');
+        });
+        
         if (expressionIndex < expressionQuizzes.length) {
           loadExpression();
         } else {
-          showToast(`🎉 Skor akhir: ${expressionScore}/5`);
-          updateIslandStatus('expression', Math.min(3, Math.ceil(expressionScore)));
+          showToast(`🎉 Skor akhir: ${expressionScore}/6`);
           expressionIndex = 0;
           expressionScore = 0;
+          loadExpression();
         }
       }, 1500);
     }
 
-    function loadExpression() {
-      const quiz = expressionQuizzes[expressionIndex];
-      document.getElementById('expression-emoji').textContent = quiz.emoji;
-      document.getElementById('expression-score').textContent = expressionScore;
-    }
-
-    // Profile
+    // ==================== PROFILE ====================
     function updateProfile() {
+      if (!currentUser) return;
+      
       document.getElementById('profile-avatar').textContent = avatarSettings.skin;
-      document.getElementById('profile-name').textContent = currentUser?.nama || 'Nama Siswa';
-      document.getElementById('profile-class').textContent = `${currentUser?.kelas || 'Kelas'} - ${currentUser?.sekolah || 'Sekolah'}`;
-      document.getElementById('profile-stars').textContent = currentUser?.totalStars || 0;
+      document.getElementById('profile-name').textContent = currentUser.nama;
+      document.getElementById('profile-class').textContent = `${currentUser.kelas} - ${currentUser.sekolah}`;
+      document.getElementById('profile-pet').textContent = avatarSettings.pet;
+      document.getElementById('profile-stars').textContent = currentUser.totalStars || 0;
       
       const completedCount = Object.values(gameStates).filter(g => g.completed).length;
       document.getElementById('profile-islands').textContent = `${completedCount}/6`;
       
-      // Update progress bars
+      // Update progress bars and texts
       const progressIds = ['prog-disiplin', 'prog-tanggung', 'prog-kerjasama', 'prog-sopan', 'prog-toleransi', 'prog-jujur'];
+      const progressTextIds = ['prog-disiplin-text', 'prog-tanggung-text', 'prog-kerjasama-text', 'prog-sopan-text', 'prog-toleransi-text', 'prog-jujur-text'];
       const islands = ['sumatra', 'jawa', 'kalimantan', 'sulawesi', 'bali', 'papua'];
       
       islands.forEach((island, i) => {
-        const progress = gameStates[island].completed ? 100 : (gameStates[island].score || 0) * 33;
-        document.getElementById(progressIds[i]).style.width = progress + '%';
+        const score = gameStates[island].score || 0;
+        const percent = (score / 3) * 100;
+        document.getElementById(progressIds[i]).style.width = percent + '%';
+        document.getElementById(progressTextIds[i]).textContent = score + '/3';
       });
     }
 
@@ -1971,147 +2840,60 @@
       
       // Update UI
       document.querySelectorAll(`.response-btn[data-question="${question}"]`).forEach(btn => {
-        btn.classList.remove('bg-purple-200', 'ring-2', 'ring-purple-500', 'border-purple-500');
+        btn.classList.remove('bg-purple-200', 'ring-4', 'ring-purple-300', 'border-purple-500');
       });
-      event.currentTarget.classList.add('bg-purple-200', 'ring-2', 'ring-purple-500');
+      if (event) {
+        event.currentTarget.classList.add('bg-purple-200', 'ring-4', 'ring-purple-300');
+      }
     }
 
     async function submitStudentResponse() {
       if (Object.keys(studentResponses).length < 5) {
-        showToast('⚠️ Jawab semua pertanyaan!');
+        document.getElementById('response-error').classList.remove('hidden');
         return;
       }
       
-      // Create response record
-      if (window.dataSdk && appData.length < 999) {
-        const responseRecord = {
-          recordType: 'student_response',
-          userId: currentUser.userId,
-          nama: currentUser.nama,
-          kelas: currentUser.kelas,
-          sekolah: currentUser.sekolah,
-          gender: '',
-          skinTone: '',
-          clothes: '',
-          pet: '',
-          totalStars: 0,
-          completedIslands: '',
-          journalCount: 0,
-          gamesSumatra: 0,
-          gamesJawa: 0,
-          gamesKalimantan: 0,
-          gamesSulawesi: 0,
-          gamesBali: 0,
-          gamesPapua: 0,
-          pretestScore: 0,
-          posttestScore: 0,
-          studentResponse: JSON.stringify(studentResponses),
-          timestamp: new Date().toISOString()
-        };
-        
-        await window.dataSdk.create(responseRecord);
-      }
+      document.getElementById('response-error').classList.add('hidden');
+      
+      await updateUserData({
+        studentResponse: JSON.stringify(studentResponses)
+      });
       
       showToast('🎉 Terima kasih! Petualanganmu selesai!');
-      setTimeout(() => showScreen('map'), 1000);
+      showScreen('map');
     }
 
+    // ==================== VALIDATOR ====================
     async function submitValidation() {
       const validation = {
         materi: [
-          parseInt(document.getElementById('val-materi-1').value),
-          parseInt(document.getElementById('val-materi-2').value),
-          parseInt(document.getElementById('val-materi-3').value)
+          document.getElementById('val-materi-1').value,
+          document.getElementById('val-materi-2').value,
+          document.getElementById('val-materi-3').value
         ],
         media: [
-          parseInt(document.getElementById('val-media-1').value),
-          parseInt(document.getElementById('val-media-2').value),
-          parseInt(document.getElementById('val-media-3').value)
+          document.getElementById('val-media-1').value,
+          document.getElementById('val-media-2').value,
+          document.getElementById('val-media-3').value
         ],
         suggestions: document.getElementById('validator-suggestions').value
       };
       
-      if (window.dataSdk && appData.length < 999) {
-        const validationRecord = {
-          recordType: 'validator_feedback',
+      if (window.dataSdk) {
+        await window.dataSdk.create({
+          type: 'validation',
           userId: 'validator_' + Date.now(),
-          nama: 'Validator Ahli',
-          kelas: 'N/A',
-          sekolah: 'N/A',
-          gender: '',
-          skinTone: '',
-          clothes: '',
-          pet: '',
-          totalStars: 0,
-          completedIslands: '',
-          journalCount: 0,
-          gamesSumatra: 0,
-          gamesJawa: 0,
-          gamesKalimantan: 0,
-          gamesSulawesi: 0,
-          gamesBali: 0,
-          gamesPapua: 0,
-          pretestScore: 0,
-          posttestScore: 0,
-          studentResponse: JSON.stringify(validation),
-          timestamp: new Date().toISOString()
-        };
-        
-        const result = await window.dataSdk.create(validationRecord);
-        if (result.isOk) {
-          showToast('📤 Validasi terkirim! Terima kasih!');
-        } else {
-          showToast('⚠️ Gagal mengirim validasi');
-        }
+          nama: 'Validator',
+          timestamp: new Date().toISOString(),
+          validatorFeedback: JSON.stringify(validation)
+        });
       }
       
-      setTimeout(() => showScreen('map'), 1000);
+      showToast('📤 Validasi terkirim!');
+      showScreen('map');
     }
 
-    async function submitTeacherResponse() {
-      const response = {
-        q1: parseInt(document.getElementById('teacher-q1').value),
-        q2: parseInt(document.getElementById('teacher-q2').value),
-        q3: parseInt(document.getElementById('teacher-q3').value),
-        q4: parseInt(document.getElementById('teacher-q4').value)
-      };
-      
-      if (window.dataSdk && appData.length < 999) {
-        const teacherRecord = {
-          recordType: 'teacher_feedback',
-          userId: 'teacher_' + Date.now(),
-          nama: 'Guru Pembimbing',
-          kelas: 'N/A',
-          sekolah: 'N/A',
-          gender: '',
-          skinTone: '',
-          clothes: '',
-          pet: '',
-          totalStars: 0,
-          completedIslands: '',
-          journalCount: 0,
-          gamesSumatra: 0,
-          gamesJawa: 0,
-          gamesKalimantan: 0,
-          gamesSulawesi: 0,
-          gamesBali: 0,
-          gamesPapua: 0,
-          pretestScore: 0,
-          posttestScore: 0,
-          studentResponse: JSON.stringify(response),
-          timestamp: new Date().toISOString()
-        };
-        
-        const result = await window.dataSdk.create(teacherRecord);
-        if (result.isOk) {
-          showToast('📤 Respon guru terkirim! Terima kasih!');
-        } else {
-          showToast('⚠️ Gagal mengirim respon');
-        }
-      }
-    }
-
-    // ==================== DASHBOARD ====================
+    // ==================== TEACHER DASHBOARD ====================
     function updateDashboard() {
       const students = appData.filter(d => d.recordType === 'student');
       const completed = students.filter(s => {
@@ -2131,31 +2913,57 @@
       // Update table
       const tbody = document.getElementById('student-table-body');
       if (students.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-500">Belum ada data siswa</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-500">Belum ada data siswa</td></tr>';
       } else {
         tbody.innerHTML = students.map(s => {
           const islands = JSON.parse(s.completedIslands || '[]');
-          const improvement = s.posttestScore > 0 ? s.posttestScore - s.pretestScore : 0;
+          const preScore = s.pretestScore || 0;
+          const postScore = s.posttestScore || 0;
+          const improvement = postScore - preScore;
           
           return `
             <tr class="border-b hover:bg-gray-50">
               <td class="p-3">${s.nama}</td>
-              <td class="p-3 text-center text-sm">${s.kelas}</td>
-              <td class="p-3 text-center text-sm">${s.pretestScore}/36</td>
-              <td class="p-3 text-center text-sm">${s.posttestScore > 0 ? s.posttestScore + '/36' : '-'}</td>
+              <td class="p-3 text-center">${s.kelas}</td>
+              <td class="p-3 text-center">${preScore}/36</td>
+              <td class="p-3 text-center">${postScore > 0 ? postScore + '/36' : '-'}</td>
+              <td class="p-3 text-center ${improvement >= 0 ? 'text-green-600' : 'text-red-600'}">
+                ${improvement >= 0 ? '+' : ''}${improvement}
+              </td>
               <td class="p-3 text-center">⭐ ${s.totalStars || 0}</td>
-              <td class="p-3 text-center text-sm">${islands.length === 6 ? '✅' : '🔄 ' + islands.length}</td>
+              <td class="p-3 text-center">${islands.length}/6</td>
             </tr>
           `;
         }).join('');
       }
       
-      // Update chart
+      // Update chart (simulated with random heights)
       const chartIds = ['chart-disiplin', 'chart-tanggung', 'chart-kerjasama', 'chart-sopan', 'chart-toleransi', 'chart-jujur'];
       chartIds.forEach((id, i) => {
         const randomHeight = students.length > 0 ? Math.random() * 60 + 20 : 0;
         document.getElementById(id).style.height = randomHeight + '%';
       });
+    }
+
+    async function submitTeacherResponse() {
+      const response = {
+        q1: document.getElementById('teacher-q1').value,
+        q2: document.getElementById('teacher-q2').value,
+        q3: document.getElementById('teacher-q3').value,
+        q4: document.getElementById('teacher-q4').value
+      };
+      
+      if (window.dataSdk) {
+        await window.dataSdk.create({
+          type: 'teacher_response',
+          userId: 'teacher_' + Date.now(),
+          nama: 'Guru',
+          timestamp: new Date().toISOString(),
+          teacherResponse: JSON.stringify(response)
+        });
+      }
+      
+      showToast('📤 Respon guru terkirim!');
     }
 
     // ==================== EXPORT FUNCTIONS ====================
@@ -2166,7 +2974,7 @@
         return;
       }
       
-      const headers = ['Nama', 'Kelas', 'Sekolah', 'Pretest', 'Posttest', 'Perbaikan', 'Bintang', 'Pulau Selesai', 'Jurnal'];
+      const headers = ['Nama', 'Kelas', 'Sekolah', 'Pretest', 'Posttest', 'Peningkatan', 'Bintang', 'Pulau Selesai', 'Jurnal'];
       const rows = students.map(s => {
         const improvement = s.posttestScore - s.pretestScore;
         const islands = JSON.parse(s.completedIslands || '[]');
@@ -2175,7 +2983,7 @@
           s.kelas,
           s.sekolah,
           s.pretestScore,
-          s.posttestScore,
+          s.posttestScore || '',
           improvement,
           s.totalStars || 0,
           islands.length + '/6',
@@ -2196,19 +3004,18 @@
     }
 
     function exportPDF() {
-      // Create simple text report
-      const students = appData.filter(d => d.type === 'student');
-      let report = '=== LAPORAN SMART EDUKULTUR ===\n\n';
+      const students = appData.filter(d => d.recordType === 'student');
+      let report = '=== LAPORAN SMART EDUKULTUR ===\n';
       report += `Tanggal: ${new Date().toLocaleDateString('id-ID')}\n`;
       report += `Total Siswa: ${students.length}\n\n`;
       
       students.forEach(s => {
-        const pretest = JSON.parse(s.pretestData || '{}');
-        const posttest = JSON.parse(s.posttestData || '{}');
-        report += `--- ${s.nama} (${s.kelas}) ---\n`;
-        report += `Pretest: ${Object.values(pretest).reduce((a, b) => a + b, 0)}/36\n`;
-        report += `Posttest: ${Object.values(posttest).reduce((a, b) => a + b, 0)}/36\n`;
-        report += `Bintang: ${s.totalStars || 0}\n\n`;
+        report += `\n--- ${s.nama} (${s.kelas}) ---\n`;
+        report += `Pretest: ${s.pretestScore}/36\n`;
+        report += `Posttest: ${s.posttestScore || '-'}/36\n`;
+        report += `Bintang: ${s.totalStars || 0}\n`;
+        report += `Pulau Selesai: ${JSON.parse(s.completedIslands || '[]').length}/6\n`;
+        report += `Jurnal: ${s.journalCount || 0}\n`;
       });
       
       const blob = new Blob([report], { type: 'text/plain' });
@@ -2238,7 +3045,7 @@
       document.addEventListener('dragstart', (e) => {
         if (e.target.classList.contains('draggable')) {
           e.target.classList.add('dragging');
-          e.dataTransfer.setData('text/plain', e.target.dataset.activity || e.target.dataset.region || '');
+          e.dataTransfer.setData('text/plain', e.target.dataset.region || '');
           e.dataTransfer.setData('text/html', e.target.outerHTML);
         }
       });
@@ -2267,19 +3074,20 @@
           e.preventDefault();
           e.target.classList.remove('drag-over');
           
-          const activity = e.dataTransfer.getData('text/plain');
           const html = e.dataTransfer.getData('text/html');
           
           // For Sumatra schedule game
           if (e.target.dataset.time) {
-            const timeText = e.target.querySelector('span').textContent;
+            const timeText = e.target.querySelector('span')?.textContent || '';
             e.target.innerHTML = `<span class="text-gray-500">${timeText}</span>`;
             const div = document.createElement('div');
             div.innerHTML = html;
             const newElement = div.firstChild;
             newElement.classList.remove('dragging');
+            newElement.classList.add('placed-card');
+            newElement.draggable = false;
             e.target.appendChild(newElement);
-            e.target.dataset.placedActivity = activity;
+            e.target.dataset.placedActivity = newElement.dataset.activity;
           }
           
           // For Bali culture game
@@ -2288,7 +3096,7 @@
             div.innerHTML = html;
             const newElement = div.firstChild;
             newElement.classList.remove('dragging');
-            newElement.classList.add('placed-card');
+            newElement.classList.add('placed-card', 'mt-2');
             newElement.draggable = false;
             e.target.appendChild(newElement);
           }
@@ -2299,5 +3107,5 @@
     // ==================== INITIALIZATION ====================
     initApp();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d92bf2c037afdb4',t:'MTc3Mjk4MjQxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </body>
 </html>
