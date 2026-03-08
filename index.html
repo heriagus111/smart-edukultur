@@ -1,0 +1,2168 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Edukultur</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    
+    @keyframes bounce-in {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes slide-up {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 5px currentColor; }
+      50% { box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+    }
+    
+    @keyframes star-fall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
+    }
+    
+    .float-animation { animation: float 3s ease-in-out infinite; }
+    .sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+    .bounce-in { animation: bounce-in 0.5s ease-out forwards; }
+    .slide-up { animation: slide-up 0.4s ease-out forwards; }
+    .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    
+    .island-btn {
+      transition: all 0.3s ease;
+      transform-origin: center;
+    }
+    .island-btn:hover {
+      transform: scale(1.1);
+      filter: brightness(1.1);
+    }
+    
+    .game-card {
+      transition: all 0.3s ease;
+    }
+    .game-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    
+    .draggable {
+      cursor: grab;
+      transition: transform 0.2s ease;
+    }
+    .draggable:active { cursor: grabbing; }
+    .draggable.dragging {
+      opacity: 0.7;
+      transform: scale(1.05);
+    }
+    
+    .drop-zone {
+      transition: all 0.3s ease;
+      border: 2px dashed #ccc;
+    }
+    .drop-zone.drag-over {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      transform: scale(1.02);
+    }
+    
+    .progress-fill {
+      transition: width 0.5s ease;
+    }
+    
+    .emoji-btn {
+      transition: transform 0.2s ease;
+    }
+    .emoji-btn:hover {
+      transform: scale(1.3);
+    }
+    
+    .modal-overlay {
+      backdrop-filter: blur(4px);
+    }
+    
+    .chibi-character {
+      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .island-sumatra { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+    .island-jawa { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+    .island-kalimantan { background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); }
+    .island-sulawesi { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+    .island-bali { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); }
+    .island-papua { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); }
+    
+    .nav-btn {
+      transition: all 0.2s ease;
+    }
+    .nav-btn:hover {
+      transform: scale(1.1);
+      background: rgba(255,255,255,0.3);
+    }
+    
+    .star-counter {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    }
+    
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 8px;
+      border-radius: 4px;
+      background: #e5e7eb;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+    }
+
+    .scroll-container {
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 #f1f5f9;
+    }
+    .scroll-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    .scroll-container::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 3px;
+    }
+    .scroll-container::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100">
+  <div id="app" class="h-full w-full overflow-auto scroll-container"><!-- Loading Screen -->
+   <div id="loading-screen" class="h-full flex items-center justify-center">
+    <div class="text-center">
+     <div class="text-6xl mb-4 float-animation">
+      🏝️
+     </div>
+     <h1 class="text-3xl font-bold text-purple-700">Smart Edukultur</h1>
+     <p class="text-purple-500 mt-2">Memuat petualangan...</p>
+     <div class="mt-4 w-48 h-2 bg-purple-200 rounded-full mx-auto overflow-hidden">
+      <div class="h-full bg-purple-600 rounded-full animate-pulse" style="width: 60%"></div>
+     </div>
+    </div>
+   </div><!-- Main App Container -->
+   <div id="main-container" class="hidden h-full"><!-- Navigation Bar -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/90 shadow-lg px-4 py-2 flex items-center justify-between"><button onclick="goBack()" class="nav-btn p-2 rounded-full text-2xl" title="Kembali">←</button>
+     <div class="flex items-center gap-2"><span class="text-xl">🌟</span> <span id="total-stars" class="font-bold text-yellow-600">0</span>
+     </div>
+     <div class="flex gap-2"><button onclick="showScreen('map')" class="nav-btn p-2 rounded-full text-2xl" title="Peta">🏠</button> <button onclick="showScreen('profile')" class="nav-btn p-2 rounded-full text-2xl" title="Profil">👤</button> <button onclick="showHelp()" class="nav-btn p-2 rounded-full text-2xl" title="Bantuan">❓</button>
+     </div>
+    </nav><!-- Screen Container -->
+    <div id="screen-container" class="pt-16 pb-4 px-4 min-h-full"><!-- Welcome/Story Screen -->
+     <div id="screen-welcome" class="screen hidden">
+      <div class="max-w-2xl mx-auto text-center py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <div class="text-8xl mb-6 float-animation">
+         🏝️✨
+        </div>
+        <h1 id="main-title" class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-4">Smart Edukultur</h1>
+        <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-6 mb-6 text-left">
+         <h2 class="text-xl font-bold text-orange-700 mb-3">📖 Cerita Pembuka</h2>
+         <p class="text-gray-700 leading-relaxed"><span class="text-2xl">🌏</span> Dahulu kala, <strong>Negeri Nusantara</strong> dilindungi oleh <strong>6 Permata Karakter</strong> yang berkilau indah. Namun, suatu hari permata-permata itu pecah dan tersebar ke 6 pulau berbeda!</p>
+         <p class="text-gray-700 leading-relaxed mt-3"><span class="text-2xl">🦸</span> Kamu terpilih sebagai <strong>Duta Karakter</strong>! Tugasmu adalah mengunjungi setiap pulau, menyelesaikan tantangan, dan mengumpulkan kembali pecahan permata untuk memulihkan Negeri Nusantara!</p>
+         <p class="text-gray-700 leading-relaxed mt-3"><span class="text-2xl">💎</span> Setiap pulau menyimpan nilai karakter: <strong>Disiplin, Tanggung Jawab, Kerja Sama, Sopan Santun, Toleransi, dan Jujur</strong>.</p>
+        </div><button onclick="showScreen('consent')" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full text-xl font-bold hover:scale-105 transition-transform shadow-lg"> 🚀 Mulai Petualangan! </button>
+       </div>
+      </div>
+     </div><!-- Consent Screen -->
+     <div id="screen-consent" class="screen hidden">
+      <div class="max-w-xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">📝 Data Diri</h2>
+        <div class="space-y-4">
+         <div><label class="block text-gray-700 font-semibold mb-2">👤 Nama Lengkap</label> <input type="text" id="input-nama" class="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none text-lg" placeholder="Masukkan namamu...">
+         </div>
+         <div><label class="block text-gray-700 font-semibold mb-2">🏫 Kelas</label> <select id="input-kelas" class="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none text-lg"> <option value="">Pilih kelas...</option> <option value="4A">Kelas 4A</option> <option value="4B">Kelas 4B</option> <option value="4C">Kelas 4C</option> </select>
+         </div>
+         <div><label class="block text-gray-700 font-semibold mb-2">🏢 Nama Sekolah</label> <input type="text" id="input-sekolah" class="w-full px-4 py-3 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none text-lg" placeholder="Masukkan nama sekolah...">
+         </div>
+         <div class="bg-blue-50 rounded-xl p-4 mt-6"><label class="flex items-start gap-3 cursor-pointer"> <input type="checkbox" id="consent-check" class="w-6 h-6 mt-1 rounded text-purple-600"> <span class="text-gray-700">Saya setuju mengikuti pembelajaran ini dan data saya digunakan untuk keperluan penelitian pendidikan.</span> </label>
+         </div>
+        </div><button onclick="submitConsent()" class="w-full mt-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> ✅ Lanjutkan </button>
+        <p id="consent-error" class="text-red-500 text-center mt-3 hidden">⚠️ Mohon lengkapi semua data dan centang persetujuan!</p>
+       </div>
+      </div>
+     </div><!-- Avatar Creation Screen -->
+     <div id="screen-avatar" class="screen hidden">
+      <div class="max-w-2xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">🎨 Buat Avatarmu!</h2><!-- Avatar Preview -->
+        <div class="flex justify-center mb-8">
+         <div id="avatar-preview" class="w-40 h-40 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center text-7xl chibi-character bounce-in">
+          🧒
+         </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><!-- Gender -->
+         <div><label class="block text-gray-700 font-semibold mb-3">👫 Gender</label>
+          <div class="flex gap-3"><button onclick="setAvatar('gender', 'boy')" class="avatar-option flex-1 p-3 rounded-xl border-2 border-gray-200 hover:border-blue-500 transition-all text-center" data-group="gender"> <span class="text-4xl">👦</span> <p class="text-sm mt-1">Laki-laki</p></button> <button onclick="setAvatar('gender', 'girl')" class="avatar-option flex-1 p-3 rounded-xl border-2 border-gray-200 hover:border-pink-500 transition-all text-center" data-group="gender"> <span class="text-4xl">👧</span> <p class="text-sm mt-1">Perempuan</p></button>
+          </div>
+         </div><!-- Skin Tone -->
+         <div><label class="block text-gray-700 font-semibold mb-3">🎨 Warna Kulit</label>
+          <div class="flex gap-2 flex-wrap"><button onclick="setAvatar('skin', '🧒🏻')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl" data-group="skin">🧒🏻</button> <button onclick="setAvatar('skin', '🧒🏼')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl" data-group="skin">🧒🏼</button> <button onclick="setAvatar('skin', '🧒🏽')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl" data-group="skin">🧒🏽</button> <button onclick="setAvatar('skin', '🧒🏾')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl" data-group="skin">🧒🏾</button> <button onclick="setAvatar('skin', '🧒🏿')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-purple-500 text-2xl" data-group="skin">🧒🏿</button>
+          </div>
+         </div><!-- Traditional Clothing -->
+         <div><label class="block text-gray-700 font-semibold mb-3">👘 Pakaian Adat</label>
+          <div class="flex gap-2 flex-wrap"><button onclick="setAvatar('clothes', 'jawa')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-green-500 text-sm" data-group="clothes">🏛️ Jawa</button> <button onclick="setAvatar('clothes', 'sumatra')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-red-500 text-sm" data-group="clothes">🏔️ Sumatra</button> <button onclick="setAvatar('clothes', 'bali')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-yellow-500 text-sm" data-group="clothes">🌺 Bali</button> <button onclick="setAvatar('clothes', 'papua')" class="avatar-option px-3 py-2 rounded-lg border-2 border-gray-200 hover:border-orange-500 text-sm" data-group="clothes">🦜 Papua</button>
+          </div>
+         </div><!-- Pet -->
+         <div><label class="block text-gray-700 font-semibold mb-3">🐾 Hewan Peliharaan</label>
+          <div class="flex gap-2 flex-wrap"><button onclick="setAvatar('pet', '🦜')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl" data-group="pet">🦜</button> <button onclick="setAvatar('pet', '🐈')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl" data-group="pet">🐈</button> <button onclick="setAvatar('pet', '🦜')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl" data-group="pet">🦎</button> <button onclick="setAvatar('pet', '🐠')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl" data-group="pet">🐠</button> <button onclick="setAvatar('pet', '🦋')" class="avatar-option w-12 h-12 rounded-full border-2 border-gray-200 hover:border-orange-500 text-2xl" data-group="pet">🦋</button>
+          </div>
+         </div>
+        </div><button onclick="saveAvatar()" class="w-full mt-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> ✨ Simpan Avatar </button>
+       </div>
+      </div>
+     </div><!-- Pretest Screen -->
+     <div id="screen-pretest" class="screen hidden">
+      <div class="max-w-2xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-purple-700 mb-2">📊 Pretest</h2>
+        <p class="text-center text-gray-600 mb-6">Jawab pertanyaan berikut sesuai kebiasaanmu sehari-hari!</p>
+        <div id="pretest-questions" class="space-y-6"><!-- Questions will be generated by JS -->
+        </div>
+        <div class="flex justify-between items-center mt-8"><span id="pretest-progress" class="text-gray-600">Pertanyaan 1/12</span> <button onclick="submitPretest()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg"> Selesai ✅ </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Map Screen -->
+     <div id="screen-map" class="screen hidden">
+      <div class="max-w-4xl mx-auto py-8">
+       <div class="text-center mb-6">
+        <h2 class="text-3xl font-bold text-purple-700">🗺️ Peta Nusantara</h2>
+        <p id="welcome-msg" class="text-gray-600 mt-2">Pilih pulau untuk memulai petualangan!</p>
+       </div><!-- Map Grid -->
+       <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8"><!-- Sumatra --> <button onclick="startIslandGame('sumatra')" class="island-btn island-sumatra rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+         <div class="absolute top-2 right-2 text-2xl" id="sumatra-status">
+          🔒
+         </div>
+         <div class="text-5xl mb-3">
+          ⏰
+         </div><h3 class="text-xl font-bold">Sumatra</h3><p class="text-sm opacity-90">Disiplin</p>
+         <div class="mt-2 flex justify-center gap-1" id="sumatra-stars"></div></button> <!-- Jawa --> <button onclick="startIslandGame('jawa')" class="island-btn island-jawa rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+         <div class="absolute top-2 right-2 text-2xl" id="jawa-status">
+          🔒
+         </div>
+         <div class="text-5xl mb-3">
+          📚
+         </div><h3 class="text-xl font-bold">Jawa</h3><p class="text-sm opacity-90">Tanggung Jawab</p>
+         <div class="mt-2 flex justify-center gap-1" id="jawa-stars"></div></button> <!-- Kalimantan --> <button onclick="startIslandGame('kalimantan')" class="island-btn island-kalimantan rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+         <div class="absolute top-2 right-2 text-2xl" id="kalimantan-status">
+          🔒
+         </div>
+         <div class="text-5xl mb-3">
+          🤝
+         </div><h3 class="text-xl font-bold">Kalimantan</h3><p class="text-sm opacity-90">Kerja Sama</p>
+         <div class="mt-2 flex justify-center gap-1" id="kalimantan-stars"></div></button> <!-- Sulawesi --> <button onclick="startIslandGame('sulawesi')" class="island-btn island-sulawesi rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+         <div class="absolute top-2 right-2 text-2xl" id="sulawesi-status">
+          🔒
+         </div>
+         <div class="text-5xl mb-3">
+          🙏
+         </div><h3 class="text-xl font-bold">Sulawesi</h3><p class="text-sm opacity-90">Sopan Santun</p>
+         <div class="mt-2 flex justify-center gap-1" id="sulawesi-stars"></div></button> <!-- Bali --> <button onclick="startIslandGame('bali')" class="island-btn island-bali rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+         <div class="absolute top-2 right-2 text-2xl" id="bali-status">
+          🔒
+         </div>
+         <div class="text-5xl mb-3">
+          🌈
+         </div><h3 class="text-xl font-bold">Bali</h3><p class="text-sm opacity-90">Toleransi</p>
+         <div class="mt-2 flex justify-center gap-1" id="bali-stars"></div></button> <!-- Papua --> <button onclick="startIslandGame('papua')" class="island-btn island-papua rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+         <div class="absolute top-2 right-2 text-2xl" id="papua-status">
+          🔒
+         </div>
+         <div class="text-5xl mb-3">
+          💜
+         </div><h3 class="text-xl font-bold">Papua</h3><p class="text-sm opacity-90">Jujur</p>
+         <div class="mt-2 flex justify-center gap-1" id="papua-stars"></div></button>
+       </div><!-- Quick Actions -->
+       <div class="grid grid-cols-2 md:grid-cols-4 gap-4"><button onclick="showScreen('journal')" class="game-card bg-white rounded-2xl p-4 shadow-lg text-center"> <span class="text-3xl">📔</span> <p class="font-semibold text-gray-700 mt-2">Jurnal Harian</p></button> <button onclick="showScreen('garden')" class="game-card bg-white rounded-2xl p-4 shadow-lg text-center"> <span class="text-3xl">🌱</span> <p class="font-semibold text-gray-700 mt-2">Taman Karakter</p></button> <button onclick="showScreen('comic')" class="game-card bg-white rounded-2xl p-4 shadow-lg text-center"> <span class="text-3xl">🎨</span> <p class="font-semibold text-gray-700 mt-2">Komik Generator</p></button> <button onclick="showScreen('expression')" class="game-card bg-white rounded-2xl p-4 shadow-lg text-center"> <span class="text-3xl">😊</span> <p class="font-semibold text-gray-700 mt-2">Tebak Ekspresi</p></button>
+       </div><!-- Special Access -->
+       <div class="mt-8 text-center"><button onclick="showAccessCode()" class="text-purple-600 underline text-sm">🔐 Akses Khusus</button>
+       </div>
+      </div>
+     </div><!-- Game Screens --> <!-- Sumatra: Jadwal Pahlawan -->
+     <div id="screen-game-sumatra" class="screen hidden">
+      <div class="max-w-3xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8">
+        <div class="text-center mb-6"><span class="text-5xl">⏰</span>
+         <h2 class="text-2xl font-bold text-red-600 mt-2">Jadwal Pahlawan</h2>
+         <p class="text-gray-600">Susun jadwal harian dengan disiplin!</p>
+        </div><!-- Schedule Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><!-- Activities to drag -->
+         <div>
+          <h3 class="font-bold text-gray-700 mb-3">📋 Kegiatan</h3>
+          <div id="activities-container" class="space-y-2">
+           <div class="draggable bg-yellow-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="bangun">
+            🌅 Bangun Tidur
+           </div>
+           <div class="draggable bg-blue-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="mandi">
+            🚿 Mandi Pagi
+           </div>
+           <div class="draggable bg-green-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="sarapan">
+            🍳 Sarapan
+           </div>
+           <div class="draggable bg-purple-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="sekolah">
+            🏫 Berangkat Sekolah
+           </div>
+           <div class="draggable bg-pink-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="belajar">
+            📖 Belajar
+           </div>
+           <div class="draggable bg-orange-100 p-3 rounded-xl cursor-grab" draggable="true" data-activity="tidur">
+            🌙 Tidur Malam
+           </div>
+          </div>
+         </div><!-- Time slots -->
+         <div>
+          <h3 class="font-bold text-gray-700 mb-3">🕐 Slot Waktu</h3>
+          <div class="space-y-2">
+           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="05:00"><span class="text-gray-500">05:00 - </span>
+           </div>
+           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="06:00"><span class="text-gray-500">06:00 - </span>
+           </div>
+           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="06:30"><span class="text-gray-500">06:30 - </span>
+           </div>
+           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="07:00"><span class="text-gray-500">07:00 - </span>
+           </div>
+           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="15:00"><span class="text-gray-500">15:00 - </span>
+           </div>
+           <div class="drop-zone p-3 rounded-xl min-h-[50px] bg-gray-50" data-time="21:00"><span class="text-gray-500">21:00 - </span>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="mt-6 text-center">
+         <p class="text-gray-600 mb-4">Skor: <span id="sumatra-score" class="font-bold text-red-600">0</span>/6</p><button onclick="checkSchedule()" class="bg-red-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-600 transition-colors"> ✅ Periksa Jadwal </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Jawa: Misi Rawat Bumi -->
+     <div id="screen-game-jawa" class="screen hidden">
+      <div class="max-w-3xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8">
+        <div class="text-center mb-6"><span class="text-5xl">📚</span>
+         <h2 class="text-2xl font-bold text-green-600 mt-2">Misi Rawat Bumi</h2>
+         <p class="text-gray-600">Selesaikan semua tugas tanggung jawabmu!</p>
+        </div><!-- Progress Bar -->
+        <div class="mb-6">
+         <div class="flex justify-between text-sm text-gray-600 mb-1"><span>Progress</span> <span id="jawa-progress-text">0/4 tugas</span>
+         </div>
+         <div class="w-full h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div id="jawa-progress-bar" class="h-full bg-green-500 progress-fill" style="width: 0%"></div>
+         </div>
+        </div><!-- Tasks Grid -->
+        <div class="grid grid-cols-2 gap-4"><button onclick="completeTask('siram')" id="task-siram" class="task-btn bg-blue-50 hover:bg-blue-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-blue-400"> <span class="text-5xl">🌱</span> <p class="font-semibold mt-2">Siram Tanaman</p><span class="task-status text-green-500 hidden">✅ Selesai</span> </button> <button onclick="completeTask('rapikan')" id="task-rapikan" class="task-btn bg-purple-50 hover:bg-purple-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-purple-400"> <span class="text-5xl">📚</span> <p class="font-semibold mt-2">Rapikan Buku</p><span class="task-status text-green-500 hidden">✅ Selesai</span> </button> <button onclick="completeTask('sampah')" id="task-sampah" class="task-btn bg-orange-50 hover:bg-orange-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-orange-400"> <span class="text-5xl">🗑️</span> <p class="font-semibold mt-2">Buang Sampah</p><span class="task-status text-green-500 hidden">✅ Selesai</span> </button> <button onclick="completeTask('makan')" id="task-makan" class="task-btn bg-pink-50 hover:bg-pink-100 p-6 rounded-2xl text-center transition-all border-2 border-transparent hover:border-pink-400"> <span class="text-5xl">🍽️</span> <p class="font-semibold mt-2">Cuci Piring</p><span class="task-status text-green-500 hidden">✅ Selesai</span> </button>
+        </div>
+        <div id="jawa-result" class="mt-6 text-center hidden">
+         <div class="bg-green-100 rounded-2xl p-6"><span class="text-5xl">🎉</span>
+          <h3 class="text-xl font-bold text-green-700 mt-2">Hebat! Semua Tugas Selesai!</h3>
+          <p class="text-green-600">Kamu anak yang bertanggung jawab!</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Kalimantan: Gotong Royong Mosaik -->
+     <div id="screen-game-kalimantan" class="screen hidden">
+      <div class="max-w-3xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8">
+        <div class="text-center mb-6"><span class="text-5xl">🤝</span>
+         <h2 class="text-2xl font-bold text-yellow-600 mt-2">Gotong Royong Mosaik</h2>
+         <p class="text-gray-600">Susun puzzle rumah adat bersama teman!</p>
+        </div><!-- Timer -->
+        <div class="text-center mb-4"><span class="text-2xl font-bold text-yellow-600">⏱️ <span id="puzzle-timer">3:00</span></span>
+        </div><!-- AI Helpers -->
+        <div class="flex justify-center gap-4 mb-6">
+         <div class="text-center">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl">
+           👦
+          </div>
+          <p class="text-sm mt-1">Budi</p>
+         </div>
+         <div class="text-center">
+          <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center text-3xl">
+           👧
+          </div>
+          <p class="text-sm mt-1">Ani</p>
+         </div>
+        </div><!-- Puzzle Grid -->
+        <div id="puzzle-container" class="grid grid-cols-3 gap-2 max-w-md mx-auto mb-6"><!-- Puzzle pieces will be generated by JS -->
+        </div>
+        <div class="flex justify-center gap-4"><button onclick="startPuzzle()" class="bg-yellow-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-yellow-600 transition-colors"> 🎮 Mulai Puzzle </button> <button onclick="getHint()" class="bg-blue-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600 transition-colors"> 💡 Minta Bantuan </button>
+        </div>
+        <div id="kalimantan-result" class="mt-6 text-center hidden">
+         <div class="bg-yellow-100 rounded-2xl p-6"><span class="text-5xl">🏠</span>
+          <h3 class="text-xl font-bold text-yellow-700 mt-2">Rumah Adat Selesai!</h3>
+          <p class="text-yellow-600">Kerja sama tim yang hebat!</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Sulawesi: Kata Ajaib -->
+     <div id="screen-game-sulawesi" class="screen hidden">
+      <div class="max-w-3xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8">
+        <div class="text-center mb-6"><span class="text-5xl">🙏</span>
+         <h2 class="text-2xl font-bold text-blue-600 mt-2">Kata Ajaib</h2>
+         <p class="text-gray-600">Pilih kata-kata sopan di pasar!</p>
+        </div><!-- Scenario -->
+        <div id="sulawesi-scenario" class="bg-blue-50 rounded-2xl p-6 mb-6">
+         <div class="text-center mb-4"><span class="text-6xl">🏪</span>
+         </div>
+         <p id="scenario-text" class="text-lg text-center text-gray-700">Kamu ingin membeli buah di pasar. Apa yang kamu katakan kepada penjual?</p>
+        </div><!-- Choices -->
+        <div id="sulawesi-choices" class="space-y-3"><button onclick="selectChoice(0)" class="choice-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 text-left transition-all"> "Bu, saya mau beli jeruk 1 kg, <strong>tolong</strong> ya!" </button> <button onclick="selectChoice(1)" class="choice-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 text-left transition-all"> "Hey, kasih jeruk 1 kg!" </button> <button onclick="selectChoice(2)" class="choice-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 text-left transition-all"> "Jeruknya mana? Cepat!" </button>
+        </div><!-- Coins -->
+        <div class="mt-6 text-center"><span class="text-2xl">🪙</span> <span id="sulawesi-coins" class="text-xl font-bold text-yellow-600">0</span> <span class="text-gray-600"> koin sopan</span>
+        </div>
+        <div id="sulawesi-feedback" class="mt-4 text-center hidden"></div>
+       </div>
+      </div>
+     </div><!-- Bali: Bhineka Warna -->
+     <div id="screen-game-bali" class="screen hidden">
+      <div class="max-w-4xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8">
+        <div class="text-center mb-6"><span class="text-5xl">🌈</span>
+         <h2 class="text-2xl font-bold text-purple-600 mt-2">Bhineka Warna</h2>
+         <p class="text-gray-600">Cocokkan budaya dengan daerah asalnya!</p>
+        </div><!-- Cards to drag -->
+        <div class="mb-6">
+         <h3 class="font-bold text-gray-700 mb-3">🎴 Kartu Budaya</h3>
+         <div id="culture-cards" class="flex flex-wrap gap-3 justify-center">
+          <div class="draggable bg-red-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="sumatra">
+           🏠 Rumah Gadang
+          </div>
+          <div class="draggable bg-green-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="jawa">
+           👘 Batik
+          </div>
+          <div class="draggable bg-yellow-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="kalimantan">
+           🍲 Soto Banjar
+          </div>
+          <div class="draggable bg-purple-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="bali">
+           💃 Tari Kecak
+          </div>
+          <div class="draggable bg-blue-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="papua">
+           🎭 Tifa
+          </div>
+          <div class="draggable bg-pink-100 px-4 py-2 rounded-xl cursor-grab" draggable="true" data-region="sulawesi">
+           🏛️ Tongkonan
+          </div>
+         </div>
+        </div><!-- Drop zones for regions -->
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-red-50" data-region="sumatra">
+          <p class="font-bold text-red-600 mb-2">🏔️ Sumatra</p>
+         </div>
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-green-50" data-region="jawa">
+          <p class="font-bold text-green-600 mb-2">🏛️ Jawa</p>
+         </div>
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-yellow-50" data-region="kalimantan">
+          <p class="font-bold text-yellow-600 mb-2">🌲 Kalimantan</p>
+         </div>
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-blue-50" data-region="sulawesi">
+          <p class="font-bold text-blue-600 mb-2">🌊 Sulawesi</p>
+         </div>
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-purple-50" data-region="bali">
+          <p class="font-bold text-purple-600 mb-2">🌺 Bali</p>
+         </div>
+         <div class="drop-zone region-drop p-4 rounded-xl min-h-[100px] bg-indigo-50" data-region="papua">
+          <p class="font-bold text-indigo-600 mb-2">🦜 Papua</p>
+         </div>
+        </div><!-- Fun fact -->
+        <div id="bali-fact" class="mt-6 bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-4 hidden">
+         <p class="text-center text-purple-700"><span class="text-xl">💡</span> <span id="fact-text"></span></p>
+        </div>
+        <div class="mt-6 text-center"><button onclick="checkCulture()" class="bg-purple-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-purple-600 transition-colors"> ✅ Periksa Jawaban </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Papua: Hati Nurani -->
+     <div id="screen-game-papua" class="screen hidden">
+      <div class="max-w-3xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8">
+        <div class="text-center mb-6"><span class="text-5xl">💜</span>
+         <h2 class="text-2xl font-bold text-indigo-600 mt-2">Hati Nurani</h2>
+         <p class="text-gray-600">Pilih tindakan jujur!</p>
+        </div><!-- Story -->
+        <div id="papua-story" class="bg-indigo-50 rounded-2xl p-6 mb-6">
+         <div class="text-center mb-4"><span id="story-emoji" class="text-6xl">👛</span>
+         </div>
+         <p id="story-text" class="text-lg text-center text-gray-700">Kamu menemukan dompet berisi uang di jalan. Tidak ada orang di sekitar. Apa yang akan kamu lakukan?</p>
+        </div><!-- Choices -->
+        <div id="papua-choices" class="space-y-3"><button onclick="selectHonesty(0)" class="honesty-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 text-left transition-all"> 🔍 Mencari pemiliknya atau menyerahkan ke polisi/guru </button> <button onclick="selectHonesty(1)" class="honesty-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 text-left transition-all"> 🤫 Menyimpan uangnya untuk diri sendiri </button> <button onclick="selectHonesty(2)" class="honesty-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 text-left transition-all"> 🚶 Meninggalkannya begitu saja </button>
+        </div><!-- Stars -->
+        <div class="mt-6 text-center"><span class="text-2xl">⭐</span> <span id="papua-stars" class="text-xl font-bold text-yellow-600">0</span> <span class="text-gray-600"> bintang kejujuran</span>
+        </div>
+        <div id="papua-feedback" class="mt-4 text-center hidden"></div>
+       </div>
+      </div>
+     </div><!-- Journal Screen -->
+     <div id="screen-journal" class="screen hidden">
+      <div class="max-w-2xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">📔 Jurnal Harian</h2>
+        <div class="bg-yellow-50 rounded-2xl p-6 mb-6"><label class="block text-gray-700 font-semibold mb-3">✨ Hari ini aku berhasil...</label> <textarea id="journal-entry" class="w-full h-32 p-4 rounded-xl border-2 border-yellow-200 focus:border-yellow-500 focus:outline-none resize-none" placeholder="Ceritakan pengalamanmu hari ini..."></textarea>
+        </div><button onclick="saveJournal()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> 💾 Simpan Jurnal </button> <!-- Previous Entries -->
+        <div class="mt-8">
+         <h3 class="font-bold text-gray-700 mb-4">📖 Jurnal Sebelumnya</h3>
+         <div id="journal-list" class="space-y-3 max-h-64 overflow-y-auto scroll-container">
+          <p class="text-gray-500 text-center">Belum ada jurnal tersimpan</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Garden Screen -->
+     <div id="screen-garden" class="screen hidden">
+      <div class="max-w-3xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-green-700 mb-6">🌱 Taman Karakter</h2>
+        <p class="text-center text-gray-600 mb-6">Tanamanmu tumbuh sesuai bintang yang kamu kumpulkan!</p><!-- Garden Grid -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+         <div class="text-center p-4 bg-green-50 rounded-2xl">
+          <div id="plant-1" class="text-5xl">
+           🌱
+          </div>
+          <p class="text-sm mt-2 text-green-600">Disiplin</p>
+         </div>
+         <div class="text-center p-4 bg-green-50 rounded-2xl">
+          <div id="plant-2" class="text-5xl">
+           🌱
+          </div>
+          <p class="text-sm mt-2 text-green-600">Tanggung Jawab</p>
+         </div>
+         <div class="text-center p-4 bg-green-50 rounded-2xl">
+          <div id="plant-3" class="text-5xl">
+           🌱
+          </div>
+          <p class="text-sm mt-2 text-green-600">Kerja Sama</p>
+         </div>
+         <div class="text-center p-4 bg-green-50 rounded-2xl">
+          <div id="plant-4" class="text-5xl">
+           🌱
+          </div>
+          <p class="text-sm mt-2 text-green-600">Sopan Santun</p>
+         </div>
+         <div class="text-center p-4 bg-green-50 rounded-2xl">
+          <div id="plant-5" class="text-5xl">
+           🌱
+          </div>
+          <p class="text-sm mt-2 text-green-600">Toleransi</p>
+         </div>
+         <div class="text-center p-4 bg-green-50 rounded-2xl">
+          <div id="plant-6" class="text-5xl">
+           🌱
+          </div>
+          <p class="text-sm mt-2 text-green-600">Jujur</p>
+         </div>
+        </div>
+        <div class="text-center bg-yellow-100 rounded-2xl p-4">
+         <p class="text-yellow-700">🌟 Total Bintang: <span id="garden-stars" class="font-bold">0</span></p>
+         <p class="text-sm text-yellow-600">Kumpulkan bintang untuk menumbuhkan tanamanmu!</p>
+        </div>
+       </div>
+      </div>
+     </div><!-- Comic Generator Screen -->
+     <div id="screen-comic" class="screen hidden">
+      <div class="max-w-4xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-pink-700 mb-6">🎨 Komik Generator</h2>
+        <p class="text-center text-gray-600 mb-6">Buat komik tentang karakter baikmu!</p><!-- Comic Panels -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+         <div class="comic-panel bg-gray-100 rounded-xl p-4 min-h-[200px] relative">
+          <div class="absolute top-2 left-2 bg-pink-500 text-white text-xs px-2 py-1 rounded">
+           Panel 1
+          </div><select id="comic-bg-1" class="w-full mt-6 p-2 rounded border" onchange="updateComicPanel(1)"> <option value="🏫">🏫 Sekolah</option> <option value="🏠">🏠 Rumah</option> <option value="🌳">🌳 Taman</option> <option value="🏪">🏪 Pasar</option> </select> <select id="comic-char-1" class="w-full mt-2 p-2 rounded border" onchange="updateComicPanel(1)"> <option value="👦">👦 Anak Laki-laki</option> <option value="👧">👧 Anak Perempuan</option> <option value="👨‍🏫">👨‍🏫 Guru</option> <option value="👩">👩 Ibu</option> </select> <input type="text" id="comic-text-1" class="w-full mt-2 p-2 rounded border text-sm" placeholder="Dialog..." onchange="updateComicPanel(1)">
+          <div id="comic-preview-1" class="mt-2 text-center text-3xl">
+           🏫👦
+          </div>
+         </div>
+         <div class="comic-panel bg-gray-100 rounded-xl p-4 min-h-[200px] relative">
+          <div class="absolute top-2 left-2 bg-pink-500 text-white text-xs px-2 py-1 rounded">
+           Panel 2
+          </div><select id="comic-bg-2" class="w-full mt-6 p-2 rounded border" onchange="updateComicPanel(2)"> <option value="🏫">🏫 Sekolah</option> <option value="🏠">🏠 Rumah</option> <option value="🌳">🌳 Taman</option> <option value="🏪">🏪 Pasar</option> </select> <select id="comic-char-2" class="w-full mt-2 p-2 rounded border" onchange="updateComicPanel(2)"> <option value="👦">👦 Anak Laki-laki</option> <option value="👧">👧 Anak Perempuan</option> <option value="👨‍🏫">👨‍🏫 Guru</option> <option value="👩">👩 Ibu</option> </select> <input type="text" id="comic-text-2" class="w-full mt-2 p-2 rounded border text-sm" placeholder="Dialog..." onchange="updateComicPanel(2)">
+          <div id="comic-preview-2" class="mt-2 text-center text-3xl">
+           🏫👦
+          </div>
+         </div>
+         <div class="comic-panel bg-gray-100 rounded-xl p-4 min-h-[200px] relative">
+          <div class="absolute top-2 left-2 bg-pink-500 text-white text-xs px-2 py-1 rounded">
+           Panel 3
+          </div><select id="comic-bg-3" class="w-full mt-6 p-2 rounded border" onchange="updateComicPanel(3)"> <option value="🏫">🏫 Sekolah</option> <option value="🏠">🏠 Rumah</option> <option value="🌳">🌳 Taman</option> <option value="🏪">🏪 Pasar</option> </select> <select id="comic-char-3" class="w-full mt-2 p-2 rounded border" onchange="updateComicPanel(3)"> <option value="👦">👦 Anak Laki-laki</option> <option value="👧">👧 Anak Perempuan</option> <option value="👨‍🏫">👨‍🏫 Guru</option> <option value="👩">👩 Ibu</option> </select> <input type="text" id="comic-text-3" class="w-full mt-2 p-2 rounded border text-sm" placeholder="Dialog..." onchange="updateComicPanel(3)">
+          <div id="comic-preview-3" class="mt-2 text-center text-3xl">
+           🏫👦
+          </div>
+         </div>
+        </div>
+        <div class="flex justify-center gap-4"><button onclick="previewComic()" class="bg-pink-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-pink-600 transition-colors"> 👁️ Preview Komik </button> <button onclick="downloadComic()" class="bg-purple-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-purple-600 transition-colors"> 📥 Unduh Komik </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Expression Game Screen -->
+     <div id="screen-expression" class="screen hidden">
+      <div class="max-w-2xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-orange-700 mb-6">😊 Tebak Ekspresi</h2>
+        <p class="text-center text-gray-600 mb-6">Tebak karakter dari emoji!</p><!-- Expression Display -->
+        <div class="text-center mb-8">
+         <div id="expression-emoji" class="text-8xl mb-4">
+          😡📚
+         </div>
+         <p class="text-gray-600">Karakter apa yang ditunjukkan?</p>
+        </div><!-- Answer Options -->
+        <div id="expression-options" class="grid grid-cols-2 gap-4"><button onclick="checkExpression('disiplin')" class="expression-btn bg-red-50 hover:bg-red-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-red-400"> <span class="text-3xl">⏰</span> <p class="font-semibold mt-2">Kurang Disiplin</p></button> <button onclick="checkExpression('tanggung_jawab')" class="expression-btn bg-green-50 hover:bg-green-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-green-400"> <span class="text-3xl">📚</span> <p class="font-semibold mt-2">Kurang Tanggung Jawab</p></button> <button onclick="checkExpression('sopan')" class="expression-btn bg-blue-50 hover:bg-blue-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-blue-400"> <span class="text-3xl">🙏</span> <p class="font-semibold mt-2">Kurang Sopan</p></button> <button onclick="checkExpression('jujur')" class="expression-btn bg-purple-50 hover:bg-purple-100 p-4 rounded-xl text-center transition-all border-2 border-transparent hover:border-purple-400"> <span class="text-3xl">💜</span> <p class="font-semibold mt-2">Kurang Jujur</p></button>
+        </div>
+        <div class="mt-6 text-center">
+         <p>Skor: <span id="expression-score" class="font-bold text-orange-600">0</span>/5</p>
+        </div>
+        <div id="expression-feedback" class="mt-4 text-center hidden"></div>
+       </div>
+      </div>
+     </div><!-- Profile Screen -->
+     <div id="screen-profile" class="screen hidden">
+      <div class="max-w-2xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">👤 Profil Duta Karakter</h2><!-- Avatar Display -->
+        <div class="text-center mb-6">
+         <div id="profile-avatar" class="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center text-6xl">
+          🧒
+         </div>
+         <h3 id="profile-name" class="text-xl font-bold mt-4">Nama Siswa</h3>
+         <p id="profile-class" class="text-gray-600">Kelas - Sekolah</p>
+        </div><!-- Stats -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+         <div class="bg-yellow-50 rounded-xl p-4 text-center"><span class="text-3xl">🌟</span>
+          <p class="text-2xl font-bold text-yellow-600" id="profile-stars">0</p>
+          <p class="text-sm text-gray-600">Total Bintang</p>
+         </div>
+         <div class="bg-green-50 rounded-xl p-4 text-center"><span class="text-3xl">🏝️</span>
+          <p class="text-2xl font-bold text-green-600" id="profile-islands">0/6</p>
+          <p class="text-sm text-gray-600">Pulau Selesai</p>
+         </div>
+        </div><!-- Character Progress -->
+        <div class="space-y-3">
+         <h3 class="font-bold text-gray-700">📊 Progress Karakter</h3>
+         <div class="flex items-center gap-3"><span class="w-24 text-sm">Disiplin</span>
+          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+           <div id="prog-disiplin" class="h-full bg-red-500 progress-fill" style="width: 0%"></div>
+          </div>
+         </div>
+         <div class="flex items-center gap-3"><span class="w-24 text-sm">Tanggung Jawab</span>
+          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+           <div id="prog-tanggung" class="h-full bg-green-500 progress-fill" style="width: 0%"></div>
+          </div>
+         </div>
+         <div class="flex items-center gap-3"><span class="w-24 text-sm">Kerja Sama</span>
+          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+           <div id="prog-kerjasama" class="h-full bg-yellow-500 progress-fill" style="width: 0%"></div>
+          </div>
+         </div>
+         <div class="flex items-center gap-3"><span class="w-24 text-sm">Sopan Santun</span>
+          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+           <div id="prog-sopan" class="h-full bg-blue-500 progress-fill" style="width: 0%"></div>
+          </div>
+         </div>
+         <div class="flex items-center gap-3"><span class="w-24 text-sm">Toleransi</span>
+          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+           <div id="prog-toleransi" class="h-full bg-purple-500 progress-fill" style="width: 0%"></div>
+          </div>
+         </div>
+         <div class="flex items-center gap-3"><span class="w-24 text-sm">Jujur</span>
+          <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+           <div id="prog-jujur" class="h-full bg-indigo-500 progress-fill" style="width: 0%"></div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Posttest Screen -->
+     <div id="screen-posttest" class="screen hidden">
+      <div class="max-w-2xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-green-700 mb-2">📊 Posttest</h2>
+        <p class="text-center text-gray-600 mb-6">Selamat! Kamu sudah menyelesaikan semua pulau! Jawab pertanyaan berikut:</p>
+        <div id="posttest-questions" class="space-y-6"><!-- Questions will be generated by JS -->
+        </div>
+        <div class="flex justify-between items-center mt-8"><span id="posttest-progress" class="text-gray-600">Pertanyaan 1/12</span> <button onclick="submitPosttest()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg"> Selesai ✅ </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Results Comparison Screen -->
+     <div id="screen-results" class="screen hidden">
+      <div class="max-w-3xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">🏆 Hasil Perbandingan</h2>
+        <div id="results-comparison" class="space-y-4"><!-- Results will be generated by JS -->
+        </div><button onclick="showScreen('student-response')" class="w-full mt-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> 📝 Isi Angket Respon </button>
+       </div>
+      </div>
+     </div><!-- Student Response Screen -->
+     <div id="screen-student-response" class="screen hidden">
+      <div class="max-w-2xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-purple-700 mb-6">📝 Angket Respon Siswa</h2>
+        <div class="space-y-6">
+         <div class="bg-purple-50 rounded-xl p-4">
+          <p class="font-semibold mb-3">😊 Apakah kamu senang bermain Smart Edukultur?</p>
+          <div class="flex justify-center gap-4"><button onclick="setResponse('q1', 3)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q1">😄</button> <button onclick="setResponse('q1', 2)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q1">😐</button> <button onclick="setResponse('q1', 1)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q1">😢</button>
+          </div>
+         </div>
+         <div class="bg-blue-50 rounded-xl p-4">
+          <p class="font-semibold mb-3">🎮 Apakah game-nya mudah dimainkan?</p>
+          <div class="flex justify-center gap-4"><button onclick="setResponse('q2', 3)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q2">👍</button> <button onclick="setResponse('q2', 2)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q2">🤔</button> <button onclick="setResponse('q2', 1)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q2">👎</button>
+          </div>
+         </div>
+         <div class="bg-green-50 rounded-xl p-4">
+          <p class="font-semibold mb-3">📚 Apakah kamu lebih paham tentang karakter baik?</p>
+          <div class="flex justify-center gap-4"><button onclick="setResponse('q3', 3)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q3">🌟</button> <button onclick="setResponse('q3', 2)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q3">⭐</button> <button onclick="setResponse('q3', 1)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q3">✨</button>
+          </div>
+         </div>
+         <div class="bg-yellow-50 rounded-xl p-4">
+          <p class="font-semibold mb-3">🔄 Apakah kamu ingin main lagi?</p>
+          <div class="flex justify-center gap-4"><button onclick="setResponse('q4', 3)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q4">❤️</button> <button onclick="setResponse('q4', 2)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q4">💛</button> <button onclick="setResponse('q4', 1)" class="response-btn emoji-btn text-4xl p-2 rounded-lg" data-question="q4">💔</button>
+          </div>
+         </div>
+         <div class="bg-pink-50 rounded-xl p-4">
+          <p class="font-semibold mb-3">⭐ Fitur favoritmu?</p>
+          <div class="flex flex-wrap justify-center gap-2"><button onclick="setResponse('q5', 'game')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500" data-question="q5">🎮 Game</button> <button onclick="setResponse('q5', 'jurnal')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500" data-question="q5">📔 Jurnal</button> <button onclick="setResponse('q5', 'taman')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500" data-question="q5">🌱 Taman</button> <button onclick="setResponse('q5', 'komik')" class="response-btn px-4 py-2 rounded-lg bg-white border-2 hover:border-pink-500" data-question="q5">🎨 Komik</button>
+          </div>
+         </div>
+        </div><button onclick="submitStudentResponse()" class="w-full mt-8 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> ✅ Kirim Angket </button>
+       </div>
+      </div>
+     </div><!-- Validator Mode Screen -->
+     <div id="screen-validator" class="screen hidden">
+      <div class="max-w-3xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6">🔬 Mode Validator</h2>
+        <div class="grid md:grid-cols-2 gap-6"><!-- Material Validation -->
+         <div class="bg-indigo-50 rounded-xl p-6">
+          <h3 class="font-bold text-indigo-700 mb-4">📚 Validasi Materi</h3>
+          <div class="space-y-4">
+           <div><label class="block text-sm mb-2">Kesesuaian Materi dengan Kurikulum</label> <input type="range" id="val-materi-1" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500">
+             <span>1</span><span>5</span>
+            </div>
+           </div>
+           <div><label class="block text-sm mb-2">Kejelasan Nilai Karakter</label> <input type="range" id="val-materi-2" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500">
+             <span>1</span><span>5</span>
+            </div>
+           </div>
+           <div><label class="block text-sm mb-2">Kesesuaian Bahasa untuk Anak SD</label> <input type="range" id="val-materi-3" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500">
+             <span>1</span><span>5</span>
+            </div>
+           </div>
+          </div>
+         </div><!-- Media Validation -->
+         <div class="bg-purple-50 rounded-xl p-6">
+          <h3 class="font-bold text-purple-700 mb-4">🎨 Validasi Media</h3>
+          <div class="space-y-4">
+           <div><label class="block text-sm mb-2">Tampilan Visual</label> <input type="range" id="val-media-1" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500">
+             <span>1</span><span>5</span>
+            </div>
+           </div>
+           <div><label class="block text-sm mb-2">Kemudahan Navigasi</label> <input type="range" id="val-media-2" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500">
+             <span>1</span><span>5</span>
+            </div>
+           </div>
+           <div><label class="block text-sm mb-2">Interaktivitas</label> <input type="range" id="val-media-3" min="1" max="5" value="3" class="w-full">
+            <div class="flex justify-between text-xs text-gray-500">
+             <span>1</span><span>5</span>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div><!-- Suggestions -->
+        <div class="mt-6"><label class="block font-bold text-gray-700 mb-2">💬 Saran dan Masukan</label> <textarea id="validator-suggestions" class="w-full h-32 p-4 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none resize-none" placeholder="Tuliskan saran Anda..."></textarea>
+        </div><button onclick="submitValidation()" class="w-full mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-4 rounded-xl text-xl font-bold hover:scale-105 transition-transform shadow-lg"> 📤 Kirim Validasi </button>
+       </div>
+      </div>
+     </div><!-- Teacher Dashboard Screen -->
+     <div id="screen-dashboard" class="screen hidden">
+      <div class="max-w-5xl mx-auto py-8">
+       <div class="bg-white rounded-3xl shadow-2xl p-8 slide-up">
+        <h2 class="text-2xl font-bold text-center text-green-700 mb-6">👨‍🏫 Dashboard Guru</h2><!-- Stats Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+         <div class="bg-blue-50 rounded-xl p-4 text-center"><span class="text-3xl">👨‍🎓</span>
+          <p id="dash-students" class="text-2xl font-bold text-blue-600">0</p>
+          <p class="text-sm text-gray-600">Siswa Aktif</p>
+         </div>
+         <div class="bg-green-50 rounded-xl p-4 text-center"><span class="text-3xl">✅</span>
+          <p id="dash-completed" class="text-2xl font-bold text-green-600">0</p>
+          <p class="text-sm text-gray-600">Selesai Semua</p>
+         </div>
+         <div class="bg-yellow-50 rounded-xl p-4 text-center"><span class="text-3xl">🌟</span>
+          <p id="dash-avg-stars" class="text-2xl font-bold text-yellow-600">0</p>
+          <p class="text-sm text-gray-600">Rata-rata Bintang</p>
+         </div>
+         <div class="bg-purple-50 rounded-xl p-4 text-center"><span class="text-3xl">📔</span>
+          <p id="dash-journals" class="text-2xl font-bold text-purple-600">0</p>
+          <p class="text-sm text-gray-600">Total Jurnal</p>
+         </div>
+        </div><!-- Student Data Table -->
+        <div class="mb-8">
+         <h3 class="font-bold text-gray-700 mb-4">📊 Data Siswa</h3>
+         <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+           <thead class="bg-gray-100">
+            <tr>
+             <th class="p-3 text-left rounded-tl-lg">Nama</th>
+             <th class="p-3 text-center">Kelas</th>
+             <th class="p-3 text-center">Pretest</th>
+             <th class="p-3 text-center">Posttest</th>
+             <th class="p-3 text-center">Bintang</th>
+             <th class="p-3 text-center rounded-tr-lg">Status</th>
+            </tr>
+           </thead>
+           <tbody id="student-table-body">
+            <tr>
+             <td colspan="6" class="p-4 text-center text-gray-500">Belum ada data siswa</td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+        </div><!-- Character Progress Chart -->
+        <div class="mb-8">
+         <h3 class="font-bold text-gray-700 mb-4">📈 Rata-rata Peningkatan per Karakter</h3>
+         <div id="character-chart" class="grid grid-cols-6 gap-2">
+          <div class="text-center">
+           <div class="h-32 bg-red-100 rounded-t-lg relative overflow-hidden">
+            <div id="chart-disiplin" class="absolute bottom-0 w-full bg-red-500 transition-all" style="height: 0%"></div>
+           </div>
+           <p class="text-xs mt-1">Disiplin</p>
+          </div>
+          <div class="text-center">
+           <div class="h-32 bg-green-100 rounded-t-lg relative overflow-hidden">
+            <div id="chart-tanggung" class="absolute bottom-0 w-full bg-green-500 transition-all" style="height: 0%"></div>
+           </div>
+           <p class="text-xs mt-1">T.Jawab</p>
+          </div>
+          <div class="text-center">
+           <div class="h-32 bg-yellow-100 rounded-t-lg relative overflow-hidden">
+            <div id="chart-kerjasama" class="absolute bottom-0 w-full bg-yellow-500 transition-all" style="height: 0%"></div>
+           </div>
+           <p class="text-xs mt-1">K.Sama</p>
+          </div>
+          <div class="text-center">
+           <div class="h-32 bg-blue-100 rounded-t-lg relative overflow-hidden">
+            <div id="chart-sopan" class="absolute bottom-0 w-full bg-blue-500 transition-all" style="height: 0%"></div>
+           </div>
+           <p class="text-xs mt-1">Sopan</p>
+          </div>
+          <div class="text-center">
+           <div class="h-32 bg-purple-100 rounded-t-lg relative overflow-hidden">
+            <div id="chart-toleransi" class="absolute bottom-0 w-full bg-purple-500 transition-all" style="height: 0%"></div>
+           </div>
+           <p class="text-xs mt-1">Toleransi</p>
+          </div>
+          <div class="text-center">
+           <div class="h-32 bg-indigo-100 rounded-t-lg relative overflow-hidden">
+            <div id="chart-jujur" class="absolute bottom-0 w-full bg-indigo-500 transition-all" style="height: 0%"></div>
+           </div>
+           <p class="text-xs mt-1">Jujur</p>
+          </div>
+         </div>
+        </div><!-- Teacher Response Form -->
+        <div class="bg-gray-50 rounded-xl p-6 mb-6">
+         <h3 class="font-bold text-gray-700 mb-4">📝 Angket Respon Guru</h3>
+         <div class="grid md:grid-cols-2 gap-4">
+          <div><label class="block text-sm mb-2">Kemudahan Penggunaan (1-5)</label> <input type="range" id="teacher-q1" min="1" max="5" value="3" class="w-full">
+          </div>
+          <div><label class="block text-sm mb-2">Kesesuaian dengan Pembelajaran (1-5)</label> <input type="range" id="teacher-q2" min="1" max="5" value="3" class="w-full">
+          </div>
+          <div><label class="block text-sm mb-2">Antusiasme Siswa (1-5)</label> <input type="range" id="teacher-q3" min="1" max="5" value="3" class="w-full">
+          </div>
+          <div><label class="block text-sm mb-2">Kebermanfaatan (1-5)</label> <input type="range" id="teacher-q4" min="1" max="5" value="3" class="w-full">
+          </div>
+         </div><button onclick="submitTeacherResponse()" class="mt-4 bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors"> 📤 Kirim Respon </button>
+        </div><!-- Export Buttons -->
+        <div class="flex justify-center gap-4"><button onclick="exportCSV()" class="bg-blue-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600 transition-colors"> 📊 Ekspor CSV </button> <button onclick="exportPDF()" class="bg-red-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-red-600 transition-colors"> 📄 Ekspor PDF </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Access Code Modal -->
+     <div id="access-modal" class="hidden fixed inset-0 bg-black/50 modal-overlay flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-2xl p-6 max-w-sm w-full">
+       <h3 class="text-xl font-bold text-center mb-4">🔐 Masukkan Kode Akses</h3><input type="password" id="access-code-input" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-center text-xl tracking-widest" placeholder="••••••••">
+       <p id="access-error" class="text-red-500 text-center mt-2 hidden">Kode tidak valid!</p>
+       <div class="flex gap-3 mt-4"><button onclick="closeAccessModal()" class="flex-1 px-4 py-2 rounded-xl border-2 border-gray-300 hover:bg-gray-100 transition-colors"> Batal </button> <button onclick="checkAccessCode()" class="flex-1 px-4 py-2 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition-colors"> Masuk </button>
+       </div>
+      </div>
+     </div><!-- Help Modal -->
+     <div id="help-modal" class="hidden fixed inset-0 bg-black/50 modal-overlay flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-2xl p-6 max-w-md w-full max-h-[80%] overflow-y-auto scroll-container">
+       <h3 class="text-xl font-bold text-center mb-4">❓ Bantuan</h3>
+       <div class="space-y-4 text-sm">
+        <div class="bg-blue-50 rounded-xl p-4">
+         <h4 class="font-bold text-blue-700">🏝️ Cara Bermain</h4>
+         <p class="text-gray-600">Kunjungi 6 pulau dan selesaikan tantangan untuk mengumpulkan pecahan permata karakter!</p>
+        </div>
+        <div class="bg-green-50 rounded-xl p-4">
+         <h4 class="font-bold text-green-700">🌟 Bintang</h4>
+         <p class="text-gray-600">Kumpulkan bintang dengan bermain game dan menumbuhkan Taman Karakter!</p>
+        </div>
+        <div class="bg-yellow-50 rounded-xl p-4">
+         <h4 class="font-bold text-yellow-700">📔 Jurnal</h4>
+         <p class="text-gray-600">Tulis pengalaman harianmu di Jurnal untuk mendapat bintang bonus!</p>
+        </div>
+        <div class="bg-purple-50 rounded-xl p-4">
+         <h4 class="font-bold text-purple-700">🎨 Fitur Kreatif</h4>
+         <p class="text-gray-600">Buat komik, main tebak ekspresi, dan rawat Taman Karakter!</p>
+        </div>
+       </div><button onclick="closeHelpModal()" class="w-full mt-4 px-4 py-2 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition-colors"> Mengerti! 👍 </button>
+      </div>
+     </div><!-- Success Toast -->
+     <div id="toast" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-full shadow-lg z-50 bounce-in"><span id="toast-message">✅ Berhasil!</span>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // ==================== STATE MANAGEMENT ====================
+    const defaultConfig = {
+      app_title: 'Smart Edukultur',
+      welcome_message: 'Selamat datang, Duta Karakter!'
+    };
+
+    let config = { ...defaultConfig };
+    let appData = [];
+    let currentUser = null;
+    let screenHistory = ['welcome'];
+    let currentScreen = 'welcome';
+    let userRecordId = null;
+    
+    // Game states
+    let gameStates = {
+      sumatra: { completed: false, score: 0 },
+      jawa: { completed: false, tasksCompleted: [] },
+      kalimantan: { completed: false, puzzleSolved: false },
+      sulawesi: { completed: false, coins: 0, questionIndex: 0 },
+      bali: { completed: false, correctMatches: 0 },
+      papua: { completed: false, stars: 0, storyIndex: 0 }
+    };
+    
+    let avatarSettings = {
+      gender: 'boy',
+      skin: '🧒🏽',
+      clothes: 'jawa',
+      pet: '🦜'
+    };
+
+    let pretestAnswers = {};
+    let posttestAnswers = {};
+    let studentResponses = {};
+    let puzzleTimer = null;
+    let expressionIndex = 0;
+    let expressionScore = 0;
+
+    // Pretest/Posttest questions
+    const testQuestions = [
+      { id: 'q1', character: 'disiplin', text: 'Aku bangun pagi tepat waktu setiap hari' },
+      { id: 'q2', character: 'disiplin', text: 'Aku mengerjakan PR tepat waktu' },
+      { id: 'q3', character: 'tanggung_jawab', text: 'Aku merapikan tempat tidur sendiri' },
+      { id: 'q4', character: 'tanggung_jawab', text: 'Aku merawat barang-barang milikku' },
+      { id: 'q5', character: 'kerja_sama', text: 'Aku senang bekerja dalam kelompok' },
+      { id: 'q6', character: 'kerja_sama', text: 'Aku membantu teman yang kesulitan' },
+      { id: 'q7', character: 'sopan_santun', text: 'Aku mengucapkan terima kasih saat dibantu' },
+      { id: 'q8', character: 'sopan_santun', text: 'Aku berbicara dengan sopan kepada orang tua' },
+      { id: 'q9', character: 'toleransi', text: 'Aku menghargai teman yang berbeda agama' },
+      { id: 'q10', character: 'toleransi', text: 'Aku tidak membeda-bedakan teman' },
+      { id: 'q11', character: 'jujur', text: 'Aku mengakui kesalahan yang aku buat' },
+      { id: 'q12', character: 'jujur', text: 'Aku tidak berbohong kepada orang tua dan guru' }
+    ];
+
+    // Sulawesi scenarios
+    const sulawesiScenarios = [
+      {
+        text: 'Kamu ingin membeli buah di pasar. Apa yang kamu katakan kepada penjual?',
+        choices: [
+          { text: '"Bu, saya mau beli jeruk 1 kg, tolong ya!"', correct: true },
+          { text: '"Hey, kasih jeruk 1 kg!"', correct: false },
+          { text: '"Jeruknya mana? Cepat!"', correct: false }
+        ]
+      },
+      {
+        text: 'Kamu tidak sengaja menginjak kaki temanmu. Apa yang kamu katakan?',
+        choices: [
+          { text: '"Maaf ya, aku tidak sengaja!"', correct: true },
+          { text: '"Salahmu sendiri!"', correct: false },
+          { text: 'Diam saja dan pergi', correct: false }
+        ]
+      },
+      {
+        text: 'Temanmu meminjamkan pensilnya kepadamu. Apa yang kamu ucapkan?',
+        choices: [
+          { text: '"Terima kasih banyak ya!"', correct: true },
+          { text: 'Langsung pakai tanpa bicara', correct: false },
+          { text: '"Ya sudah, sini!"', correct: false }
+        ]
+      }
+    ];
+
+    // Papua stories
+    const papuaStories = [
+      {
+        emoji: '👛',
+        text: 'Kamu menemukan dompet berisi uang di jalan. Tidak ada orang di sekitar. Apa yang akan kamu lakukan?',
+        choices: [
+          { text: '🔍 Mencari pemiliknya atau menyerahkan ke polisi/guru', correct: true },
+          { text: '🤫 Menyimpan uangnya untuk diri sendiri', correct: false },
+          { text: '🚶 Meninggalkannya begitu saja', correct: false }
+        ]
+      },
+      {
+        emoji: '🏺',
+        text: 'Kamu tidak sengaja memecahkan vas bunga di rumah saat bermain. Apa yang kamu lakukan?',
+        choices: [
+          { text: '✋ Mengaku kepada orang tua dan minta maaf', correct: true },
+          { text: '🙈 Berpura-pura tidak tahu', correct: false },
+          { text: '👆 Menyalahkan adik atau orang lain', correct: false }
+        ]
+      },
+      {
+        emoji: '📝',
+        text: 'Kamu lupa mengerjakan PR dan guru bertanya. Apa yang kamu katakan?',
+        choices: [
+          { text: '😔 "Maaf Bu/Pak, saya lupa. Saya akan kerjakan sekarang."', correct: true },
+          { text: '🤥 "PR saya tertinggal di rumah." (padahal tidak)', correct: false },
+          { text: '😷 "Saya sakit kemarin." (padahal tidak)', correct: false }
+        ]
+      }
+    ];
+
+    // Expression quiz data
+    const expressionQuizzes = [
+      { emoji: '😡📚', answer: 'disiplin', hint: 'Marah karena harus belajar' },
+      { emoji: '🗑️😴', answer: 'tanggung_jawab', hint: 'Malas membuang sampah' },
+      { emoji: '🤝❌', answer: 'kerja_sama', hint: 'Tidak mau kerja sama' },
+      { emoji: '👋😤', answer: 'sopan', hint: 'Tidak mau menyapa' },
+      { emoji: '🤥📖', answer: 'jujur', hint: 'Berbohong tentang PR' }
+    ];
+
+    // Culture facts
+    const cultureFacts = {
+      sumatra: '🏠 Rumah Gadang adalah rumah adat Minangkabau dengan atap berbentuk tanduk kerbau!',
+      jawa: '👘 Batik adalah warisan budaya Indonesia yang diakui UNESCO sejak 2009!',
+      kalimantan: '🍲 Soto Banjar adalah makanan khas Banjarmasin dengan kuah kuning yang gurih!',
+      sulawesi: '🏛️ Tongkonan adalah rumah adat Toraja dengan atap melengkung seperti perahu!',
+      bali: '💃 Tari Kecak adalah tarian yang diiringi suara "cak" dari puluhan penari!',
+      papua: '🎭 Tifa adalah alat musik tradisional Papua yang terbuat dari kayu dan kulit binatang!'
+    };
+
+    // ==================== SDK INITIALIZATION ====================
+    const dataHandler = {
+      onDataChanged(data) {
+        appData = data;
+        updateDashboard();
+      }
+    };
+
+    async function initApp() {
+      // Initialize Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (newConfig) => {
+            config = { ...config, ...newConfig };
+            const titleEl = document.getElementById('main-title');
+            if (titleEl) titleEl.textContent = config.app_title || defaultConfig.app_title;
+            const welcomeEl = document.getElementById('welcome-msg');
+            if (welcomeEl) welcomeEl.textContent = config.welcome_message || defaultConfig.welcome_message;
+          },
+          mapToCapabilities: (cfg) => ({
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (cfg) => new Map([
+            ['app_title', cfg.app_title || defaultConfig.app_title],
+            ['welcome_message', cfg.welcome_message || defaultConfig.welcome_message]
+          ])
+        });
+      }
+
+      // Initialize Data SDK
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Data SDK initialization failed');
+        }
+      }
+
+      // Setup drag and drop
+      setupDragAndDrop();
+
+      // Hide loading, show main content
+      setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.getElementById('main-container').classList.remove('hidden');
+        showScreen('welcome');
+      }, 1500);
+    }
+
+    // ==================== NAVIGATION ====================
+    function showScreen(screenId) {
+      // Hide all screens
+      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      
+      // Show target screen
+      const screen = document.getElementById('screen-' + screenId);
+      if (screen) {
+        screen.classList.remove('hidden');
+        
+        // Add to history if different from current
+        if (currentScreen !== screenId) {
+          screenHistory.push(screenId);
+          currentScreen = screenId;
+        }
+      }
+
+      // Special screen setup
+      if (screenId === 'pretest') generateTestQuestions('pretest');
+      if (screenId === 'posttest') generateTestQuestions('posttest');
+      if (screenId === 'profile') updateProfile();
+      if (screenId === 'garden') updateGarden();
+      if (screenId === 'dashboard') updateDashboard();
+    }
+
+    function goBack() {
+      if (screenHistory.length > 1) {
+        screenHistory.pop();
+        const prevScreen = screenHistory[screenHistory.length - 1];
+        currentScreen = prevScreen;
+        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+        const screen = document.getElementById('screen-' + prevScreen);
+        if (screen) screen.classList.remove('hidden');
+      }
+    }
+
+    function showHelp() {
+      document.getElementById('help-modal').classList.remove('hidden');
+    }
+
+    function closeHelpModal() {
+      document.getElementById('help-modal').classList.add('hidden');
+    }
+
+    function showAccessCode() {
+      document.getElementById('access-modal').classList.remove('hidden');
+    }
+
+    function closeAccessModal() {
+      document.getElementById('access-modal').classList.add('hidden');
+      document.getElementById('access-code-input').value = '';
+      document.getElementById('access-error').classList.add('hidden');
+    }
+
+    function checkAccessCode() {
+      const code = document.getElementById('access-code-input').value;
+      if (code === 'VALIDATOR') {
+        closeAccessModal();
+        showScreen('validator');
+      } else if (code === 'GURU4JAMBU') {
+        closeAccessModal();
+        showScreen('dashboard');
+      } else {
+        document.getElementById('access-error').classList.remove('hidden');
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+
+    // ==================== CONSENT & AVATAR ====================
+    async function submitConsent() {
+      const nama = document.getElementById('input-nama').value.trim();
+      const kelas = document.getElementById('input-kelas').value;
+      const sekolah = document.getElementById('input-sekolah').value.trim();
+      const consent = document.getElementById('consent-check').checked;
+
+      if (!nama || !kelas || !sekolah || !consent) {
+        document.getElementById('consent-error').classList.remove('hidden');
+        return;
+      }
+
+      currentUser = {
+        recordType: 'student',
+        userId: 'user_' + Date.now(),
+        nama,
+        kelas,
+        sekolah,
+        gender: avatarSettings.gender,
+        skinTone: avatarSettings.skin,
+        clothes: avatarSettings.clothes,
+        pet: avatarSettings.pet,
+        totalStars: 0,
+        completedIslands: '[]',
+        journalCount: 0,
+        pretestScore: 0,
+        posttestScore: 0,
+        gamesSumatra: 0,
+        gamesJawa: 0,
+        gamesKalimantan: 0,
+        gamesSulawesi: 0,
+        gamesBali: 0,
+        gamesPapua: 0,
+        timestamp: new Date().toISOString()
+      };
+
+      document.getElementById('consent-error').classList.add('hidden');
+      showScreen('avatar');
+    }
+
+    function setAvatar(type, value) {
+      avatarSettings[type] = value;
+      
+      // Update selection UI
+      document.querySelectorAll(`.avatar-option[data-group="${type}"]`).forEach(btn => {
+        btn.classList.remove('border-purple-500', 'bg-purple-100');
+      });
+      event.currentTarget.classList.add('border-purple-500', 'bg-purple-100');
+      
+      updateAvatarPreview();
+    }
+
+    function updateAvatarPreview() {
+      const preview = document.getElementById('avatar-preview');
+      preview.textContent = avatarSettings.skin;
+    }
+
+    function saveAvatar() {
+      currentUser.gender = avatarSettings.gender;
+      currentUser.skinTone = avatarSettings.skin;
+      currentUser.clothes = avatarSettings.clothes;
+      currentUser.pet = avatarSettings.pet;
+      showToast('✨ Avatar tersimpan!');
+      showScreen('pretest');
+    }
+
+    // ==================== PRETEST/POSTTEST ====================
+    function generateTestQuestions(type) {
+      const container = document.getElementById(type + '-questions');
+      container.innerHTML = '';
+      
+      testQuestions.forEach((q, index) => {
+        const div = document.createElement('div');
+        div.className = 'bg-gray-50 rounded-xl p-4';
+        div.innerHTML = `
+          <p class="font-semibold mb-3">${index + 1}. ${q.text}</p>
+          <div class="flex justify-center gap-4">
+            <button onclick="setTestAnswer('${type}', '${q.id}', 3)" class="test-btn emoji-btn text-4xl p-2 rounded-lg transition-all" data-question="${q.id}" data-value="3">🟢</button>
+            <button onclick="setTestAnswer('${type}', '${q.id}', 2)" class="test-btn emoji-btn text-4xl p-2 rounded-lg transition-all" data-question="${q.id}" data-value="2">🟡</button>
+            <button onclick="setTestAnswer('${type}', '${q.id}', 1)" class="test-btn emoji-btn text-4xl p-2 rounded-lg transition-all" data-question="${q.id}" data-value="1">🔴</button>
+          </div>
+          <div class="flex justify-center gap-8 mt-1 text-xs text-gray-500">
+            <span>Selalu</span>
+            <span>Kadang</span>
+            <span>Tidak</span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function setTestAnswer(type, questionId, value) {
+      if (type === 'pretest') {
+        pretestAnswers[questionId] = value;
+      } else {
+        posttestAnswers[questionId] = value;
+      }
+      
+      // Update UI
+      document.querySelectorAll(`.test-btn[data-question="${questionId}"]`).forEach(btn => {
+        btn.classList.remove('bg-purple-200', 'ring-2', 'ring-purple-500');
+      });
+      event.currentTarget.classList.add('bg-purple-200', 'ring-2', 'ring-purple-500');
+      
+      // Update progress
+      const answers = type === 'pretest' ? pretestAnswers : posttestAnswers;
+      const answered = Object.keys(answers).length;
+      document.getElementById(type + '-progress').textContent = `Pertanyaan ${Math.min(answered + 1, 12)}/12`;
+    }
+
+    async function submitPretest() {
+      if (Object.keys(pretestAnswers).length < 12) {
+        showToast('⚠️ Jawab semua pertanyaan!');
+        return;
+      }
+      
+      // Calculate pretest score
+      const pretestScore = Object.values(pretestAnswers).reduce((sum, val) => sum + val, 0);
+      currentUser.pretestScore = pretestScore;
+      
+      // Save to database
+      if (window.dataSdk && appData.length < 999) {
+        const result = await window.dataSdk.create(currentUser);
+        if (result.isOk) {
+          userRecordId = currentUser.userId;
+        }
+      }
+      
+      showToast('✅ Pretest selesai!');
+      unlockAllIslands();
+      showScreen('map');
+    }
+
+    async function submitPosttest() {
+      if (Object.keys(posttestAnswers).length < 12) {
+        showToast('⚠️ Jawab semua pertanyaan!');
+        return;
+      }
+      
+      // Calculate posttest score
+      const posttestScore = Object.values(posttestAnswers).reduce((sum, val) => sum + val, 0);
+      currentUser.posttestScore = posttestScore;
+      
+      // Update in database
+      await updateUserData({ posttestScore: currentUser.posttestScore });
+      
+      showToast('✅ Posttest selesai!');
+      generateResults();
+      showScreen('results');
+    }
+
+    function generateResults() {
+      const container = document.getElementById('results-comparison');
+      container.innerHTML = '';
+      
+      const characters = [
+        { id: 'disiplin', name: 'Disiplin', color: 'red', questions: ['q1', 'q2'] },
+        { id: 'tanggung_jawab', name: 'Tanggung Jawab', color: 'green', questions: ['q3', 'q4'] },
+        { id: 'kerja_sama', name: 'Kerja Sama', color: 'yellow', questions: ['q5', 'q6'] },
+        { id: 'sopan_santun', name: 'Sopan Santun', color: 'blue', questions: ['q7', 'q8'] },
+        { id: 'toleransi', name: 'Toleransi', color: 'purple', questions: ['q9', 'q10'] },
+        { id: 'jujur', name: 'Jujur', color: 'indigo', questions: ['q11', 'q12'] }
+      ];
+
+      characters.forEach(char => {
+        const preScore = char.questions.reduce((sum, q) => sum + (pretestAnswers[q] || 0), 0);
+        const postScore = char.questions.reduce((sum, q) => sum + (posttestAnswers[q] || 0), 0);
+        const maxScore = 6;
+        const prePercent = (preScore / maxScore) * 100;
+        const postPercent = (postScore / maxScore) * 100;
+        const improvement = postPercent - prePercent;
+        
+        const div = document.createElement('div');
+        div.className = 'bg-gray-50 rounded-xl p-4';
+        div.innerHTML = `
+          <div class="flex justify-between items-center mb-2">
+            <span class="font-semibold">${char.name}</span>
+            <span class="${improvement >= 0 ? 'text-green-600' : 'text-red-600'}">${improvement >= 0 ? '↑' : '↓'} ${Math.abs(improvement).toFixed(0)}%</span>
+          </div>
+          <div class="flex gap-2 items-center text-sm mb-1">
+            <span class="w-16 text-gray-500">Pretest:</span>
+            <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full bg-${char.color}-300" style="width: ${prePercent}%"></div>
+            </div>
+            <span>${preScore}/6</span>
+          </div>
+          <div class="flex gap-2 items-center text-sm">
+            <span class="w-16 text-gray-500">Posttest:</span>
+            <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full bg-${char.color}-500" style="width: ${postPercent}%"></div>
+            </div>
+            <span>${postScore}/6</span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // ==================== ISLAND GAMES ====================
+    function unlockAllIslands() {
+      ['sumatra', 'jawa', 'kalimantan', 'sulawesi', 'bali', 'papua'].forEach(island => {
+        document.getElementById(island + '-status').textContent = '🔓';
+      });
+    }
+
+    function startIslandGame(island) {
+      showScreen('game-' + island);
+      
+      // Initialize game-specific content
+      if (island === 'sulawesi') initSulawesiGame();
+      if (island === 'papua') initPapuaGame();
+      if (island === 'kalimantan') initPuzzleGame();
+      if (island === 'bali') initBaliGame();
+    }
+
+    function updateIslandStatus(island, stars) {
+      gameStates[island].completed = true;
+      gameStates[island].score = stars;
+      
+      // Update map UI
+      document.getElementById(island + '-status').textContent = '✅';
+      const starsContainer = document.getElementById(island + '-stars');
+      starsContainer.innerHTML = '⭐'.repeat(stars);
+      
+      // Update total stars
+      currentUser.totalStars = (currentUser.totalStars || 0) + stars;
+      document.getElementById('total-stars').textContent = currentUser.totalStars;
+      
+      // Update game-specific star count
+      const gameKey = 'games' + island.charAt(0).toUpperCase() + island.slice(1);
+      currentUser[gameKey] = stars;
+      
+      // Check if all islands completed
+      const completedIslands = Object.values(gameStates).filter(g => g.completed).length;
+      if (completedIslands === 6) {
+        setTimeout(() => {
+          showToast('🎉 Semua pulau selesai! Saatnya Posttest!');
+          showScreen('posttest');
+        }, 1500);
+      }
+      
+      // Save progress
+      updateUserData({
+        totalStars: currentUser.totalStars,
+        completedIslands: JSON.stringify(Object.keys(gameStates).filter(k => gameStates[k].completed)),
+        gamesSumatra: currentUser.gamesSumatra,
+        gamesJawa: currentUser.gamesJawa,
+        gamesKalimantan: currentUser.gamesKalimantan,
+        gamesSulawesi: currentUser.gamesSulawesi,
+        gamesBali: currentUser.gamesBali,
+        gamesPapua: currentUser.gamesPapua
+      });
+    }
+
+    // ==================== SUMATRA GAME (Jadwal Pahlawan) ====================
+    const correctSchedule = {
+      '05:00': 'bangun',
+      '06:00': 'mandi',
+      '06:30': 'sarapan',
+      '07:00': 'sekolah',
+      '15:00': 'belajar',
+      '21:00': 'tidur'
+    };
+
+    function checkSchedule() {
+      let score = 0;
+      const dropZones = document.querySelectorAll('#screen-game-sumatra .drop-zone');
+      
+      dropZones.forEach(zone => {
+        const time = zone.dataset.time;
+        const activity = zone.dataset.placedActivity;
+        if (activity === correctSchedule[time]) {
+          score++;
+          zone.classList.add('bg-green-100');
+        } else if (activity) {
+          zone.classList.add('bg-red-100');
+        }
+      });
+      
+      document.getElementById('sumatra-score').textContent = score;
+      
+      if (score >= 4) {
+        showToast('🎉 Hebat! Kamu anak yang disiplin!');
+        updateIslandStatus('sumatra', Math.min(3, Math.ceil(score / 2)));
+      } else {
+        showToast('💪 Coba lagi! Susun jadwal dengan benar!');
+      }
+    }
+
+    // ==================== JAWA GAME (Misi Rawat Bumi) ====================
+    function completeTask(taskId) {
+      if (gameStates.jawa.tasksCompleted.includes(taskId)) return;
+      
+      gameStates.jawa.tasksCompleted.push(taskId);
+      const taskBtn = document.getElementById('task-' + taskId);
+      taskBtn.classList.add('bg-green-100', 'border-green-500');
+      taskBtn.querySelector('.task-status').classList.remove('hidden');
+      
+      // Update progress
+      const completed = gameStates.jawa.tasksCompleted.length;
+      document.getElementById('jawa-progress-text').textContent = `${completed}/4 tugas`;
+      document.getElementById('jawa-progress-bar').style.width = `${(completed / 4) * 100}%`;
+      
+      if (completed === 4) {
+        document.getElementById('jawa-result').classList.remove('hidden');
+        updateIslandStatus('jawa', 3);
+      }
+    }
+
+    // ==================== KALIMANTAN GAME (Gotong Royong Mosaik) ====================
+    let puzzlePieces = [];
+    let puzzleTimeLeft = 180;
+
+    function initPuzzleGame() {
+      const container = document.getElementById('puzzle-container');
+      container.innerHTML = '';
+      puzzlePieces = ['🏠', '🏡', '🛖', '🏘️', '🌳', '🌴', '⛰️', '🏔️', '🌊'];
+      
+      // Shuffle pieces
+      const shuffled = [...puzzlePieces].sort(() => Math.random() - 0.5);
+      
+      shuffled.forEach((piece, index) => {
+        const div = document.createElement('div');
+        div.className = 'puzzle-piece bg-yellow-100 p-4 rounded-xl text-4xl text-center cursor-pointer hover:bg-yellow-200 transition-all';
+        div.textContent = piece;
+        div.dataset.index = index;
+        div.dataset.originalPiece = piece;
+        div.onclick = () => selectPuzzlePiece(div);
+        container.appendChild(div);
+      });
+    }
+
+    let selectedPuzzlePiece = null;
+
+    function selectPuzzlePiece(element) {
+      if (selectedPuzzlePiece === null) {
+        selectedPuzzlePiece = element;
+        element.classList.add('ring-2', 'ring-yellow-500');
+      } else {
+        // Swap pieces
+        const temp = element.textContent;
+        element.textContent = selectedPuzzlePiece.textContent;
+        selectedPuzzlePiece.textContent = temp;
+        
+        selectedPuzzlePiece.classList.remove('ring-2', 'ring-yellow-500');
+        selectedPuzzlePiece = null;
+        
+        // Check if puzzle is solved
+        checkPuzzleSolution();
+      }
+    }
+
+    function checkPuzzleSolution() {
+      const pieces = document.querySelectorAll('.puzzle-piece');
+      const current = Array.from(pieces).map(p => p.textContent);
+      
+      if (JSON.stringify(current) === JSON.stringify(puzzlePieces)) {
+        document.getElementById('kalimantan-result').classList.remove('hidden');
+        if (puzzleTimer) clearInterval(puzzleTimer);
+        updateIslandStatus('kalimantan', 3);
+      }
+    }
+
+    function startPuzzle() {
+      initPuzzleGame();
+      puzzleTimeLeft = 180;
+      
+      if (puzzleTimer) clearInterval(puzzleTimer);
+      puzzleTimer = setInterval(() => {
+        puzzleTimeLeft--;
+        const mins = Math.floor(puzzleTimeLeft / 60);
+        const secs = puzzleTimeLeft % 60;
+        document.getElementById('puzzle-timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+        
+        if (puzzleTimeLeft <= 0) {
+          clearInterval(puzzleTimer);
+          showToast('⏰ Waktu habis! Coba lagi!');
+        }
+      }, 1000);
+    }
+
+    function getHint() {
+      showToast('💡 Budi: "Coba susun dari pojok kiri atas!"');
+    }
+
+    // ==================== SULAWESI GAME (Kata Ajaib) ====================
+    function initSulawesiGame() {
+      gameStates.sulawesi.questionIndex = 0;
+      gameStates.sulawesi.coins = 0;
+      loadSulawesiQuestion();
+    }
+
+    function loadSulawesiQuestion() {
+      const index = gameStates.sulawesi.questionIndex;
+      if (index >= sulawesiScenarios.length) {
+        updateIslandStatus('sulawesi', Math.min(3, Math.ceil(gameStates.sulawesi.coins / sulawesiScenarios.length)));
+        return;
+      }
+      
+      const scenario = sulawesiScenarios[index];
+      document.getElementById('scenario-text').textContent = scenario.text;
+      
+      const choicesContainer = document.getElementById('sulawesi-choices');
+      choicesContainer.innerHTML = '';
+      
+      scenario.choices.forEach((choice, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 text-left transition-all';
+        btn.innerHTML = choice.text;
+        btn.onclick = () => selectChoice(i);
+        choicesContainer.appendChild(btn);
+      });
+    }
+
+    function selectChoice(choiceIndex) {
+      const scenario = sulawesiScenarios[gameStates.sulawesi.questionIndex];
+      const choice = scenario.choices[choiceIndex];
+      const feedback = document.getElementById('sulawesi-feedback');
+      
+      if (choice.correct) {
+        gameStates.sulawesi.coins++;
+        document.getElementById('sulawesi-coins').textContent = gameStates.sulawesi.coins;
+        feedback.innerHTML = '<div class="bg-green-100 text-green-700 p-3 rounded-xl">✅ Benar! Kata-kata sopan sangat penting!</div>';
+      } else {
+        feedback.innerHTML = '<div class="bg-red-100 text-red-700 p-3 rounded-xl">❌ Coba gunakan kata yang lebih sopan!</div>';
+      }
+      feedback.classList.remove('hidden');
+      
+      setTimeout(() => {
+        feedback.classList.add('hidden');
+        gameStates.sulawesi.questionIndex++;
+        loadSulawesiQuestion();
+      }, 1500);
+    }
+
+    // ==================== BALI GAME (Bhineka Warna) ====================
+    function initBaliGame() {
+      gameStates.bali.correctMatches = 0;
+    }
+
+    function checkCulture() {
+      const dropZones = document.querySelectorAll('.region-drop');
+      let correct = 0;
+      
+      dropZones.forEach(zone => {
+        const region = zone.dataset.region;
+        const placedCards = zone.querySelectorAll('.placed-card');
+        
+        placedCards.forEach(card => {
+          if (card.dataset.region === region) {
+            correct++;
+            card.classList.add('bg-green-200');
+            
+            // Show fact
+            document.getElementById('bali-fact').classList.remove('hidden');
+            document.getElementById('fact-text').textContent = cultureFacts[region];
+          } else {
+            card.classList.add('bg-red-200');
+          }
+        });
+      });
+      
+      if (correct >= 4) {
+        showToast('🎉 Hebat! Kamu mengenal budaya Indonesia!');
+        updateIslandStatus('bali', Math.min(3, Math.ceil(correct / 2)));
+      }
+    }
+
+    // ==================== PAPUA GAME (Hati Nurani) ====================
+    function initPapuaGame() {
+      gameStates.papua.storyIndex = 0;
+      gameStates.papua.stars = 0;
+      loadPapuaStory();
+    }
+
+    function loadPapuaStory() {
+      const index = gameStates.papua.storyIndex;
+      if (index >= papuaStories.length) {
+        updateIslandStatus('papua', Math.min(3, gameStates.papua.stars));
+        return;
+      }
+      
+      const story = papuaStories[index];
+      document.getElementById('story-emoji').textContent = story.emoji;
+      document.getElementById('story-text').textContent = story.text;
+      
+      const choicesContainer = document.getElementById('papua-choices');
+      choicesContainer.innerHTML = '';
+      
+      story.choices.forEach((choice, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'honesty-btn w-full p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-500 text-left transition-all';
+        btn.innerHTML = choice.text;
+        btn.onclick = () => selectHonesty(i);
+        choicesContainer.appendChild(btn);
+      });
+    }
+
+    function selectHonesty(choiceIndex) {
+      const story = papuaStories[gameStates.papua.storyIndex];
+      const choice = story.choices[choiceIndex];
+      const feedback = document.getElementById('papua-feedback');
+      
+      if (choice.correct) {
+        gameStates.papua.stars++;
+        document.getElementById('papua-stars').textContent = gameStates.papua.stars;
+        feedback.innerHTML = '<div class="bg-green-100 text-green-700 p-3 rounded-xl">⭐ Benar! Kejujuran adalah karakter mulia!</div>';
+      } else {
+        feedback.innerHTML = '<div class="bg-red-100 text-red-700 p-3 rounded-xl">💭 Coba pikirkan lagi, apa yang hati nuranimu katakan?</div>';
+      }
+      feedback.classList.remove('hidden');
+      
+      setTimeout(() => {
+        feedback.classList.add('hidden');
+        gameStates.papua.storyIndex++;
+        loadPapuaStory();
+      }, 1500);
+    }
+
+    // ==================== CREATIVE FEATURES ====================
+    // Journal
+    async function saveJournal() {
+      const entry = document.getElementById('journal-entry').value.trim();
+      if (!entry) {
+        showToast('⚠️ Tulis sesuatu di jurnalmu!');
+        return;
+      }
+      
+      // Add bonus star
+      currentUser.totalStars = (currentUser.totalStars || 0) + 1;
+      currentUser.journalCount = (currentUser.journalCount || 0) + 1;
+      document.getElementById('total-stars').textContent = currentUser.totalStars;
+      
+      await updateUserData({
+        journalCount: currentUser.journalCount,
+        totalStars: currentUser.totalStars,
+        timestamp: new Date().toISOString()
+      });
+      
+      document.getElementById('journal-entry').value = '';
+      showToast('📔 Jurnal tersimpan! +1 ⭐');
+      updateJournalList();
+    }
+
+    function updateJournalList() {
+      const container = document.getElementById('journal-list');
+      
+      if (currentUser.journalCount <= 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center">Belum ada jurnal tersimpan</p>';
+        return;
+      }
+      
+      // Display simple count of journals saved
+      container.innerHTML = `
+        <div class="bg-yellow-50 rounded-xl p-3 text-center">
+          <p class="text-lg font-bold text-yellow-700">📔 ${currentUser.journalCount} jurnal tersimpan</p>
+          <p class="text-sm text-yellow-600">Terakhir diperbarui: ${new Date().toLocaleDateString('id-ID')}</p>
+        </div>
+      `;
+    }
+
+    // Garden
+    function updateGarden() {
+      const stars = currentUser.totalStars || 0;
+      document.getElementById('garden-stars').textContent = stars;
+      
+      const plants = ['🌱', '🌿', '🌳', '🌲', '🌴', '🎄'];
+      const plantLevel = Math.min(5, Math.floor(stars / 5));
+      
+      for (let i = 1; i <= 6; i++) {
+        const plant = document.getElementById('plant-' + i);
+        const islandStars = Object.values(gameStates)[i - 1]?.score || 0;
+        const level = Math.min(5, islandStars);
+        plant.textContent = plants[level];
+      }
+    }
+
+    // Comic Generator
+    function updateComicPanel(panelNum) {
+      const bg = document.getElementById('comic-bg-' + panelNum).value;
+      const char = document.getElementById('comic-char-' + panelNum).value;
+      const preview = document.getElementById('comic-preview-' + panelNum);
+      preview.textContent = bg + char;
+    }
+
+    function previewComic() {
+      showToast('👁️ Preview komik siap!');
+    }
+
+    function downloadComic() {
+      const panels = [];
+      for (let i = 1; i <= 3; i++) {
+        panels.push({
+          bg: document.getElementById('comic-bg-' + i).value,
+          char: document.getElementById('comic-char-' + i).value,
+          text: document.getElementById('comic-text-' + i).value
+        });
+      }
+      
+      // Create simple text representation
+      const comicText = panels.map((p, i) => 
+        `Panel ${i + 1}: ${p.bg}${p.char}\n"${p.text || '...'}"`
+      ).join('\n\n');
+      
+      const blob = new Blob([comicText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'komik-karakter.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      showToast('📥 Komik diunduh!');
+    }
+
+    // Expression Game
+    function checkExpression(answer) {
+      const quiz = expressionQuizzes[expressionIndex];
+      const feedback = document.getElementById('expression-feedback');
+      
+      if (answer === quiz.answer) {
+        expressionScore++;
+        document.getElementById('expression-score').textContent = expressionScore;
+        feedback.innerHTML = '<div class="bg-green-100 text-green-700 p-3 rounded-xl">✅ Benar!</div>';
+      } else {
+        feedback.innerHTML = `<div class="bg-red-100 text-red-700 p-3 rounded-xl">❌ Jawaban: ${quiz.hint}</div>`;
+      }
+      feedback.classList.remove('hidden');
+      
+      setTimeout(() => {
+        feedback.classList.add('hidden');
+        expressionIndex++;
+        if (expressionIndex < expressionQuizzes.length) {
+          loadExpression();
+        } else {
+          showToast(`🎉 Skor akhir: ${expressionScore}/5`);
+          expressionIndex = 0;
+          expressionScore = 0;
+        }
+      }, 1500);
+    }
+
+    function loadExpression() {
+      const quiz = expressionQuizzes[expressionIndex];
+      document.getElementById('expression-emoji').textContent = quiz.emoji;
+    }
+
+    // Profile
+    function updateProfile() {
+      document.getElementById('profile-avatar').textContent = avatarSettings.skin;
+      document.getElementById('profile-name').textContent = currentUser?.nama || 'Nama Siswa';
+      document.getElementById('profile-class').textContent = `${currentUser?.kelas || 'Kelas'} - ${currentUser?.sekolah || 'Sekolah'}`;
+      document.getElementById('profile-stars').textContent = currentUser?.totalStars || 0;
+      
+      const completedCount = Object.values(gameStates).filter(g => g.completed).length;
+      document.getElementById('profile-islands').textContent = `${completedCount}/6`;
+      
+      // Update progress bars
+      const progressIds = ['prog-disiplin', 'prog-tanggung', 'prog-kerjasama', 'prog-sopan', 'prog-toleransi', 'prog-jujur'];
+      const islands = ['sumatra', 'jawa', 'kalimantan', 'sulawesi', 'bali', 'papua'];
+      
+      islands.forEach((island, i) => {
+        const progress = gameStates[island].completed ? 100 : (gameStates[island].score || 0) * 33;
+        document.getElementById(progressIds[i]).style.width = progress + '%';
+      });
+    }
+
+    // ==================== RESPONSES ====================
+    function setResponse(question, value) {
+      studentResponses[question] = value;
+      
+      // Update UI
+      document.querySelectorAll(`.response-btn[data-question="${question}"]`).forEach(btn => {
+        btn.classList.remove('bg-purple-200', 'ring-2', 'ring-purple-500', 'border-purple-500');
+      });
+      event.currentTarget.classList.add('bg-purple-200', 'ring-2', 'ring-purple-500');
+    }
+
+    async function submitStudentResponse() {
+      if (Object.keys(studentResponses).length < 5) {
+        showToast('⚠️ Jawab semua pertanyaan!');
+        return;
+      }
+      
+      await updateUserData({
+        studentResponse: JSON.stringify(studentResponses)
+      });
+      
+      showToast('🎉 Terima kasih! Petualanganmu selesai!');
+      showScreen('map');
+    }
+
+    async function submitValidation() {
+      const validation = {
+        materi: [
+          document.getElementById('val-materi-1').value,
+          document.getElementById('val-materi-2').value,
+          document.getElementById('val-materi-3').value
+        ],
+        media: [
+          document.getElementById('val-media-1').value,
+          document.getElementById('val-media-2').value,
+          document.getElementById('val-media-3').value
+        ],
+        suggestions: document.getElementById('validator-suggestions').value
+      };
+      
+      if (window.dataSdk && appData.length < 999) {
+        await window.dataSdk.create({
+          type: 'validation',
+          userId: 'validator_' + Date.now(),
+          nama: 'Validator',
+          kelas: '',
+          sekolah: '',
+          avatar: '',
+          pretestData: '',
+          posttestData: '',
+          gameProgress: '',
+          journalEntries: '',
+          gardenStars: 0,
+          completedIslands: '',
+          totalStars: 0,
+          timestamp: new Date().toISOString(),
+          validatorFeedback: JSON.stringify(validation),
+          studentResponse: '',
+          teacherResponse: ''
+        });
+      }
+      
+      showToast('📤 Validasi terkirim!');
+      showScreen('map');
+    }
+
+    async function submitTeacherResponse() {
+      const response = {
+        q1: document.getElementById('teacher-q1').value,
+        q2: document.getElementById('teacher-q2').value,
+        q3: document.getElementById('teacher-q3').value,
+        q4: document.getElementById('teacher-q4').value
+      };
+      
+      if (window.dataSdk && appData.length < 999) {
+        await window.dataSdk.create({
+          type: 'teacher_response',
+          userId: 'teacher_' + Date.now(),
+          nama: 'Guru',
+          kelas: '',
+          sekolah: '',
+          avatar: '',
+          pretestData: '',
+          posttestData: '',
+          gameProgress: '',
+          journalEntries: '',
+          gardenStars: 0,
+          completedIslands: '',
+          totalStars: 0,
+          timestamp: new Date().toISOString(),
+          validatorFeedback: '',
+          studentResponse: '',
+          teacherResponse: JSON.stringify(response)
+        });
+      }
+      
+      showToast('📤 Respon guru terkirim!');
+    }
+
+    // ==================== DASHBOARD ====================
+    function updateDashboard() {
+      const students = appData.filter(d => d.recordType === 'student');
+      const completed = students.filter(s => {
+        const islands = JSON.parse(s.completedIslands || '[]');
+        return islands.length === 6;
+      });
+      
+      document.getElementById('dash-students').textContent = students.length;
+      document.getElementById('dash-completed').textContent = completed.length;
+      
+      const totalStars = students.reduce((sum, s) => sum + (s.totalStars || 0), 0);
+      document.getElementById('dash-avg-stars').textContent = students.length > 0 ? (totalStars / students.length).toFixed(1) : 0;
+      
+      const totalJournals = students.reduce((sum, s) => sum + (s.journalCount || 0), 0);
+      document.getElementById('dash-journals').textContent = totalJournals;
+      
+      // Update table
+      const tbody = document.getElementById('student-table-body');
+      if (students.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-500">Belum ada data siswa</td></tr>';
+      } else {
+        tbody.innerHTML = students.map(s => {
+          const islands = JSON.parse(s.completedIslands || '[]');
+          const improvement = s.posttestScore > 0 ? s.posttestScore - s.pretestScore : 0;
+          
+          return `
+            <tr class="border-b hover:bg-gray-50">
+              <td class="p-3">${s.nama}</td>
+              <td class="p-3 text-center text-sm">${s.kelas}</td>
+              <td class="p-3 text-center text-sm">${s.pretestScore}/36</td>
+              <td class="p-3 text-center text-sm">${s.posttestScore > 0 ? s.posttestScore + '/36' : '-'}</td>
+              <td class="p-3 text-center">⭐ ${s.totalStars || 0}</td>
+              <td class="p-3 text-center text-sm">${islands.length === 6 ? '✅' : '🔄 ' + islands.length}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+      
+      // Update chart
+      const chartIds = ['chart-disiplin', 'chart-tanggung', 'chart-kerjasama', 'chart-sopan', 'chart-toleransi', 'chart-jujur'];
+      chartIds.forEach((id, i) => {
+        const randomHeight = students.length > 0 ? Math.random() * 60 + 20 : 0;
+        document.getElementById(id).style.height = randomHeight + '%';
+      });
+    }
+
+    // ==================== EXPORT FUNCTIONS ====================
+    function exportCSV() {
+      const students = appData.filter(d => d.recordType === 'student');
+      if (students.length === 0) {
+        showToast('⚠️ Belum ada data untuk diekspor');
+        return;
+      }
+      
+      const headers = ['Nama', 'Kelas', 'Sekolah', 'Pretest', 'Posttest', 'Perbaikan', 'Bintang', 'Pulau Selesai', 'Jurnal'];
+      const rows = students.map(s => {
+        const improvement = s.posttestScore - s.pretestScore;
+        const islands = JSON.parse(s.completedIslands || '[]');
+        return [
+          s.nama,
+          s.kelas,
+          s.sekolah,
+          s.pretestScore,
+          s.posttestScore,
+          improvement,
+          s.totalStars || 0,
+          islands.length + '/6',
+          s.journalCount || 0
+        ];
+      });
+      
+      const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'smart-edukultur-data.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      showToast('📊 CSV diunduh!');
+    }
+
+    function exportPDF() {
+      // Create simple text report
+      const students = appData.filter(d => d.type === 'student');
+      let report = '=== LAPORAN SMART EDUKULTUR ===\n\n';
+      report += `Tanggal: ${new Date().toLocaleDateString('id-ID')}\n`;
+      report += `Total Siswa: ${students.length}\n\n`;
+      
+      students.forEach(s => {
+        const pretest = JSON.parse(s.pretestData || '{}');
+        const posttest = JSON.parse(s.posttestData || '{}');
+        report += `--- ${s.nama} (${s.kelas}) ---\n`;
+        report += `Pretest: ${Object.values(pretest).reduce((a, b) => a + b, 0)}/36\n`;
+        report += `Posttest: ${Object.values(posttest).reduce((a, b) => a + b, 0)}/36\n`;
+        report += `Bintang: ${s.totalStars || 0}\n\n`;
+      });
+      
+      const blob = new Blob([report], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'laporan-smart-edukultur.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      showToast('📄 Laporan diunduh!');
+    }
+
+    // ==================== DATA HELPERS ====================
+    async function updateUserData(updates) {
+      if (!currentUser || !window.dataSdk) return;
+      
+      const userRecord = appData.find(d => d.userId === currentUser.userId);
+      if (userRecord) {
+        Object.assign(userRecord, updates);
+        await window.dataSdk.update(userRecord);
+      }
+    }
+
+    // ==================== DRAG AND DROP ====================
+    function setupDragAndDrop() {
+      document.addEventListener('dragstart', (e) => {
+        if (e.target.classList.contains('draggable')) {
+          e.target.classList.add('dragging');
+          e.dataTransfer.setData('text/plain', e.target.dataset.activity || e.target.dataset.region || '');
+          e.dataTransfer.setData('text/html', e.target.outerHTML);
+        }
+      });
+      
+      document.addEventListener('dragend', (e) => {
+        if (e.target.classList.contains('draggable')) {
+          e.target.classList.remove('dragging');
+        }
+      });
+      
+      document.addEventListener('dragover', (e) => {
+        if (e.target.classList.contains('drop-zone')) {
+          e.preventDefault();
+          e.target.classList.add('drag-over');
+        }
+      });
+      
+      document.addEventListener('dragleave', (e) => {
+        if (e.target.classList.contains('drop-zone')) {
+          e.target.classList.remove('drag-over');
+        }
+      });
+      
+      document.addEventListener('drop', (e) => {
+        if (e.target.classList.contains('drop-zone')) {
+          e.preventDefault();
+          e.target.classList.remove('drag-over');
+          
+          const activity = e.dataTransfer.getData('text/plain');
+          const html = e.dataTransfer.getData('text/html');
+          
+          // For Sumatra schedule game
+          if (e.target.dataset.time) {
+            const timeText = e.target.querySelector('span').textContent;
+            e.target.innerHTML = `<span class="text-gray-500">${timeText}</span>`;
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            const newElement = div.firstChild;
+            newElement.classList.remove('dragging');
+            e.target.appendChild(newElement);
+            e.target.dataset.placedActivity = activity;
+          }
+          
+          // For Bali culture game
+          if (e.target.classList.contains('region-drop')) {
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            const newElement = div.firstChild;
+            newElement.classList.remove('dragging');
+            newElement.classList.add('placed-card');
+            newElement.draggable = false;
+            e.target.appendChild(newElement);
+          }
+        }
+      });
+    }
+
+    // ==================== INITIALIZATION ====================
+    initApp();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d92393d5292603b',t:'MTc3Mjk3NjkzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
